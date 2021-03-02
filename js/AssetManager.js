@@ -1,9 +1,10 @@
 export default class AssetManager{
-    constructor(){
+    constructor(mixer){
         this.aCarregar = 0;
         this.carregadas = 0;
         this.imagens = new Map();
         this.audios = new Map();
+        this.mixer = mixer;
     }
 
     carregaImagem(chave, source){
@@ -47,5 +48,9 @@ export default class AssetManager{
 
     audio(chave){
         return this.audios.get(chave);
+    }
+
+    play(chave){
+        this.mixer?.play(this.audio(chave));
     }
 }
