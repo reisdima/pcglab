@@ -26,12 +26,12 @@ const mapa1 = new Mapa(10, 14, 32);
 mapa1.carregaMapa(modeloMapa1);
 cena1.configuraMapa(mapa1);
 
-const pc = new Sprite({vx:10});
-const en1 = new Sprite({x:140, w:30, color:"red"});
+const pc = new Sprite({x:70, vx:10});
+const en1 = new Sprite({x:140, color:"red"});
 
 cena1.adicionar(pc);
 cena1.adicionar(en1);
-cena1.adicionar(new Sprite({x:140, y:40, w:30, color:"red"}));
+cena1.adicionar(new Sprite({ y:70, color:"red"}));
 
 cena1.iniciar();
 
