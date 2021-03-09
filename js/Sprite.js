@@ -14,10 +14,15 @@ export default class Sprite{
     }
 
     desenhar(ctx){
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-        ctx.strokeStyle = "blue";
-        ctx.strokeRect(this.mx * this.cena.mapa.SIZE, this.my * this.cena.mapa.SIZE, this.cena.mapa.SIZE, this.cena.mapa.SIZE);
+        const SIZE = this.cena.mapa.SIZE;
+
+        if(this.cena.mapa.tiles[this.my][this.mx] != 1){
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+            ctx.strokeStyle = "blue";
+            ctx.strokeRect(this.mx * SIZE, this.my * SIZE, SIZE, SIZE);
+        }
+
     }
 
     passo(dt){

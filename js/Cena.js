@@ -14,7 +14,7 @@ export default class Cena {
     }
 
     desenhar(){
-        this.ctx.fillStyle = "lightblue";
+        this.ctx.fillStyle = "black";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.mapa?.desenhar(this.ctx);
