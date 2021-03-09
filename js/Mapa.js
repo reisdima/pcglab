@@ -1,5 +1,5 @@
 export default class Mapa{
-    constructor(linhas = 8, colunas = 12, tamanho = 32){
+    constructor(linhas = 8, colunas = 12, tamanho = 32, cena = null){
         this.LINHAS = linhas;
         this.COLUNAS = colunas;
         this.SIZE = tamanho;
@@ -10,7 +10,7 @@ export default class Mapa{
                 this.tiles[l][c] = 0;
             }
         }
-        this.cena = null;
+        this.cena = cena;
     }
 
     desenhar(ctx){
@@ -21,19 +21,21 @@ export default class Mapa{
                         ctx.fillStyle = "grey";
                         ctx.lineWidth = 1;
                         ctx.strokeStyle = "black";
+                        ctx.drawImage(this.cena.assets.img("parede"), c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);
                     break;
                     case 2:
                         ctx.fillStyle = "red";
                         ctx.lineWidth = 2;
                         ctx.strokeStyle = "orange"; 
+                        ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);
                     break;
                     default:
                         ctx.fillStyle = "black";
                         ctx.lineWidth = 1;
                         ctx.strokeStyle = "grey";
+                        ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);
                     }
-                    ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);
-                    ctx.strokeRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE); 
+                    //ctx.strokeRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE); 
             }
         }
     }

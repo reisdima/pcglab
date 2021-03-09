@@ -13,6 +13,7 @@ const assets = new AssetManager(mixer);
 assets.carregaImagem("garota", "assets/garota.png");
 assets.carregaImagem("esqueleto", "assets/skelly.png");
 assets.carregaImagem("orc", "assets/orc.png");
+assets.carregaImagem("parede", "assets/parede.png");
 assets.carregaAudio("moeda", "assets/coin.wav");
 assets.carregaAudio("boom", "assets/boom.wav");
 assets.carregaAudio("bruh", "assets/bruh.mp3");
@@ -28,7 +29,7 @@ const cena1 = new Cena(canvas, assets);
 mapa1.carregaMapa(modeloMapa1);
 cena1.configuraMapa(mapa1);*/
 
-const mapa2 = new Mapa(10, 14, 32);
+const mapa2 = new Mapa(10, 14, 32, cena1);
 mapa2.carregaMapa(modeloMapa2);
 cena1.configuraMapa(mapa2);
 
