@@ -15,6 +15,7 @@ assets.carregaImagem("esqueleto", "assets/skelly.png");
 assets.carregaImagem("orc", "assets/orc.png");
 assets.carregaAudio("moeda", "assets/coin.wav");
 assets.carregaAudio("boom", "assets/boom.wav");
+assets.carregaAudio("bruh", "assets/bruh.mp3");
 
 const canvas = document.querySelector("canvas");
 canvas.width = 20*32;
@@ -39,11 +40,32 @@ cena1.adicionar(en1);
 cena1.adicionar(new Sprite({x: 115, y:70, vy:10, color:"red"}));
 cena1.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red"}));*/
 
+cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43),
+    y: randValue(43, canvas.height - 43),
+    vy: randValue(-100, 100),
+    vx: randValue(-100,100),
+    color:"yellow"}));
+cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43),
+    y: randValue(43, canvas.height - 43),
+    vy: randValue(-100, 100),
+    vx: randValue(-100,100),
+    color:"#4B0082"}));
+cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43),
+    y: randValue(43, canvas.height - 43),
+    vy: randValue(-100, 100),
+    vx: randValue(-100,100),
+    color:"#008B8B"}));
+cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43),
+    y: randValue(43, canvas.height - 43),
+    vy: randValue(-100, 100),
+    vx: randValue(-100,100),
+    color:"#00FFFF"}));
+
 setInterval(() => {
-    cena1.adicionar(new Sprite({x: getRandomIntInclusive(43, canvas.width - 43),
-                                y: getRandomIntInclusive(43, canvas.height - 43),
-                                vy: getRandomIntInclusive(-100, 100),
-                                vx: getRandomIntInclusive(-100,100),
+    cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43),
+                                y: randValue(43, canvas.height - 43),
+                                vy: randValue(-100, 100),
+                                vx: randValue(-100,100),
                                 color:"red"}));
 }, 4000);
 
@@ -66,7 +88,7 @@ document.addEventListener("keydown", (e) => {
     }
 })
 
-function getRandomIntInclusive(min, max) {
+function randValue(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;

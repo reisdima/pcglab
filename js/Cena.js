@@ -86,6 +86,7 @@ export default class Cena {
             this.aRemover.push(b);
         }
         console.log(this.aRemover);
+        this.assets.play("bruh");
     }
 
     removerSprites(){
