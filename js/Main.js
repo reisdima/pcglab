@@ -4,6 +4,7 @@ import Mapa from "./Mapa.js";
 import Mixer from "./Mixer.js";
 import Sprite from "./Sprite.js";
 import modeloMapa1 from "../maps/mapa1.js";
+import modeloMapa2 from "../maps/mapa2.js";
 //console.log("Hello World!");
 
 const mixer = new Mixer(10);
@@ -16,15 +17,19 @@ assets.carregaAudio("moeda", "assets/coin.wav");
 assets.carregaAudio("boom", "assets/boom.wav");
 
 const canvas = document.querySelector("canvas");
-canvas.width = 14*32;
-canvas.height = 10*32;
+canvas.width = 20*32;
+canvas.height = 20*32;
 console.log(canvas);
 
 const cena1 = new Cena(canvas, assets);
 
-const mapa1 = new Mapa(10, 14, 32);
+/*const mapa1 = new Mapa(10, 14, 32);
 mapa1.carregaMapa(modeloMapa1);
-cena1.configuraMapa(mapa1);
+cena1.configuraMapa(mapa1);*/
+
+const mapa2 = new Mapa(10, 14, 32);
+mapa2.carregaMapa(modeloMapa2);
+cena1.configuraMapa(mapa2);
 
 const pc = new Sprite({x:50, y :150, vx:20, h: 50});
 const en1 = new Sprite({x:160, vx: -10, color:"red"});
