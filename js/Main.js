@@ -40,8 +40,11 @@ cena1.adicionar(new Sprite({x: 115, y:70, vy:10, color:"red"}));
 cena1.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red"}));*/
 
 setInterval(() => {
-    let valorX = 
-    cena1.adicionar(new Sprite({x: getRandomIntInclusive(0, canvas.width), y:70, vy:10, color:"red"}));
+    cena1.adicionar(new Sprite({x: getRandomIntInclusive(43, canvas.width - 43),
+                                y: getRandomIntInclusive(43, canvas.height - 43),
+                                vy: getRandomIntInclusive(-100, 100),
+                                vx: getRandomIntInclusive(-100,100),
+                                color:"red"}));
 }, 4000);
 
 cena1.iniciar();
