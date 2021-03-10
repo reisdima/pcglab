@@ -78,7 +78,7 @@ export default class Sprite{
                 this.cena.ctx.strokeStyle = "white";
                 //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
                 if(this.colidiuCom(tile)){
-                    this.vx = 0;
+                    this.vx = this.vx * -1;
                     this.x = tile.x - tile.w/2 - this.w/2 - 1;
                 }
             }
@@ -93,7 +93,7 @@ export default class Sprite{
                 this.cena.ctx.strokeStyle = "white";
                 //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
                 if(this.colidiuCom(tile)){
-                    this.vx = 0;
+                    this.vx = this.vx * -1;
                     this.x = tile.x + tile.w/2 + this.w/2 + 1;
                 }
             }
@@ -108,7 +108,7 @@ export default class Sprite{
                 this.cena.ctx.strokeStyle = "white";
                 //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
                 if(this.colidiuCom(tile)){
-                    this.vy = 0;
+                    this.vy = this.vy * -1;
                     this.y = tile.y - tile.h/2 - this.h/2 - 1;
                 }
             }
@@ -123,7 +123,7 @@ export default class Sprite{
                 this.cena.ctx.strokeStyle = "white";
                 //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
                 if(this.colidiuCom(tile)){
-                    this.vy = 0;
+                    this.vy = this.vy * -1;
                     this.y = tile.y + tile.h/2 + this.h/2 + 1;
                 }
             }

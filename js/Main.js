@@ -44,13 +44,13 @@ cena1.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red"}));*/
 
 // Adiciona sprites mais fortes ("Protagonistas")
 cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43), y: randValue(43, canvas.height - 43), w:20, h:20,
-                            vy: randValue(-100, 100), vx: randValue(-100,100), color:"yellow", vida: 1000}));
+                            vy: randValue(-200, 200), vx: randValue(-200,200), color:"yellow", vida: 1000}));
 cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43), y: randValue(43, canvas.height - 43), w:20, h:20,
-                            vy: randValue(-100, 100), vx: randValue(-100,100), color:"#4B0082", vida: 1000}));
+                            vy: randValue(-200, 200), vx: randValue(-200,200), color:"#BA55D3", vida: 1000}));
 cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43), y: randValue(43, canvas.height - 43), w:20, h:20,
-                            vy: randValue(-100, 100), vx: randValue(-100,100), color:"#008B8B", vida: 1000}));
+                            vy: randValue(-200, 200), vx: randValue(-200,200), color:"white", vida: 1000}));
 cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43), y: randValue(43, canvas.height - 43), w:20, h:20,
-                            vy: randValue(-100, 100), vx: randValue(-100,100), color:"#00FFFF", vida: 1000}));
+                            vy: randValue(-200, 200), vx: randValue(-200,200), color:"#00FFFF", vida: 1000}));
 
 // Adiciona sprites "inimigos" a cada 4000 ms (4 segundos)
 setInterval(() => {
