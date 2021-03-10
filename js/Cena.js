@@ -79,14 +79,48 @@ export default class Cena {
     }
 
     quandoColidir(a, b){
-        if(!this.aRemover.includes(a)){
-            this.aRemover.push(a);
+        //Colisão básica (elimina os dois)
+        if(a.vida === 0 && b.vida === 0){
+            if(!this.aRemover.includes(a)){
+                this.aRemover.push(a);
+            }
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+            }
+            console.log(this.aRemover);
+            this.assets.play("bruh");
         }
-        if(!this.aRemover.includes(b)){
-            this.aRemover.push(b);
+
+        //Colisão forte-fraco (Elimina um e outro perde vida)
+        if(a.vida > 0 && b.vida === 0){
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+            }
+            a.vida -= 1;
+            console.log(a.vida);
+            console.log(this.aRemover);
+            this.assets.play("bruh");
         }
-        console.log(this.aRemover);
-        this.assets.play("bruh");
+        if(a.vida === 0 && b.vida > 0){
+            if(!this.aRemover.includes(a)){
+                this.aRemover.push(a);
+            }
+            b.vida -= 1;
+            console.log(b.vida);
+            console.log(this.aRemover);
+            this.assets.play("bruh");
+        }
+
+        //Colisão forte-forte (Os dois perdem vida)
+        /*
+        if(a.vida > 0 && b.vida > 0){
+            a.vida -= 1;
+            b.vida -= 1;
+            console.log(a.vida);
+            console.log(b.vida);
+        }
+        */
+
     }
 
     removerSprites(){
