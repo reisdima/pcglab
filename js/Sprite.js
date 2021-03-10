@@ -13,10 +13,18 @@ export default class Sprite{
         this.my = 0;
     }
 
-    desenhar(ctx){
+    desenhar(ctx){ 
         const SIZE = this.cena.mapa.SIZE;
 
         if(this.cena.mapa.tiles[this.my][this.mx] != 1){
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+            ctx.strokeStyle = "blue";
+            ctx.strokeRect(this.mx * SIZE, this.my * SIZE, SIZE, SIZE);
+        }
+        else{
+            this.x = this.randValue(43, ctx.canvas.width - 43);
+            this.y = this.randValue(43, ctx.canvas.height - 43);
             ctx.fillStyle = this.color;
             ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
             ctx.strokeStyle = "blue";
@@ -119,5 +127,11 @@ export default class Sprite{
                 }
             }
         }
+    }
+
+    randValue(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 }
