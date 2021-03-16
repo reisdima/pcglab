@@ -26,8 +26,8 @@ canvas.width = 14*32;
 canvas.height = 10*32;
 
 input.configurarTeclado({
-    "ArrowLeft": "MOVE-ESQUERDA",
-    "ArrowRight": "MOVE-DIREITA",
+    "ArrowLeft": "MOVE_ESQUERDA",
+    "ArrowRight": "MOVE_DIREITA",
 });
 
 const cena1 = new Cena(canvas, assets);
@@ -40,7 +40,16 @@ cena1.configuraMapa(mapa1);
 mapa2.carregaMapa(modeloMapa2);
 cena1.configuraMapa(mapa2);*/
 
-const pc = new Sprite({x:50, y :150, vx:20, h: 20, w:20});
+const pc = new Sprite({x:50, y :150, h: 20, w:20});
+pc.controlar = function(dt){
+    if(input.comandos.get("MOVE_ESQUERDA")){
+        this.vx = -50;
+    } else if (input.comandos.get("MOVE_DIREITA")){
+        this.vx = +50;
+    } else {
+        this.vx = 0;
+    }
+};
 const en1 = new Sprite({x:160, vx: -10, color:"red", h: 20, w:20});
 
 cena1.adicionar(pc);
