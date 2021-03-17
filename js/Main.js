@@ -5,11 +5,6 @@ import InputManager from "./InputManager.js";
 import Game from "./Game.js";
 import CenaCarregando from "./CenaCarregando.js";
 import CenaFim from "./CenaFim.js";
-import Cena from "./Cena.js";
-import Mapa from "./Mapa.js";
-import Sprite from "./Sprite.js";
-import modeloMapa1 from "../maps/mapa1.js";
-import modeloMapa2 from "../maps/mapa2.js";
 
 const input = new InputManager();
 const mixer = new Mixer(10);
