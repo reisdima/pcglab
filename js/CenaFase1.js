@@ -61,5 +61,36 @@ export default class CenaFase1 extends Cena{
         //this.adicionar(en1);
         //this.adicionar(new Sprite({x: 115, y:70, vy:10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
         //this.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
+
+
+                            // Criação de sprites experimental 
+        
+        /*const mapa2 = new Mapa(10, 14, 32);
+        const cena = this;
+        mapa2.carregaMapa(modeloMapa2);
+        cena.configuraMapa(mapa2);
+
+        // Adiciona sprites mais fortes ("Protagonistas")
+        cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43), w:20, h:20,
+                                    vy: randValue(-200, 200), vx: randValue(-200,200), color:"yellow", vida: 1000}));
+        cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43), w:20, h:20,
+                                    vy: randValue(-200, 200), vx: randValue(-200,200), color:"#BA55D3", vida: 1000}));
+        cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43), w:20, h:20,
+                                    vy: randValue(-200, 200), vx: randValue(-200,200), color:"white", vida: 1000}));
+        cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43), w:20, h:20,
+                                    vy: randValue(-200, 200), vx: randValue(-200,200), color:"#00FFFF", vida: 1000}));
+
+        // Adiciona sprites "inimigos" a cada 4000 ms (4 segundos)
+        setInterval(() => {
+            cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43),
+                                        vy: randValue(-100, 100), vx: randValue(-100,100), color:"red"}));
+        }, 4000);
+
+        function randValue(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }*/
+        
     }
 }

@@ -40,35 +40,14 @@ game.adicionarCena("carregando", cena0);
 game.adicionarCena("jogo", cena1);
 game.adicionarCena("fim", cena2);
 
-/*const mapa2 = new Mapa(10, 14, 32, cena1);
-mapa2.carregaMapa(modeloMapa2);
-cena1.configuraMapa(mapa2);*/
-
-// Adiciona sprites mais fortes ("Protagonistas")
-/*cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43), y: randValue(43, canvas.height - 43), w:20, h:20,
-                            vy: randValue(-200, 200), vx: randValue(-200,200), color:"yellow", vida: 1000}));
-cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43), y: randValue(43, canvas.height - 43), w:20, h:20,
-                            vy: randValue(-200, 200), vx: randValue(-200,200), color:"#BA55D3", vida: 1000}));
-cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43), y: randValue(43, canvas.height - 43), w:20, h:20,
-                            vy: randValue(-200, 200), vx: randValue(-200,200), color:"white", vida: 1000}));
-cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43), y: randValue(43, canvas.height - 43), w:20, h:20,
-                            vy: randValue(-200, 200), vx: randValue(-200,200), color:"#00FFFF", vida: 1000}));
-
-// Adiciona sprites "inimigos" a cada 4000 ms (4 segundos)
-setInterval(() => {
-    cena1.adicionar(new Sprite({x: randValue(43, canvas.width - 43), y: randValue(43, canvas.height - 43),
-                                vy: randValue(-100, 100), vx: randValue(-100,100), color:"red"}));
-}, 4000);
-*/
-
 game.iniciar();
 
 document.addEventListener("keydown", (e) => {
     switch (e.key) {
-        case "s":
+        case "i":
             game.iniciar(); 
             break;
-        case "S":
+        case "p":
             game.parar(); 
             break;
         case "c":
@@ -79,9 +58,3 @@ document.addEventListener("keydown", (e) => {
             break;
     }
 })
-
-function randValue(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
