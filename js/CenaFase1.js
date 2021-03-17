@@ -35,16 +35,16 @@ export default class CenaFase1 extends Cena{
 
         pc.controlar = function(dt){
             if(cena.input.comandos.get("MOVE_ESQUERDA")){
-                this.vx = -50;
+                this.vx = -150;
             } else if (cena.input.comandos.get("MOVE_DIREITA")){
-                this.vx = +50;
+                this.vx = +150;
             } else {
                 this.vx = 0;
             }
             if(cena.input.comandos.get("MOVE_CIMA")){
-                this.vy = -50;
+                this.vy = -150;
             } else if (cena.input.comandos.get("MOVE_BAIXO")){
-                this.vy = +50;
+                this.vy = +150;
             } else {
                 this.vy = 0;
             }
@@ -61,6 +61,9 @@ export default class CenaFase1 extends Cena{
         //this.adicionar(en1);
         //this.adicionar(new Sprite({x: 115, y:70, vy:10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
         //this.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
+
+        const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, w: 32, h: 32, color: "yellow", tags:["exit"]});
+        this.adicionar(exit);
 
 
                             // Criação de sprites experimental 
