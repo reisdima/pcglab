@@ -11,6 +11,7 @@ export default class Cena {
         this.idAnim = null;
         this.assets = assets;
         this.mapa = null;
+        this.game = null;
     }
 
     desenhar(){
