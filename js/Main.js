@@ -1,5 +1,5 @@
 import AssetManager from "./AssetManager.js";
-import CenaJogo from "./CenaJogo.js";
+import CenaFase1 from "./CenaFase1.js";
 import Mixer from "./Mixer.js";
 import InputManager from "./InputManager.js";
 import Game from "./Game.js";
@@ -25,8 +25,8 @@ assets.carregaAudio("boom", "assets/boom.wav");
 assets.carregaAudio("bruh", "assets/bruh.mp3");
 
 const canvas = document.querySelector("canvas");
-canvas.width = 14*32;
-canvas.height = 10*32;
+canvas.width = 16*32;
+canvas.height = 12*32;
 
 input.configurarTeclado({
     ArrowLeft: "MOVE_ESQUERDA",
@@ -39,7 +39,7 @@ input.configurarTeclado({
 const game = new Game(canvas, assets, input);
 
 const cena0 = new CenaCarregando();
-const cena1 = new CenaJogo();
+const cena1 = new CenaFase1();
 const cena2 = new CenaFim();
 game.adicionarCena("carregando", cena0);
 game.adicionarCena("jogo", cena1);

@@ -4,7 +4,7 @@ import Sprite from "./Sprite.js";
 import modeloMapa1 from "../maps/mapa1.js";
 import modeloMapa2 from "../maps/mapa2.js";
 
-export default class CenaJogo extends Cena{
+export default class CenaFase1 extends Cena{
     quandoColidir(a, b){
         //Colisão básica (elimina os dois)
         if(!this.aRemover.includes(a)){
