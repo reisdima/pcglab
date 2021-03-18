@@ -23,7 +23,7 @@ export default class CenaFase2 extends Cena{
             if(!this.aRemover.includes(b)){
                 this.aRemover.push(b);
             }
-            this.game.selecionaCena("fim");
+            this.game.selecionaCena("win");
         }
         if(a.tags.has("enemy") && b.tags.has("exit")){ // Se pc colidir com saída, não faz nada (por enquanto)
         }

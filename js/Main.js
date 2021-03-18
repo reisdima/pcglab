@@ -6,6 +6,7 @@ import InputManager from "./InputManager.js";
 import Game from "./Game.js";
 import CenaCarregando from "./CenaCarregando.js";
 import CenaFim from "./CenaFim.js";
+import CenaVitoria from "./CenaVitoria.js";
 
 const input = new InputManager();
 const mixer = new Mixer(10);
@@ -38,10 +39,12 @@ const cena0 = new CenaCarregando();
 const cena1 = new CenaFase1();
 const cena2 = new CenaFase2();
 const cenaFim = new CenaFim();
+const cenaVitoria = new CenaVitoria();
 game.adicionarCena("carregando", cena0);
 game.adicionarCena("fase1", cena1);
 game.adicionarCena("fase2", cena2);
 game.adicionarCena("fim", cenaFim);
+game.adicionarCena("win", cenaVitoria);
 
 game.iniciar();
 
