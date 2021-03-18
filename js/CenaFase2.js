@@ -52,15 +52,23 @@ export default class CenaFase2 extends Cena{
         // Define controle do pc
         pc.controlar = function(dt){
             if(cena.input.comandos.get("MOVE_ESQUERDA")){
+                this.direcao = "esq";
+                this.parado = "false";
                 this.vx = -150;
             } else if (cena.input.comandos.get("MOVE_DIREITA")){
+                this.direcao = "dir";
+                this.parado = "false";
                 this.vx = +150;
             } else {
                 this.vx = 0;
             }
             if(cena.input.comandos.get("MOVE_CIMA")){
+                this.direcao = "cima";
+                this.parado = "false";
                 this.vy = -150;
             } else if (cena.input.comandos.get("MOVE_BAIXO")){
+                this.direcao = "baixo";
+                this.parado = "false";
                 this.vy = +150;
             } else {
                 this.vy = 0;
@@ -72,6 +80,18 @@ export default class CenaFase2 extends Cena{
         function perseguePC(dt){
             this.vx = 25*Math.sign(pc.x - this.x);
             this.vy = 25*Math.sign(pc.y - this.y);
+            if(pc.x > this.x){
+                this.direcao = "dir";
+            }
+            if(pc.x < this.x){
+                this.direcao = "esq";
+            }
+            /*if (pc.y < this.y){
+                this.direcao = "cima";
+            }
+            if (pc.y > this.y){
+                this.direcao = "baixo";
+            }*/
         }
 
         // Cria inimigos
