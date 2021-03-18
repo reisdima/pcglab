@@ -108,8 +108,8 @@ export default class CenaFase1 extends Cena{
         this.adicionar(exit);
 
         // Cria moedas
-        this.adicionar(new Sprite({x: 200, y: 200, w: 10, h: 10, color: "lime", tags:["coin"]}));
-        this.adicionar(new Sprite({x: 200, y: 100, w: 10, h: 10, color: "lime", tags:["coin"]}));
+        this.adicionar(new Sprite({x: 200, y: 200, w: 12, h: 12, color: "lime", tags:["coin"]}));
+        this.adicionar(new Sprite({x: 200, y: 100, w: 12, h: 12, color: "lime", tags:["coin"]}));
 
 
                             // Criação de sprites experimental 

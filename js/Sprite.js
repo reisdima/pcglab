@@ -115,6 +115,10 @@ export default class Sprite{
                 ctx.strokeStyle = "blue";
                 ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
 
+            // Desenho e movimentos moeda
+            } else if(this.tags.has("coin")) {
+                ctx.drawImage(this.cena.assets.img("moeda"), 0, 0, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+            
             // Desenho e movimentos básicos
             } else {
                 ctx.fillStyle = this.color;

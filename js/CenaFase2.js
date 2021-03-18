@@ -105,7 +105,7 @@ export default class CenaFase2 extends Cena{
         this.adicionar(exit);
 
         // Cria moedas
-        const coin1 = new Sprite({x: 300, y: 100, w: 10, h: 10, color: "lime", tags:["coin"]});
+        const coin1 = new Sprite({x: 300, y: 100, w: 12, h: 12, color: "lime", tags:["coin"]});
         this.adicionar(coin1);
         
     }
