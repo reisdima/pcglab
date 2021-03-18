@@ -21,8 +21,10 @@ export default class CenaFase1 extends Cena{
         if(a.tags.has("pc") && b.tags.has("exit")){
             this.game.selecionaCena("fase2");
         }
+        if(a.tags.has("enemy") && b.tags.has("exit")){
+        }
 
-        console.log(this.aRemover);
+        //console.log(this.aRemover);
     }
 
     preparar(){

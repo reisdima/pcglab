@@ -1,9 +1,7 @@
 import Cena from "./Cena.js";
 import Mapa from "./Mapa.js";
 import Sprite from "./Sprite.js";
-import modeloMapa1 from "../maps/mapa1.js";
-import modeloMapa2 from "../maps/mapa2.js";
-import modeloMapaFase1 from "../maps/mapaFase1.js";
+import modeloMapaFase1 from "../maps/mapaFase2.js";
 
 export default class CenaFase2 extends Cena{
     quandoColidir(a, b){
@@ -15,14 +13,16 @@ export default class CenaFase2 extends Cena{
             this.aRemover.push(b);
         }
         if(a.tags.has("pc") && b.tags.has("enemy")){
-            this.assets.play("bruh");
             this.game.selecionaCena("fim");
+            this.assets.play("bruh");
         }
         if(a.tags.has("pc") && b.tags.has("exit")){
             this.game.selecionaCena("fim");
         }
+        if(a.tags.has("enemy") && b.tags.has("exit")){
+        }
 
-        console.log(this.aRemover);
+        //console.log(this.aRemover);
     }
 
     preparar(){
@@ -59,7 +59,7 @@ export default class CenaFase2 extends Cena{
             this.vy = 25*Math.sign(pc.y - this.y);
         }
 
-        const en1 = new Sprite({x:360, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]});
+        const en1 = new Sprite({x:360, y: 250, color:"darkblue", h: 20, w:20, controlar: perseguePC, tags:["enemy"]});
 
         this.adicionar(en1);
         //this.adicionar(new Sprite({x: 115, y:70, vy:10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
