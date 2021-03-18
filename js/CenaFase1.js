@@ -47,7 +47,7 @@ export default class CenaFase1 extends Cena{
         this.configuraMapa(mapa1);
 
         // Desenha o pc
-        const pc = new Sprite({x:50, y :150, h: 20, w:20});
+        const pc = new Sprite({x:50, y :150});
         pc.tags.add("pc");
 
         const cena = this;
@@ -55,15 +55,19 @@ export default class CenaFase1 extends Cena{
         // Define controle do pc
         pc.controlar = function(dt){
             if(cena.input.comandos.get("MOVE_ESQUERDA")){
+                this.direcao = "esq";
                 this.vx = -150;
             } else if (cena.input.comandos.get("MOVE_DIREITA")){
+                this.direcao = "dir";
                 this.vx = +150;
             } else {
                 this.vx = 0;
             }
             if(cena.input.comandos.get("MOVE_CIMA")){
+                this.direcao = "cima";
                 this.vy = -150;
             } else if (cena.input.comandos.get("MOVE_BAIXO")){
+                this.direcao = "baixo";
                 this.vy = +150;
             } else {
                 this.vy = 0;
@@ -78,13 +82,13 @@ export default class CenaFase1 extends Cena{
         }
 
         // Cria inimigos
-        const en1 = new Sprite({x:360, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]});
+        const en1 = new Sprite({x:360, color:"red", controlar: perseguePC, tags:["enemy"]});
         this.adicionar(en1);
-        this.adicionar(new Sprite({x: 115, y:70, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
-        this.adicionar(new Sprite({x: 115, y:160, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
+        this.adicionar(new Sprite({x: 115, y:70, color:"red", controlar: perseguePC, tags:["enemy"]}));
+        this.adicionar(new Sprite({x: 115, y:160, color:"red", controlar: perseguePC, tags:["enemy"]}));
 
         // Cria saída
-        const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, w: 32, h: 32, color: "yellow", tags:["exit"]});
+        const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, color: "yellow", tags:["exit"]});
         this.adicionar(exit);
 
         // Cria moedas

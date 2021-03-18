@@ -1,6 +1,6 @@
 export default class Sprite{
     // É responsável por modelar algo que se move na tela.
-    constructor({x=100, y=100, w=10, h=10, color="white", vx=0, vy=0, vida=0, controlar = ()=>{}, tags = []}={}){
+    constructor({x=100, y=100, w=30, h=30, color="white", vx=0, vy=0, vida=0, direcao="dir",controlar = ()=>{}, tags = []}={}){
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -12,29 +12,69 @@ export default class Sprite{
         this.mx = 0;
         this.my = 0;
         this.vida = vida;
+        this.direcao = direcao;
         this.controlar = controlar;
         this.tags = new Set();
         tags.forEach((tag)=>{
             this.tags.add(tag);
         });
+        this.pose = 0;
+        this.quadro = 0;
+        this.POSES_PERSONAGENS = [ // qmax: numero de poses em cada quadro // pv: velocidade da pose
+            {qmax: 7, pv: 9}, // Quadro (linha) 0
+            {qmax: 7, pv: 9}, // Quadro (linha) 1
+            {qmax: 7, pv: 9}, // Quadro (linha) 2
+            {qmax: 7, pv: 9}, // Quadro (linha) 3
+            {qmax: 8, pv: 9}, // Quadro (linha) 4
+            {qmax: 8, pv: 9}, // Quadro (linha) 5
+            {qmax: 8, pv: 9}, // Quadro (linha) 6
+            {qmax: 8, pv: 9}, // Quadro (linha) 7
+            {qmax: 9, pv: 9}, // Quadro (linha) 8 -----> Andar p/ cima
+            {qmax: 9, pv: 9}, // Quadro (linha) 9 -----> Andar p/ esquerda
+            {qmax: 9, pv: 9}, // Quadro (linha) 10 ----> Andar p/ baixo
+            {qmax: 9, pv: 9}  // Quadro (linha) 11 ----> Andar p/ direita
+        ];
     }
 
     desenhar(ctx){ 
         const SIZE = this.cena.mapa.SIZE;
 
         if(this.cena.mapa.tiles[this.my][this.mx] != 1){
-            ctx.fillStyle = this.color;
-            ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+            if(this.tags.has("pc")){
+                ctx.drawImage(this.cena.assets.img("garota"), 0*64, 11*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                ctx.strokeStyle = "blue";
+                ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+            } else if (this.tags.has("enemy")){
+                ctx.drawImage(this.cena.assets.img("esqueleto"), 0, 0, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                ctx.strokeStyle = "blue";
+                ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+            } else {
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+            }
+
+            // Modelo de desenho:
+              // sx, sy, sw, sh, dx, dy, dw, dh
+              // sx: x de origem; sy: y de origem; sw: w de origem; sh: h de origem 
+              // dx: x de destino; dy: y de destino; dw: w de destino; dh: h de origem;
+            
+            // Mostrar tile box
+            /*
             ctx.strokeStyle = "blue";
-            //ctx.strokeRect(this.mx * SIZE, this.my * SIZE, SIZE, SIZE);
+            ctx.strokeRect(this.mx * SIZE, this.my * SIZE, SIZE, SIZE);
+            */
         }
         else{
             this.x = this.randValue(43, ctx.canvas.width - 43);
             this.y = this.randValue(43, ctx.canvas.height - 43);
             ctx.fillStyle = this.color;
             ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+
+            // Mostrar tile box
+            /*
             ctx.strokeStyle = "blue";
-            //ctx.strokeRect(this.mx * SIZE, this.my * SIZE, SIZE, SIZE);
+            ctx.strokeRect(this.mx * SIZE, this.my * SIZE, SIZE, SIZE);
+            */
         }
 
     }
