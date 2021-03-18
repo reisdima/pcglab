@@ -1,6 +1,6 @@
 export default class Sprite{
     // É responsável por modelar algo que se move na tela.
-    constructor({x=100, y=100, w=30, h=30, color="white", vx=0, vy=0, vida=0, direcao="dir",controlar = ()=>{}, tags = []}={}){
+    constructor({x=100, y=100, w=30, h=30, color="white", vx=0, vy=0, vida=0, direcao="dir", parado="true",controlar = ()=>{}, tags = []}={}){
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -13,6 +13,7 @@ export default class Sprite{
         this.my = 0;
         this.vida = vida;
         this.direcao = direcao;
+        this.parado = parado;
         this.controlar = controlar;
         this.tags = new Set();
         tags.forEach((tag)=>{
@@ -40,29 +41,81 @@ export default class Sprite{
         const SIZE = this.cena.mapa.SIZE;
 
         if(this.cena.mapa.tiles[this.my][this.mx] != 1){
+            // Desenho e movimentos de pc
             if(this.tags.has("pc")){
                 if(this.direcao === "dir"){
                     this.quadro = (this.quadro >= this.POSES_PERSONAGENS[11].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[11].pv*this.cena.dt;
-                    ctx.drawImage(this.cena.assets.img("garota"), Math.floor(this.quadro)*64, 11*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    if(this.vx === 0 && this.vy === 0){
+                        ctx.drawImage(this.cena.assets.img("garota"), 0*64, 11*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    } else {
+                        ctx.drawImage(this.cena.assets.img("garota"), Math.floor(this.quadro)*64, 11*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    }
                 }
                 if(this.direcao == "esq"){
                     this.quadro = (this.quadro >= this.POSES_PERSONAGENS[9].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[9].pv*this.cena.dt;
-                    ctx.drawImage(this.cena.assets.img("garota"), Math.floor(this.quadro)*64, 9*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    if(this.vx === 0 && this.vy === 0){
+                        ctx.drawImage(this.cena.assets.img("garota"), 0*64, 9*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    } else {
+                        ctx.drawImage(this.cena.assets.img("garota"), Math.floor(this.quadro)*64, 9*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    }
                 }
                 if(this.direcao == "cima"){
                     this.quadro = (this.quadro >= this.POSES_PERSONAGENS[8].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[8].pv*this.cena.dt;
-                    ctx.drawImage(this.cena.assets.img("garota"), Math.floor(this.quadro)*64, 8*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    if(this.vx === 0 && this.vy === 0){
+                        ctx.drawImage(this.cena.assets.img("garota"), 0*64, 8*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    } else {
+                        ctx.drawImage(this.cena.assets.img("garota"), Math.floor(this.quadro)*64, 8*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    }
                 }
                 if(this.direcao == "baixo"){
                     this.quadro = (this.quadro >= this.POSES_PERSONAGENS[10].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[10].pv*this.cena.dt;
-                    ctx.drawImage(this.cena.assets.img("garota"), Math.floor(this.quadro)*64, 10*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    if(this.vx === 0 && this.vy === 0){
+                        ctx.drawImage(this.cena.assets.img("garota"), 0*64, 10*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    } else {
+                        ctx.drawImage(this.cena.assets.img("garota"), Math.floor(this.quadro)*64, 10*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    }
                 }
                 ctx.strokeStyle = "blue";
                 ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+
+            // Desenho e movimentos de enemy
             } else if (this.tags.has("enemy")){
-                ctx.drawImage(this.cena.assets.img("esqueleto"), 0, 0, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                if(this.direcao === "dir"){
+                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[11].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[11].pv*this.cena.dt;
+                    if(this.vx === 0 && this.vy === 0){
+                        ctx.drawImage(this.cena.assets.img("esqueleto"), 0*64, 11*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    } else {
+                        ctx.drawImage(this.cena.assets.img("esqueleto"), Math.floor(this.quadro)*64, 11*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    }
+                }
+                if(this.direcao == "esq"){
+                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[9].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[9].pv*this.cena.dt;
+                    if(this.vx === 0 && this.vy === 0){
+                        ctx.drawImage(this.cena.assets.img("esqueleto"), 0*64, 9*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    } else {
+                        ctx.drawImage(this.cena.assets.img("esqueleto"), Math.floor(this.quadro)*64, 9*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    }
+                }
+                if(this.direcao == "cima"){
+                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[8].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[8].pv*this.cena.dt;
+                    if(this.vx === 0 && this.vy === 0){
+                        ctx.drawImage(this.cena.assets.img("esqueleto"), 0*64, 8*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    } else {
+                        ctx.drawImage(this.cena.assets.img("esqueleto"), Math.floor(this.quadro)*64, 8*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    }
+                }
+                if(this.direcao == "baixo"){
+                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[10].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[10].pv*this.cena.dt;
+                    if(this.vx === 0 && this.vy === 0){
+                        ctx.drawImage(this.cena.assets.img("esqueleto"), 0*64, 10*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    } else {
+                        ctx.drawImage(this.cena.assets.img("esqueleto"), Math.floor(this.quadro)*64, 10*64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    }
+                }
                 ctx.strokeStyle = "blue";
                 ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+
+            // Desenho e movimentos básicos
             } else {
                 ctx.fillStyle = this.color;
                 ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
