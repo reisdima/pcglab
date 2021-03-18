@@ -1,5 +1,6 @@
 import AssetManager from "./AssetManager.js";
 import CenaFase1 from "./CenaFase1.js";
+import CenaFase2 from "./CenaFase2.js";
 import Mixer from "./Mixer.js";
 import InputManager from "./InputManager.js";
 import Game from "./Game.js";
@@ -35,10 +36,12 @@ const game = new Game(canvas, assets, input);
 
 const cena0 = new CenaCarregando();
 const cena1 = new CenaFase1();
-const cena2 = new CenaFim();
+const cena2 = new CenaFase2();
+const cenaFim = new CenaFim();
 game.adicionarCena("carregando", cena0);
-game.adicionarCena("jogo", cena1);
-game.adicionarCena("fim", cena2);
+game.adicionarCena("fase1", cena1);
+game.adicionarCena("fase2", cena2);
+game.adicionarCena("fim", cenaFim);
 
 game.iniciar();
 
