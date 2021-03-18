@@ -14,6 +14,7 @@ export default class Cena {
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.mapa?.desenhar(this.ctx);
+        this.desenharHud();
 
         if(this.assets.acabou()){
             for (let s = 0; s < this.sprites.length; s++) {
@@ -152,5 +153,10 @@ export default class Cena {
         this.idAnim = null;
         this.mapa = null;
         this.rodando = true;
+    }
+
+    
+    desenharHud(){
+        
     }
 }

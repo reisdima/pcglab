@@ -112,4 +112,14 @@ export default class CenaFase1 extends Cena{
         }*/
         
     }
+
+    desenharHud(){
+        // Fase
+        this.ctx.fillStyle = "yellow";
+        this.ctx.fillText("Fase 1", 30, 20);
+
+        // Moedas
+        this.ctx.fillStyle = "yellow";
+        this.ctx.fillText("Moedas: " + this.game.moedas, this.canvas.width - 60, 20);
+    }
 }
