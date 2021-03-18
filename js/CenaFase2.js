@@ -25,6 +25,12 @@ export default class CenaFase2 extends Cena{
             }
             this.game.selecionaCena("win");
         }
+        if(a.tags.has("pc") && b.tags.has("coin")){ // Se pc colidir com moeda, remove moeda e incrementa contador
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+            }
+            this.game.moedas += 1;
+        }
         if(a.tags.has("enemy") && b.tags.has("exit")){ // Se pc colidir com saída, não faz nada (por enquanto)
         }
 
@@ -37,11 +43,13 @@ export default class CenaFase2 extends Cena{
         mapa1.carregaMapa(modeloMapaFase1);
         this.configuraMapa(mapa1);
 
+        // Desenha o pc
         const pc = new Sprite({x:50, y :150, h: 20, w:20});
         pc.tags.add("pc");
 
         const cena = this;
 
+        // Define controle do pc
         pc.controlar = function(dt){
             if(cena.input.comandos.get("MOVE_ESQUERDA")){
                 this.vx = -150;
@@ -60,19 +68,25 @@ export default class CenaFase2 extends Cena{
         };
         this.adicionar(pc);
 
+        // Função de perseguição
         function perseguePC(dt){
             this.vx = 25*Math.sign(pc.x - this.x);
             this.vy = 25*Math.sign(pc.y - this.y);
         }
 
+        // Cria inimigos
         const en1 = new Sprite({x:360, y: 250, color:"darkblue", h: 20, w:20, controlar: perseguePC, tags:["enemy"]});
-
         this.adicionar(en1);
         //this.adicionar(new Sprite({x: 115, y:70, vy:10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
         //this.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
 
+        // Cria saída
         const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, w: 32, h: 32, color: "yellow", tags:["exit"]});
         this.adicionar(exit);
+
+        // Cria moedas
+        const coin1 = new Sprite({x: 300, y: 100, w: 10, h: 10, color: "lime", tags:["coin"]});
+        this.adicionar(coin1);
         
     }
 

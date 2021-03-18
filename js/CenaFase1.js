@@ -26,6 +26,12 @@ export default class CenaFase1 extends Cena{
             }
             this.game.selecionaCena("fase2");
         }
+        if(a.tags.has("pc") && b.tags.has("coin")){ // Se pc colidir com moeda, remove moeda e incrementa contador
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+            }
+            this.game.moedas += 1;
+        }
         if(a.tags.has("enemy") && b.tags.has("exit")){ // Se pc colidir com saída, não faz nada (por enquanto)
         }
 
@@ -71,7 +77,7 @@ export default class CenaFase1 extends Cena{
             this.vy = 25*Math.sign(pc.y - this.y);
         }
 
-        // Cria inimigo
+        // Cria inimigos
         const en1 = new Sprite({x:360, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]});
         this.adicionar(en1);
         this.adicionar(new Sprite({x: 115, y:70, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
@@ -80,6 +86,10 @@ export default class CenaFase1 extends Cena{
         // Cria saída
         const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, w: 32, h: 32, color: "yellow", tags:["exit"]});
         this.adicionar(exit);
+
+        // Cria moedas
+        this.adicionar(new Sprite({x: 200, y: 200, w: 10, h: 10, color: "lime", tags:["coin"]}));
+        this.adicionar(new Sprite({x: 200, y: 100, w: 10, h: 10, color: "lime", tags:["coin"]}));
 
 
                             // Criação de sprites experimental 
