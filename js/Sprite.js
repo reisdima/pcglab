@@ -35,6 +35,9 @@ export default class Sprite{
             {qmax: 9, pv: 12}, // Quadro (linha) 10 ----> Andar p/ baixo
             {qmax: 9, pv: 12}  // Quadro (linha) 11 ----> Andar p/ direita
         ];
+        this.POSES_MOEDA = [
+            {qmax: 6, pv: 9}
+        ];
     }
 
     desenhar(ctx){ 
@@ -117,7 +120,8 @@ export default class Sprite{
 
             // Desenho e movimentos moeda
             } else if(this.tags.has("coin")) {
-                ctx.drawImage(this.cena.assets.img("moeda"), 0, 0, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                this.quadro = (this.quadro >= this.POSES_MOEDA[0].qmax - 1) ? 0 : this.quadro + this.POSES_MOEDA[0].pv*this.cena.dt;
+                ctx.drawImage(this.cena.assets.img("moeda"), Math.floor(this.quadro)*32, 0, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
             
             // Desenho e movimentos básicos
             } else {
