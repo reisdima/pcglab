@@ -6,20 +6,26 @@ import modeloMapaFase1 from "../maps/mapaFase2.js";
 export default class CenaFase2 extends Cena{
     quandoColidir(a, b){
         //Colisão básica (elimina os dois)
-        if(!this.aRemover.includes(a)){
-            this.aRemover.push(a);
-        }
-        if(!this.aRemover.includes(b)){
-            this.aRemover.push(b);
-        }
-        if(a.tags.has("pc") && b.tags.has("enemy")){
-            this.game.selecionaCena("fim");
+        if(a.tags.has("pc") && b.tags.has("enemy")){ // Se pc colidir com inimigo, remove os dois, emite som e Game Over
+            if(!this.aRemover.includes(a)){
+                this.aRemover.push(a);
+            }
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+            }
             this.assets.play("bruh");
-        }
-        if(a.tags.has("pc") && b.tags.has("exit")){
             this.game.selecionaCena("fim");
         }
-        if(a.tags.has("enemy") && b.tags.has("exit")){
+        if(a.tags.has("pc") && b.tags.has("exit")){ // Se pc colidir com saída, remove os dois e vai pra próx. fase
+            if(!this.aRemover.includes(a)){
+                this.aRemover.push(a);
+            }
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+            }
+            this.game.selecionaCena("fim");
+        }
+        if(a.tags.has("enemy") && b.tags.has("exit")){ // Se pc colidir com saída, não faz nada (por enquanto)
         }
 
         //console.log(this.aRemover);

@@ -7,21 +7,26 @@ import modeloMapaFase1 from "../maps/mapaFase1.js";
 
 export default class CenaFase1 extends Cena{
     quandoColidir(a, b){
-        //Colisão básica (elimina os dois)
-        if(!this.aRemover.includes(a)){
-            this.aRemover.push(a);
-        }
-        if(!this.aRemover.includes(b)){
-            this.aRemover.push(b);
-        }
-        if(a.tags.has("pc") && b.tags.has("enemy")){
+        if(a.tags.has("pc") && b.tags.has("enemy")){ // Se pc colidir com inimigo, remove os dois, emite som e Game Over
+            if(!this.aRemover.includes(a)){
+                this.aRemover.push(a);
+            }
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+            }
             this.assets.play("bruh");
             this.game.selecionaCena("fim");
         }
-        if(a.tags.has("pc") && b.tags.has("exit")){
+        if(a.tags.has("pc") && b.tags.has("exit")){ // Se pc colidir com saída, remove os dois e vai pra próx. fase
+            if(!this.aRemover.includes(a)){
+                this.aRemover.push(a);
+            }
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+            }
             this.game.selecionaCena("fase2");
         }
-        if(a.tags.has("enemy") && b.tags.has("exit")){
+        if(a.tags.has("enemy") && b.tags.has("exit")){ // Se pc colidir com saída, não faz nada (por enquanto)
         }
 
         //console.log(this.aRemover);
@@ -69,8 +74,8 @@ export default class CenaFase1 extends Cena{
         // Cria inimigo
         const en1 = new Sprite({x:360, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]});
         this.adicionar(en1);
-        //this.adicionar(new Sprite({x: 115, y:70, vy:10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
-        //this.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
+        this.adicionar(new Sprite({x: 115, y:70, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
+        this.adicionar(new Sprite({x: 115, y:160, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
 
         // Cria saída
         const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, w: 32, h: 32, color: "yellow", tags:["exit"]});

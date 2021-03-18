@@ -77,6 +77,14 @@ export default class Cena {
     }
 
     quandoColidir(a, b){
+        /*//Colisão básica (elimina os dois)
+        if(!this.aRemover.includes(a)){
+            this.aRemover.push(a);
+        }
+        if(!this.aRemover.includes(b)){
+            this.aRemover.push(b);
+        }
+
         //Colisão básica (elimina os dois)
         if(a.vida === 0 && b.vida === 0){
             if(!this.aRemover.includes(a)){
