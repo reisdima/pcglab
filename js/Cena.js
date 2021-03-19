@@ -42,6 +42,17 @@ export default class Cena {
         this.t0 = this.t0 ?? t;
         this.dt = (t- this.t0)/1000;
 
+        if(this.input.comandos.get("MOSTRA_HITBOX")){
+            for (let s = 0; s < this.sprites.length; s++) {
+                if(this.sprites[s].hitbox === "false"){
+                    this.sprites[s].hitbox = "true";
+                } else {
+                    this.sprites[s].hitbox = "false";
+                }
+                console.log(this.sprites[s].hitbox);
+            }
+        }
+
         this.passo(this.dt);
         this.desenhar();
         this.checaColisao();
