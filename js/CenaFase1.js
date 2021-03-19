@@ -47,7 +47,7 @@ export default class CenaFase1 extends Cena{
         this.configuraMapa(mapa1);
 
         // Desenha o pc
-        const pc = new Sprite({x:80, y :150});
+        const pc = new Sprite({x:280, y :150, w:26, h: 50});
         pc.tags.add("pc");
 
         const cena = this;
@@ -99,9 +99,9 @@ export default class CenaFase1 extends Cena{
 
         // Cria inimigos
         const en1 = new Sprite({x:360, color:"red", controlar: perseguePC, tags:["enemy"]});
-        this.adicionar(en1);
-        this.adicionar(new Sprite({x: 255, y:70, color:"red", controlar: perseguePC, tags:["enemy"]}));
-        this.adicionar(new Sprite({x: 235, y:160, color:"red", controlar: perseguePC, tags:["enemy"]}));
+        //this.adicionar(en1);
+        //this.adicionar(new Sprite({x: 255, y:70, color:"red", controlar: perseguePC, tags:["enemy"]}));
+        //this.adicionar(new Sprite({x: 235, y:160, color:"red", controlar: perseguePC, tags:["enemy"]}));
 
         // Cria saída
         const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, w: 32, h: 48, color: "yellow", tags:["exit"]});

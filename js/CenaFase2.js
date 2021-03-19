@@ -44,7 +44,7 @@ export default class CenaFase2 extends Cena{
         this.configuraMapa(mapa1);
 
         // Desenha o pc
-        const pc = new Sprite({x:50, y :150});
+        const pc = new Sprite({x:50, y :150, w:26, h: 50});
         pc.tags.add("pc");
 
         const cena = this;
