@@ -14,6 +14,7 @@ const assets = new AssetManager(mixer);
 
 assets.carregaImagem("garota", "assets/garota.png"); // 64x64 
 assets.carregaImagem("esqueleto", "assets/skelly.png"); // 64x64
+assets.carregaImagem("skelly", "assets/skelly2.png"); // 32x50
 assets.carregaImagem("orc", "assets/orc.png"); // 64x64
 assets.carregaImagem("guerreiro", "assets/guerreiro.png"); // 30x54
 assets.carregaImagem("moeda", "assets/moeda.png"); // 32x32
