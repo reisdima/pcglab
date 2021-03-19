@@ -124,6 +124,8 @@ export default class Sprite{
                 ctx.drawImage(this.cena.assets.img("moeda"), Math.floor(this.quadro)*32, 0, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
             
             // Desenho e movimentos básicos
+            } else if(this.tags.has("exit")){
+                ctx.drawImage(this.cena.assets.img("porta"), this.x - this.w/2, this.y - this.h/2, this.w, this.h);
             } else {
                 ctx.fillStyle = this.color;
                 ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);

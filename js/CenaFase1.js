@@ -104,7 +104,7 @@ export default class CenaFase1 extends Cena{
         this.adicionar(new Sprite({x: 115, y:160, color:"red", controlar: perseguePC, tags:["enemy"]}));
 
         // Cria saída
-        const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, color: "yellow", tags:["exit"]});
+        const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, h: 48, color: "yellow", tags:["exit"]});
         this.adicionar(exit);
 
         // Cria moedas
