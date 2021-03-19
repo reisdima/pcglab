@@ -21,6 +21,7 @@ assets.carregaImagem("porta", "assets/porta.png"); // 32x48
 assets.carregaImagem("parede", "assets/parede.png");
 assets.carregaImagem("grama", "assets/grama.png");
 assets.carregaAudio("moeda", "assets/coin.wav");
+assets.carregaAudio("moeda2", "assets/coin2.wav");
 assets.carregaAudio("boom", "assets/boom.wav");
 assets.carregaAudio("bruh", "assets/bruh.mp3");
 

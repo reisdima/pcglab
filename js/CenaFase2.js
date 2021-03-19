@@ -27,6 +27,7 @@ export default class CenaFase2 extends Cena{
         }
         if(a.tags.has("pc") && b.tags.has("coin")){ // Se pc colidir com moeda, remove moeda e incrementa contador
             if(!this.aRemover.includes(b)){
+                this.assets.play("moeda2");
                 this.aRemover.push(b);
             }
             this.game.moedas += 1;
@@ -44,7 +45,7 @@ export default class CenaFase2 extends Cena{
         this.configuraMapa(mapa1);
 
         // Desenha o pc
-        const pc = new Sprite({x:50, y :150, w:26, h: 50});
+        const pc = new Sprite({x:50, y :150, w:22, h: 46});
         pc.tags.add("pc");
 
         const cena = this;
