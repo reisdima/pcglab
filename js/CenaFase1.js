@@ -24,6 +24,7 @@ export default class CenaFase1 extends Cena{
             if(!this.aRemover.includes(b)){
                 this.aRemover.push(b);
             }
+            this.assets.play("porta");
             this.game.selecionaCena("fase2");
         }
         if(a.tags.has("pc") && b.tags.has("coin")){ // Se pc colidir com moeda, remove moeda e incrementa contador
