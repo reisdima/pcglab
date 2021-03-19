@@ -39,7 +39,7 @@ export default class CenaFase2 extends Cena{
 
     preparar(){
         super.preparar();
-        const mapa1 = new Mapa(10, 14, 32);
+        const mapa1 = new Mapa(10, 14, 48);
         mapa1.carregaMapa(modeloMapaFase1);
         this.configuraMapa(mapa1);
 
@@ -101,11 +101,11 @@ export default class CenaFase2 extends Cena{
         //this.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
 
         // Cria saída
-        const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, h:48, color: "yellow", tags:["exit"]});
+        const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, w: 32, h:48, color: "yellow", tags:["exit"]});
         this.adicionar(exit);
 
         // Cria moedas
-        const coin1 = new Sprite({x: 300, y: 100, w: 12, h: 12, color: "lime", tags:["coin"]});
+        const coin1 = new Sprite({x: 300, y: 100, w: 16, h: 16, color: "lime", tags:["coin"]});
         this.adicionar(coin1);
         
     }

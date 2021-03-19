@@ -24,8 +24,8 @@ assets.carregaAudio("boom", "assets/boom.wav");
 assets.carregaAudio("bruh", "assets/bruh.mp3");
 
 const canvas = document.querySelector("canvas");
-canvas.width = 16*32;
-canvas.height = 12*32;
+canvas.width = 16*48;
+canvas.height = 12*48;
 
 input.configurarTeclado({
     ArrowLeft: "MOVE_ESQUERDA",
