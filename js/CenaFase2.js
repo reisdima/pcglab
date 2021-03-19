@@ -13,7 +13,7 @@ export default class CenaFase2 extends Cena{
             if(!this.aRemover.includes(b)){
                 this.aRemover.push(b);
             }
-            this.assets.play("bruh");
+            this.assets.play("hurt");
             this.game.selecionaCena("fim");
         }
         if(a.tags.has("pc") && b.tags.has("exit")){ // Se pc colidir com saída, remove os dois e vai pra próx. fase

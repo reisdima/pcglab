@@ -25,6 +25,7 @@ assets.carregaAudio("moeda2", "assets/coin2.wav");
 assets.carregaAudio("porta", "assets/porta.wav");
 assets.carregaAudio("boom", "assets/boom.wav");
 assets.carregaAudio("bruh", "assets/bruh.mp3");
+assets.carregaAudio("hurt", "assets/hurt.mp3");
 
 const canvas = document.querySelector("canvas");
 canvas.width = 16*48;
@@ -60,12 +61,6 @@ document.addEventListener("keydown", (e) => {
             break;
         case "p":
             game.parar(); 
-            break;
-        case "c":
-            assets.play("moeda"); 
-            break;
-        case "b":
-            assets.play("boom"); 
             break;
     }
 })
