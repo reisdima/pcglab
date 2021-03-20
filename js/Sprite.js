@@ -132,12 +132,11 @@ export default class Sprite{
 
             // Desenho e movimento fantasma
             } else if(this.tags.has("ghost")) {
-                this.quadro = (this.quadro >= this.POSES_FANTASMA[0].qmax - 1) ? 0 : this.quadro + this.POSES_FANTASMA[0].pv*this.cena.dt;
                 if(this.direcao === "dir"){
-                    ctx.drawImage(this.cena.assets.img("ghost"), Math.floor(this.quadro)*64, 0, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    ctx.drawImage(this.cena.assets.img("ghost"), 0, 0, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
                 }
                 if(this.direcao === "esq"){
-                    ctx.drawImage(this.cena.assets.img("ghost"), Math.floor(this.quadro)*64, 64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                    ctx.drawImage(this.cena.assets.img("ghost"), 0, 64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
                 }
             
             // Desenho e movimentos básicos

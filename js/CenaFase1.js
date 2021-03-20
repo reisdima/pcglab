@@ -29,6 +29,7 @@ export default class CenaFase1 extends Cena{
         }
         if(a.tags.has("pc") && b.tags.has("coin")){ // Se pc colidir com moeda, remove moeda e incrementa contador
             if(!this.aRemover.includes(b)){
+                //this.mapa.tiles[0][0] = 0
                 this.assets.play("moeda2");
                 this.aRemover.push(b);
             }
@@ -93,6 +94,7 @@ export default class CenaFase1 extends Cena{
         this.adicionar(new Sprite({x: 408, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "esq"}));
 
         this.adicionar(new Sprite({x: 408, y:13*48/2, w: 32, h: 32, controlar: perseguePC, color:"red", tags:["ghost"], direcao: "esq"}));
+        this.adicionar(new Sprite({x: 72, y:72, w: 32, h: 32, controlar: perseguePC, color:"red", tags:["ghost"], direcao: "esq"}));
         
         // Cria saída
         const exit = new Sprite({x: 17*48 - 64, y: 13*48/2, w: 32, h: 48, tags:["exit"]});
