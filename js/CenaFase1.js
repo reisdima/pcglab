@@ -49,7 +49,7 @@ export default class CenaFase1 extends Cena{
         this.configuraMapa(mapa1);
 
         // Desenha o pc
-        const pc = new Sprite({x: 72, y :13*48/2, w:20, h: 44});
+        const pc = new Sprite({x: 72, y :13*48/2, w:18, h: 42});
         pc.tags.add("pc");
 
         const cena = this;
@@ -89,6 +89,8 @@ export default class CenaFase1 extends Cena{
         this.adicionar(new Sprite({x: 744, y:168, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "esq"}));
         this.adicionar(new Sprite({x: 72, y:456, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "dir"}));
         this.adicionar(new Sprite({x: 744, y:456, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "esq"}));
+        this.adicionar(new Sprite({x: 408, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "dir"}));
+        this.adicionar(new Sprite({x: 408, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "esq"}));
         
         // Cria saída
         const exit = new Sprite({x: 17*48 - 64, y: 13*48/2, w: 32, h: 48, tags:["exit"]});
@@ -151,16 +153,16 @@ export default class CenaFase1 extends Cena{
             // Função de movimentação básica
             function movimentoBasico(dt){
                 if(this.direcao === "dir"){
-                    this.vx = 50;
+                    this.vx = 60;
                 }
                 if(this.direcao === "esq"){
-                    this.vx = -50;
+                    this.vx = -60;
                 }
                 if(this.direcao === "cima"){
-                    this.vy = -50;
+                    this.vy = -60;
                 }
                 if(this.direcao === "baixo"){
-                    this.vy = 50;
+                    this.vy = 60;
                 }
                 
                 //console.log(this.direcao);
