@@ -20,8 +20,9 @@ assets.carregaImagem("guerreiro", "assets/guerreiro.png"); // 30x54
 assets.carregaImagem("moeda", "assets/moeda.png"); // 32x32
 assets.carregaImagem("porta", "assets/porta.png"); // 32x48
 assets.carregaImagem("ghost", "assets/ghost.png"); // 64x64
-assets.carregaImagem("parede", "assets/parede.png");
-assets.carregaImagem("grama", "assets/grama.png");
+assets.carregaImagem("parede", "assets/parede.png"); //64x64
+assets.carregaImagem("grama", "assets/grama.png"); //64x64
+assets.carregaImagem("rocha", "assets/rochaNegra.png"); //64x64
 assets.carregaAudio("moeda", "assets/coin.wav");
 assets.carregaAudio("moeda2", "assets/coin2.wav");
 assets.carregaAudio("porta", "assets/porta.wav");

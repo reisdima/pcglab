@@ -27,7 +27,7 @@ export default class Mapa{
                         ctx.fillStyle = "red";
                         ctx.lineWidth = 2;
                         ctx.strokeStyle = "orange"; 
-                        ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);
+                        ctx.drawImage(this.cena.assets.img("rocha"), c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);
                     break;
                     default:
                         ctx.fillStyle = "black";
