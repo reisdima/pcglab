@@ -12,10 +12,7 @@ const input = new InputManager();
 const mixer = new Mixer(10);
 const assets = new AssetManager(mixer);
 
-assets.carregaImagem("garota", "assets/garota.png"); // 64x64 
-assets.carregaImagem("esqueleto", "assets/skelly.png"); // 64x64
 assets.carregaImagem("skelly", "assets/skelly2.png"); // 32x50
-assets.carregaImagem("orc", "assets/orc.png"); // 64x64
 assets.carregaImagem("guerreiro", "assets/guerreiro.png"); // 30x54
 assets.carregaImagem("moeda", "assets/moeda.png"); // 32x32
 assets.carregaImagem("alavanca", "assets/alavanca.png"); // 32x32
@@ -25,13 +22,10 @@ assets.carregaImagem("parede", "assets/parede.png"); //64x64
 assets.carregaImagem("grama", "assets/grama.png"); //64x64
 assets.carregaImagem("rocha", "assets/rochaNegra.png"); //64x64
 
-assets.carregaAudio("moeda", "assets/coin.wav");
 assets.carregaAudio("moeda2", "assets/coin2.wav");
 assets.carregaAudio("porta", "assets/porta.wav");
-assets.carregaAudio("boom", "assets/boom.wav");
 assets.carregaAudio("click", "assets/click.wav");
 assets.carregaAudio("ossos", "assets/ossos.wav");
-assets.carregaAudio("bruh", "assets/bruh.mp3");
 assets.carregaAudio("hurt", "assets/hurt.mp3");
 
 const canvas = document.querySelector("canvas");
