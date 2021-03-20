@@ -29,7 +29,6 @@ export default class CenaFase1 extends Cena{
         }
         if(a.tags.has("pc") && b.tags.has("coin")){ // Se pc colidir com moeda, remove moeda e incrementa contador
             if(!this.aRemover.includes(b)){
-                //this.mapa.tiles[0][0] = 0
                 this.assets.play("moeda2");
                 this.aRemover.push(b);
             }
