@@ -60,6 +60,7 @@ export default class CenaFase1 extends Cena{
             if(!this.aRemover.includes(a)){
                 this.assets.play("ossos");
                 this.aRemover.push(a);
+                this.adicionar(new Sprite({x: b.x - b.w/2, y: b.y - b.h/2, w: 16, h: 16, tags:["coin"]}));
             }
         }
 
