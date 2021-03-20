@@ -21,6 +21,7 @@ assets.carregaImagem("ghost", "assets/ghost.png"); // 64x64
 assets.carregaImagem("parede", "assets/parede.png"); //64x64
 assets.carregaImagem("grama", "assets/grama.png"); //64x64
 assets.carregaImagem("rocha", "assets/rochaNegra.png"); //64x64
+assets.carregaImagem("background", "assets/background.png"); //816x624
 
 assets.carregaAudio("moeda2", "assets/coin2.wav");
 assets.carregaAudio("porta", "assets/porta.wav");

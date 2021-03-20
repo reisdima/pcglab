@@ -19,3 +19,4 @@ export default mapaFase1;
 
 // 0: Ar
 // 1: Parede
+// 2: Rocha
