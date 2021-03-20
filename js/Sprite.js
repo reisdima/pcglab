@@ -142,6 +142,14 @@ export default class Sprite{
                     ctx.strokeStyle = "blue";
                     ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
                 }
+
+            // Desenho e movimento alavanca
+            } else if(this.tags.has("alavanca")){
+                if(!this.tags.has("ativa")){
+                    ctx.drawImage(this.cena.assets.img("alavanca"), 0, 0, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                } else {
+                    ctx.drawImage(this.cena.assets.img("alavanca"), 0, 32, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                }
             
             // Desenho e movimentos básicos
             } else if(this.tags.has("exit")){
@@ -161,22 +169,21 @@ export default class Sprite{
             ctx.strokeStyle = "blue";
             ctx.strokeRect(this.mx * SIZE, this.my * SIZE, SIZE, SIZE);
             */
-        }
-        else{
+        
+        } else  {
             //this.x = this.randValue(43, ctx.canvas.width - 43);
             //this.y = this.randValue(43, ctx.canvas.height - 43);
             //ctx.fillStyle = this.color;
             //ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-
+    
             // Mostrar tile box
             /*
             ctx.strokeStyle = "blue";
             ctx.strokeRect(this.mx * SIZE, this.my * SIZE, SIZE, SIZE);
             */
         }
-
     }
-
+    
     controlar(dt){
         
     }

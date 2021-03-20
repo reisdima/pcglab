@@ -35,6 +35,27 @@ export default class CenaFase1 extends Cena{
             }
             this.game.moedas += 1;
         }
+        if(a.tags.has("pc") && b.tags.has("alavanca")){ // Se pc colidir com alavanca
+            if(!b.tags.has("ativa")){
+                this.assets.play("click");
+                if(b.tags.has("a1")){
+                    b.tags.add("ativa");
+                    this.mapa.tiles[5][7] = 1;
+                    this.mapa.tiles[5][8] = 0;
+                    this.mapa.tiles[5][9] = 1;
+                    this.mapa.tiles[6][7] = 0;
+                    this.mapa.tiles[6][9] = 0;
+                    this.mapa.tiles[7][7] = 1;
+                    this.mapa.tiles[7][8] = 0;
+                    this.mapa.tiles[7][9] = 1;
+
+                }
+                if(b.tags.has("a2")){
+                    b.tags.add("ativa");
+                    this.mapa.tiles[6][14] = 0;
+                }
+            }
+        }
         if(a.tags.has("esqueleto") && b.tags.has("ghost")){ // Se esqueleto colidir com fantasma, esqueleto morre
             if(!this.aRemover.includes(a)){
                 this.aRemover.push(a);
@@ -79,10 +100,11 @@ export default class CenaFase1 extends Cena{
                 this.vy = 0;
             }
         };
+        
         this.adicionar(pc);
 
         
-        // Cria inimigos
+        // Cria esqueletos
         //const en1 = new Sprite({x:360, w: 24, h: 42, controlar: perseguePC, tags:["esqueleto"]});
         //this.adicionar(en1);
         this.adicionar(new Sprite({x: 263, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "baixo"}));
@@ -96,8 +118,14 @@ export default class CenaFase1 extends Cena{
         this.adicionar(new Sprite({x: 408, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "dir"}));
         this.adicionar(new Sprite({x: 408, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "esq"}));
 
-        this.adicionar(new Sprite({x: 408, y:13*48/2, w: 32, h: 32, controlar: perseguePC, color:"red", tags:["ghost"], direcao: "esq"}));
+        // Cria alavancas
+        this.adicionar(new Sprite({x: 646, y:13*48/2, w: 32, h: 32, tags:["alavanca","a1"]}));
+        this.adicionar(new Sprite({x: 408, y:13*48/2, w: 32, h: 32, tags:["alavanca","a2"]}));
+
+        // Cria fantasma
+        this.adicionar(new Sprite({x: 408, y:13*48/2, w: 32, h: 32, controlar: perseguePC, tags:["ghost"], direcao: "esq"}));
         //this.adicionar(new Sprite({x: 72, y:72, w: 32, h: 32, controlar: perseguePC, color:"red", tags:["ghost"], direcao: "esq"}));
+
         
         // Cria saída
         const exit = new Sprite({x: 17*48 - 64, y: 13*48/2, w: 32, h: 48, tags:["exit"]});
