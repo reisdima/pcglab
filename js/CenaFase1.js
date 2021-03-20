@@ -58,22 +58,18 @@ export default class CenaFase1 extends Cena{
         pc.controlar = function(dt){
             if(cena.input.comandos.get("MOVE_ESQUERDA")){
                 this.direcao = "esq";
-                this.parado = "false";
                 this.vx = -150;
             } else if (cena.input.comandos.get("MOVE_DIREITA")){
                 this.direcao = "dir";
-                this.parado = "false";
                 this.vx = +150;
             } else {
                 this.vx = 0;
             }
             if(cena.input.comandos.get("MOVE_CIMA")){
                 this.direcao = "cima";
-                this.parado = "false";
                 this.vy = -150;
             } else if (cena.input.comandos.get("MOVE_BAIXO")){
                 this.direcao = "baixo";
-                this.parado = "false";
                 this.vy = +150;
             } else {
                 this.vy = 0;
@@ -81,73 +77,97 @@ export default class CenaFase1 extends Cena{
         };
         this.adicionar(pc);
 
-        // Função de perseguição
-        function perseguePC(dt){
-            this.vx = 25*Math.sign(pc.x - this.x);
-            this.vy = 25*Math.sign(pc.y - this.y);
-            if(pc.x > this.x){
-                this.direcao = "dir";
-            }
-            if(pc.x < this.x){
-                this.direcao = "esq";
-            }
-            /*if (pc.y < this.y){
-                this.direcao = "cima";
-            }
-            if (pc.y > this.y){
-                this.direcao = "baixo";
-            }*/
-        }
-
+        
         // Cria inimigos
-        const en1 = new Sprite({x:360, w: 28, h: 46, controlar: perseguePC, tags:["enemy"]});
+        const en1 = new Sprite({x:360, w: 24, h: 42, controlar: perseguePC, tags:["enemy"]});
         //this.adicionar(en1);
-        //this.adicionar(new Sprite({x: 255, y:70, w: 28, h: 46, color:"red", controlar: perseguePC, tags:["enemy"]}));
-        //this.adicionar(new Sprite({x: 235, y:160, w: 28, h: 46, color:"red", controlar: perseguePC, tags:["enemy"]}));
-
+        this.adicionar(new Sprite({x: 263, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "baixo"}));
+        this.adicionar(new Sprite({x: 263, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "cima"}));
+        this.adicionar(new Sprite({x: 552, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "baixo"}));
+        this.adicionar(new Sprite({x: 552, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "cima"}));
+        this.adicionar(new Sprite({x: 72, y:168, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "dir"}));
+        this.adicionar(new Sprite({x: 744, y:168, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "esq"}));
+        this.adicionar(new Sprite({x: 72, y:456, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "dir"}));
+        this.adicionar(new Sprite({x: 744, y:456, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "esq"}));
+        
         // Cria saída
         const exit = new Sprite({x: 17*48 - 64, y: 13*48/2, w: 32, h: 48, tags:["exit"]});
         this.adicionar(exit);
-
+        
         // Cria moedas
         this.adicionar(new Sprite({x: 17*48 - 72, y: 72, w: 16, h: 16, tags:["coin"]}));
         this.adicionar(new Sprite({x: 72, y: 72, w: 16, h: 16, tags:["coin"]}));
         this.adicionar(new Sprite({x: 17*48 - 72, y: 554, w: 16, h: 16, tags:["coin"]}));
         this.adicionar(new Sprite({x: 72, y: 554, w: 16, h: 16, tags:["coin"]}));
-
+        
 
                             // Criação de sprites experimental 
-        
+                            
         /*const mapa2 = new Mapa(10, 14, 32);
         const cena = this;
         mapa2.carregaMapa(modeloMapa2);
         cena.configuraMapa(mapa2);
-
+        
         // Adiciona sprites mais fortes ("Protagonistas")
         cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43), w:20, h:20,
                                     vy: randValue(-200, 200), vx: randValue(-200,200), color:"yellow", vida: 1000}));
-        cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43), w:20, h:20,
+                                    cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43), w:20, h:20,
                                     vy: randValue(-200, 200), vx: randValue(-200,200), color:"#BA55D3", vida: 1000}));
         cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43), w:20, h:20,
-                                    vy: randValue(-200, 200), vx: randValue(-200,200), color:"white", vida: 1000}));
+            vy: randValue(-200, 200), vx: randValue(-200,200), color:"white", vida: 1000}));
         cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43), w:20, h:20,
                                     vy: randValue(-200, 200), vx: randValue(-200,200), color:"#00FFFF", vida: 1000}));
-
-        // Adiciona sprites "inimigos" a cada 4000 ms (4 segundos)
+                                    
+                                    // Adiciona sprites "inimigos" a cada 4000 ms (4 segundos)
         setInterval(() => {
             cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43),
-                                        vy: randValue(-100, 100), vx: randValue(-100,100), color:"red"}));
-        }, 4000);
+                vy: randValue(-100, 100), vx: randValue(-100,100), color:"red"}));
+            }, 4000);
+            
+            function randValue(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }*/
+            
+            // Função de movimentação por perseguição
+            function perseguePC(dt){
+                this.vx = 25*Math.sign(pc.x - this.x);
+                this.vy = 25*Math.sign(pc.y - this.y);
+                if(pc.x > this.x){
+                    this.direcao = "dir";
+                }
+                if(pc.x < this.x){
+                    this.direcao = "esq";
+                }
+                /*if (pc.y < this.y){
+                    this.direcao = "cima";
+                }
+                if (pc.y > this.y){
+                    this.direcao = "baixo";
+                }*/
+            }
 
-        function randValue(min, max) {
-            min = Math.ceil(min);
-            max = Math.floor(max);
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }*/
+            // Função de movimentação básica
+            function movimentoBasico(dt){
+                if(this.direcao === "dir"){
+                    this.vx = 50;
+                }
+                if(this.direcao === "esq"){
+                    this.vx = -50;
+                }
+                if(this.direcao === "cima"){
+                    this.vy = -50;
+                }
+                if(this.direcao === "baixo"){
+                    this.vy = 50;
+                }
+                
+                //console.log(this.direcao);
+            }
+        }
         
-    }
-
-    desenharHud(){
+        desenharHud(){
         // Fase
         this.ctx.fillStyle = "yellow";
         this.ctx.fillText("Fase 1", 30, 20);
