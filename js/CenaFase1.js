@@ -7,7 +7,7 @@ import modeloMapaFase1 from "../maps/mapaFase1.js";
 
 export default class CenaFase1 extends Cena{
     quandoColidir(a, b){
-        if(a.tags.has("pc") && b.tags.has("esqueleto")){ // Se pc colidir com inimigo, remove os dois, emite som e Game Over
+        if(a.tags.has("pc") && (b.tags.has("esqueleto") || b.tags.has("ghost"))){ // Se pc colidir com inimigo, remove os dois, emite som e Game Over
             if(!this.aRemover.includes(a)){
                 this.aRemover.push(a);
             }
@@ -35,7 +35,10 @@ export default class CenaFase1 extends Cena{
             }
             this.game.moedas += 1;
         }
-        if(a.tags.has("esqueleto") && b.tags.has("exit")){ // Se pc colidir com saída, não faz nada (por enquanto)
+        if(a.tags.has("esqueleto") && b.tags.has("ghost")){ // Se esqueleto colidir com fantasma, esqueleto morre
+            if(!this.aRemover.includes(a)){
+                this.aRemover.push(a);
+            }
         }
 
         //console.log(this.aRemover);
@@ -94,7 +97,7 @@ export default class CenaFase1 extends Cena{
         this.adicionar(new Sprite({x: 408, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "esq"}));
 
         this.adicionar(new Sprite({x: 408, y:13*48/2, w: 32, h: 32, controlar: perseguePC, color:"red", tags:["ghost"], direcao: "esq"}));
-        this.adicionar(new Sprite({x: 72, y:72, w: 32, h: 32, controlar: perseguePC, color:"red", tags:["ghost"], direcao: "esq"}));
+        //this.adicionar(new Sprite({x: 72, y:72, w: 32, h: 32, controlar: perseguePC, color:"red", tags:["ghost"], direcao: "esq"}));
         
         // Cria saída
         const exit = new Sprite({x: 17*48 - 64, y: 13*48/2, w: 32, h: 48, tags:["exit"]});
@@ -138,8 +141,8 @@ export default class CenaFase1 extends Cena{
             
             // Função de movimentação por perseguição
             function perseguePC(dt){
-                this.vx = 25*Math.sign(pc.x - this.x);
-                this.vy = 25*Math.sign(pc.y - this.y);
+                this.vx = 40*Math.sign(pc.x - this.x);
+                this.vy = 40*Math.sign(pc.y - this.y);
                 if(pc.x > this.x){
                     this.direcao = "dir";
                 }

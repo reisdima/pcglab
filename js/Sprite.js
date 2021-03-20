@@ -138,6 +138,10 @@ export default class Sprite{
                 if(this.direcao === "esq"){
                     ctx.drawImage(this.cena.assets.img("ghost"), 0, 64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
                 }
+                if(this.hitbox === "true"){
+                    ctx.strokeStyle = "blue";
+                    ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                }
             
             // Desenho e movimentos básicos
             } else if(this.tags.has("exit")){
@@ -159,8 +163,8 @@ export default class Sprite{
             */
         }
         else{
-            this.x = this.randValue(43, ctx.canvas.width - 43);
-            this.y = this.randValue(43, ctx.canvas.height - 43);
+            //this.x = this.randValue(43, ctx.canvas.width - 43);
+            //this.y = this.randValue(43, ctx.canvas.height - 43);
             //ctx.fillStyle = this.color;
             //ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
 
@@ -219,15 +223,29 @@ export default class Sprite{
     aplicaRestricoesDireita(pmx, pmy){
         if(this.vx > 0){ 
             const SIZE = this.cena.mapa.SIZE;
-            if(this.cena.mapa.tiles[pmy][pmx] != 0){
-                const tile = {x: pmx*SIZE + SIZE/2, y: pmy*SIZE + SIZE/2, w: SIZE, h:SIZE};
-                this.cena.ctx.strokeStyle = "white";
-                //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
-                if(this.colidiuCom(tile)){
-                    this.x = tile.x - tile.w/2 - this.w/2 - 1;if(this.tags.has("movBasic")){
-                        this.direcao = "esq";
+            const tile = {x: pmx*SIZE + SIZE/2, y: pmy*SIZE + SIZE/2, w: SIZE, h:SIZE};
+            this.cena.ctx.strokeStyle = "white";
+            //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
+            switch (this.cena.mapa.tiles[pmy][pmx]) {
+                case 1:
+                    if(this.colidiuCom(tile)){
+                        if(!this.tags.has("ghost")){
+                            this.x = tile.x - tile.w/2 - this.w/2 - 1;
+                            if(this.tags.has("movBasic")){
+                            this.direcao = "esq";
+                            }
+                        }
                     }
-                }
+                    break;
+                case 2:
+                    if(this.colidiuCom(tile)){
+                        this.x = tile.x - tile.w/2 - this.w/2 - 1;
+                        if(this.tags.has("movBasic")){
+                            this.direcao = "esq";
+                        }
+                    }
+                default:
+                    break;
             }
         }
     }
@@ -235,16 +253,29 @@ export default class Sprite{
     aplicaRestricoesEsquerda(pmx, pmy){
         if(this.vx < 0){ 
             const SIZE = this.cena.mapa.SIZE;
-            if(this.cena.mapa.tiles[pmy][pmx] != 0){
-                const tile = {x: pmx*SIZE + SIZE/2, y: pmy*SIZE + SIZE/2, w: SIZE, h:SIZE};
-                this.cena.ctx.strokeStyle = "white";
-                //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
-                if(this.colidiuCom(tile)){
-                    this.x = tile.x + tile.w/2 + this.w/2 + 1;
-                    if(this.tags.has("movBasic")){
-                        this.direcao = "dir";
+            const tile = {x: pmx*SIZE + SIZE/2, y: pmy*SIZE + SIZE/2, w: SIZE, h:SIZE};
+            this.cena.ctx.strokeStyle = "white";
+            //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
+            switch (this.cena.mapa.tiles[pmy][pmx]) {
+                case 1:
+                    if(this.colidiuCom(tile)){
+                        if(!this.tags.has("ghost")){
+                            this.x = tile.x + tile.w/2 + this.w/2 + 1;
+                            if(this.tags.has("movBasic")){
+                                this.direcao = "dir";
+                            }
+                        }
                     }
-                }
+                    break;
+                case 2:
+                    if(this.colidiuCom(tile)){
+                        this.x = tile.x + tile.w/2 + this.w/2 + 1;
+                        if(this.tags.has("movBasic")){
+                            this.direcao = "dir";
+                        }
+                    }
+                default:
+                    break;
             }
         }
     }
@@ -252,16 +283,30 @@ export default class Sprite{
     aplicaRestricoesBaixo(pmx, pmy){
         if(this.vy > 0){ 
             const SIZE = this.cena.mapa.SIZE;
-            if(this.cena.mapa.tiles[pmy][pmx] != 0){
-                const tile = {x: pmx*SIZE + SIZE/2, y: pmy*SIZE + SIZE/2, w: SIZE, h:SIZE};
-                this.cena.ctx.strokeStyle = "white";
-                //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
-                if(this.colidiuCom(tile)){
-                    this.y = tile.y - tile.h/2 - this.h/2 - 1;
-                    if(this.tags.has("movBasic")){
-                        this.direcao = "cima";
+            const tile = {x: pmx*SIZE + SIZE/2, y: pmy*SIZE + SIZE/2, w: SIZE, h:SIZE};
+            this.cena.ctx.strokeStyle = "white";
+            //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
+            switch (this.cena.mapa.tiles[pmy][pmx]) {
+                case 1:
+                    if(this.colidiuCom(tile)){
+                        if(!this.tags.has("ghost")){
+                            this.y = tile.y - tile.h/2 - this.h/2 - 1;
+                            if(this.tags.has("movBasic")){
+                                this.direcao = "cima";
+                            }
+                        }
                     }
-                }
+                    break;
+                case 2:
+                    if(this.colidiuCom(tile)){
+                        this.y = tile.y - tile.h/2 - this.h/2 - 1;
+                        if(this.tags.has("movBasic")){
+                            this.direcao = "cima";
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -269,16 +314,30 @@ export default class Sprite{
     aplicaRestricoesCima(pmx, pmy){
         if(this.vy < 0){ 
             const SIZE = this.cena.mapa.SIZE;
-            if(this.cena.mapa.tiles[pmy][pmx] != 0){
-                const tile = {x: pmx*SIZE + SIZE/2, y: pmy*SIZE + SIZE/2, w: SIZE, h:SIZE};
-                this.cena.ctx.strokeStyle = "white";
-                //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
-                if(this.colidiuCom(tile)){
-                    this.y = tile.y + tile.h/2 + this.h/2 + 1;
-                    if(this.tags.has("movBasic")){
-                        this.direcao = "baixo";
+            const tile = {x: pmx*SIZE + SIZE/2, y: pmy*SIZE + SIZE/2, w: SIZE, h:SIZE};
+            this.cena.ctx.strokeStyle = "white";
+            //this.cena.ctx.strokeRect(tile.x - SIZE/2, tile.y - SIZE/2, SIZE, SIZE);
+            switch (this.cena.mapa.tiles[pmy][pmx]) {
+                case 1:
+                    if(this.colidiuCom(tile)){
+                        if(!this.tags.has("ghost")){
+                            this.y = tile.y + tile.h/2 + this.h/2 + 1;
+                            if(this.tags.has("movBasic")){
+                                this.direcao = "baixo";
+                            }
+                        }
                     }
-                }
+                    break;
+                case 2:
+                    if(this.colidiuCom(tile)){
+                        this.y = tile.y + tile.h/2 + this.h/2 + 1;
+                        if(this.tags.has("movBasic")){
+                            this.direcao = "baixo";
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
