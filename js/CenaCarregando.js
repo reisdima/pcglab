@@ -23,6 +23,7 @@ export default class CenaCarregando extends Cena{
         this.ctx.fillText(this.assets?.progresso(), this.canvas.width/2, this.canvas.height/2 + 40);
         
         if(this.assets.acabou()){
+            this.ctx.font = "30px Impact";
             this.ctx.fillText("Aperte espaço para continuar", this.canvas.width/2, this.canvas.height/2 + 80);
         }
     }
