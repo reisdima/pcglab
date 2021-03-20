@@ -37,6 +37,10 @@ export default class CenaCarregando extends Cena{
                 this.game.selecionaCena("fase1");
                 return;
             }
+            if(this.input.comandos.get("CENA_TUTORIAL")){
+                this.game.selecionaCena("tutorial");
+                return;
+            }
         }
         this.desenhar();
 

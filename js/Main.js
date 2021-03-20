@@ -7,6 +7,7 @@ import Game from "./Game.js";
 import CenaCarregando from "./CenaCarregando.js";
 import CenaFim from "./CenaFim.js";
 import CenaVitoria from "./CenaVitoria.js";
+import CenaTutorial from "./CenaTutorial.js";
 
 const input = new InputManager();
 const mixer = new Mixer(10);
@@ -41,7 +42,8 @@ input.configurarTeclado({
     ArrowUp: "MOVE_CIMA",
     ArrowDown: "MOVE_BAIXO",
     " ": "PROXIMA_CENA",
-    h: "MOSTRA_HITBOX"
+    h: "MOSTRA_HITBOX",
+    t: "CENA_TUTORIAL"
 });
 
 const game = new Game(canvas, assets, input);
@@ -51,11 +53,13 @@ const cena1 = new CenaFase1();
 const cena2 = new CenaFase2();
 const cenaFim = new CenaFim();
 const cenaVitoria = new CenaVitoria();
+const cenaTutorial = new CenaTutorial();
 game.adicionarCena("carregando", cena0);
 game.adicionarCena("fase1", cena1);
 game.adicionarCena("fase2", cena2);
 game.adicionarCena("fim", cenaFim);
 game.adicionarCena("win", cenaVitoria);
+game.adicionarCena("tutorial", cenaTutorial);
 
 game.iniciar();
 
