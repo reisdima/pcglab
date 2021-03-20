@@ -58,6 +58,7 @@ export default class CenaFase1 extends Cena{
         }
         if(a.tags.has("esqueleto") && b.tags.has("ghost")){ // Se esqueleto colidir com fantasma, esqueleto morre
             if(!this.aRemover.includes(a)){
+                this.assets.play("ossos");
                 this.aRemover.push(a);
             }
         }

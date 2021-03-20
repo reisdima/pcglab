@@ -30,6 +30,7 @@ assets.carregaAudio("moeda2", "assets/coin2.wav");
 assets.carregaAudio("porta", "assets/porta.wav");
 assets.carregaAudio("boom", "assets/boom.wav");
 assets.carregaAudio("click", "assets/click.wav");
+assets.carregaAudio("ossos", "assets/ossos.wav");
 assets.carregaAudio("bruh", "assets/bruh.mp3");
 assets.carregaAudio("hurt", "assets/hurt.mp3");
 
