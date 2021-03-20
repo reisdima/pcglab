@@ -38,6 +38,9 @@ export default class Sprite{
         this.POSES_MOEDA = [
             {qmax: 6, pv: 9}
         ];
+        this.POSES_FANTASMA = [
+            {qmax: 2, pv: 9}
+        ];
     }
 
     desenhar(ctx){ 
@@ -83,8 +86,8 @@ export default class Sprite{
                     ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
                 }
 
-            // Desenho e movimentos de enemy
-            } else if (this.tags.has("enemy")){
+            // Desenho e movimentos de esqueleto
+            } else if (this.tags.has("esqueleto")){
                 if(this.direcao === "dir"){
                     this.quadro = (this.quadro >= this.POSES_PERSONAGENS[3].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[3].pv*this.cena.dt;
                     if(this.vx === 0 && this.vy === 0){
@@ -126,6 +129,16 @@ export default class Sprite{
             } else if(this.tags.has("coin")) {
                 this.quadro = (this.quadro >= this.POSES_MOEDA[0].qmax - 1) ? 0 : this.quadro + this.POSES_MOEDA[0].pv*this.cena.dt;
                 ctx.drawImage(this.cena.assets.img("moeda"), Math.floor(this.quadro)*32, 0, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+
+            // Desenho e movimento fantasma
+            } else if(this.tags.has("ghost")) {
+                this.quadro = (this.quadro >= this.POSES_FANTASMA[0].qmax - 1) ? 0 : this.quadro + this.POSES_FANTASMA[0].pv*this.cena.dt;
+                if(this.direcao === "dir"){
+                    ctx.drawImage(this.cena.assets.img("ghost"), Math.floor(this.quadro)*64, 0, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                }
+                if(this.direcao === "esq"){
+                    ctx.drawImage(this.cena.assets.img("ghost"), Math.floor(this.quadro)*64, 64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                }
             
             // Desenho e movimentos básicos
             } else if(this.tags.has("exit")){

@@ -6,7 +6,7 @@ import modeloMapaFase1 from "../maps/mapaFase2.js";
 export default class CenaFase2 extends Cena{
     quandoColidir(a, b){
         //Colisão básica (elimina os dois)
-        if(a.tags.has("pc") && b.tags.has("enemy")){ // Se pc colidir com inimigo, remove os dois, emite som e Game Over
+        if(a.tags.has("pc") && b.tags.has("esqueleto")){ // Se pc colidir com inimigo, remove os dois, emite som e Game Over
             if(!this.aRemover.includes(a)){
                 this.aRemover.push(a);
             }
@@ -33,7 +33,7 @@ export default class CenaFase2 extends Cena{
             }
             this.game.moedas += 1;
         }
-        if(a.tags.has("enemy") && b.tags.has("exit")){ // Se pc colidir com saída, não faz nada (por enquanto)
+        if(a.tags.has("esqueleto") && b.tags.has("exit")){ // Se pc colidir com saída, não faz nada (por enquanto)
         }
 
         //console.log(this.aRemover);
@@ -97,10 +97,10 @@ export default class CenaFase2 extends Cena{
         }
 
         // Cria inimigos
-        const en1 = new Sprite({x:360, y: 250, w: 28, h: 46, color:"darkblue", controlar: perseguePC, tags:["enemy"]});
+        const en1 = new Sprite({x:360, y: 250, w: 28, h: 46, color:"darkblue", controlar: perseguePC, tags:["esqueleto"]});
         this.adicionar(en1);
-        //this.adicionar(new Sprite({x: 115, y:70, vy:10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
-        //this.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
+        //this.adicionar(new Sprite({x: 115, y:70, vy:10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["esqueleto"]}));
+        //this.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["esqueleto"]}));
 
         // Cria saída
         const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, w: 32, h:48, color: "yellow", tags:["exit"]});

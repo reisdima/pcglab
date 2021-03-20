@@ -7,7 +7,7 @@ import modeloMapaFase1 from "../maps/mapaFase1.js";
 
 export default class CenaFase1 extends Cena{
     quandoColidir(a, b){
-        if(a.tags.has("pc") && b.tags.has("enemy")){ // Se pc colidir com inimigo, remove os dois, emite som e Game Over
+        if(a.tags.has("pc") && b.tags.has("esqueleto")){ // Se pc colidir com inimigo, remove os dois, emite som e Game Over
             if(!this.aRemover.includes(a)){
                 this.aRemover.push(a);
             }
@@ -34,7 +34,7 @@ export default class CenaFase1 extends Cena{
             }
             this.game.moedas += 1;
         }
-        if(a.tags.has("enemy") && b.tags.has("exit")){ // Se pc colidir com saída, não faz nada (por enquanto)
+        if(a.tags.has("esqueleto") && b.tags.has("exit")){ // Se pc colidir com saída, não faz nada (por enquanto)
         }
 
         //console.log(this.aRemover);
@@ -79,18 +79,20 @@ export default class CenaFase1 extends Cena{
 
         
         // Cria inimigos
-        const en1 = new Sprite({x:360, w: 24, h: 42, controlar: perseguePC, tags:["enemy"]});
+        //const en1 = new Sprite({x:360, w: 24, h: 42, controlar: perseguePC, tags:["esqueleto"]});
         //this.adicionar(en1);
-        this.adicionar(new Sprite({x: 263, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "baixo"}));
-        this.adicionar(new Sprite({x: 263, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "cima"}));
-        this.adicionar(new Sprite({x: 552, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "baixo"}));
-        this.adicionar(new Sprite({x: 552, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "cima"}));
-        this.adicionar(new Sprite({x: 72, y:168, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "dir"}));
-        this.adicionar(new Sprite({x: 744, y:168, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "esq"}));
-        this.adicionar(new Sprite({x: 72, y:456, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "dir"}));
-        this.adicionar(new Sprite({x: 744, y:456, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "esq"}));
-        this.adicionar(new Sprite({x: 408, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "dir"}));
-        this.adicionar(new Sprite({x: 408, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["enemy","movBasic"], direcao: "esq"}));
+        this.adicionar(new Sprite({x: 263, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "baixo"}));
+        this.adicionar(new Sprite({x: 263, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "cima"}));
+        this.adicionar(new Sprite({x: 552, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "baixo"}));
+        this.adicionar(new Sprite({x: 552, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "cima"}));
+        this.adicionar(new Sprite({x: 72, y:168, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "dir"}));
+        this.adicionar(new Sprite({x: 744, y:168, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "esq"}));
+        this.adicionar(new Sprite({x: 72, y:456, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "dir"}));
+        this.adicionar(new Sprite({x: 744, y:456, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "esq"}));
+        this.adicionar(new Sprite({x: 408, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "dir"}));
+        this.adicionar(new Sprite({x: 408, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "esq"}));
+
+        this.adicionar(new Sprite({x: 408, y:13*48/2, w: 32, h: 32, controlar: perseguePC, color:"red", tags:["ghost"], direcao: "esq"}));
         
         // Cria saída
         const exit = new Sprite({x: 17*48 - 64, y: 13*48/2, w: 32, h: 48, tags:["exit"]});
