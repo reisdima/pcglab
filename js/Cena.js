@@ -23,6 +23,9 @@ export default class Cena {
                 sprite.aplicaRestricoes();
             }
         }
+
+        //this.ctx.fillStyle = "black";
+        //this.ctx.fillRect(17*48 - 72, 554, 10, 10);
     }
 
     adicionar(sprite){
@@ -42,6 +45,7 @@ export default class Cena {
         this.t0 = this.t0 ?? t;
         this.dt = (t- this.t0)/1000;
 
+        // Comando de ativação de hitbox
         if(this.input.comandos.get("MOSTRA_HITBOX")){
             for (let s = 0; s < this.sprites.length; s++) {
                 if(this.sprites[s].hitbox === "false"){
@@ -49,7 +53,6 @@ export default class Cena {
                 } else {
                     this.sprites[s].hitbox = "false";
                 }
-                console.log(this.sprites[s].hitbox);
             }
         }
 

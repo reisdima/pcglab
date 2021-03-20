@@ -49,7 +49,7 @@ export default class CenaFase1 extends Cena{
         this.configuraMapa(mapa1);
 
         // Desenha o pc
-        const pc = new Sprite({x:280, y :150, w:22, h: 46});
+        const pc = new Sprite({x: 72, y :13*48/2, w:20, h: 44});
         pc.tags.add("pc");
 
         const cena = this;
@@ -100,18 +100,20 @@ export default class CenaFase1 extends Cena{
         }
 
         // Cria inimigos
-        const en1 = new Sprite({x:360, w: 32, h: 50, color:"red", controlar: perseguePC, tags:["enemy"]});
+        const en1 = new Sprite({x:360, w: 28, h: 46, controlar: perseguePC, tags:["enemy"]});
         //this.adicionar(en1);
-        //this.adicionar(new Sprite({x: 255, y:70, w: 32, h: 50, color:"red", controlar: perseguePC, tags:["enemy"]}));
-        //this.adicionar(new Sprite({x: 235, y:160, w: 32, h: 50, color:"red", controlar: perseguePC, tags:["enemy"]}));
+        //this.adicionar(new Sprite({x: 255, y:70, w: 28, h: 46, color:"red", controlar: perseguePC, tags:["enemy"]}));
+        //this.adicionar(new Sprite({x: 235, y:160, w: 28, h: 46, color:"red", controlar: perseguePC, tags:["enemy"]}));
 
         // Cria saída
-        const exit = new Sprite({x: 16*32 - 64, y: 12*32/2, w: 32, h: 48, color: "yellow", tags:["exit"]});
+        const exit = new Sprite({x: 17*48 - 64, y: 13*48/2, w: 32, h: 48, tags:["exit"]});
         this.adicionar(exit);
 
         // Cria moedas
-        this.adicionar(new Sprite({x: 200, y: 200, w: 16, h: 16, color: "lime", tags:["coin"]}));
-        this.adicionar(new Sprite({x: 200, y: 100, w: 16, h: 16, color: "lime", tags:["coin"]}));
+        this.adicionar(new Sprite({x: 17*48 - 72, y: 72, w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: 72, y: 72, w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: 17*48 - 72, y: 554, w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: 72, y: 554, w: 16, h: 16, tags:["coin"]}));
 
 
                             // Criação de sprites experimental 

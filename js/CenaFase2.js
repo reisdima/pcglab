@@ -97,7 +97,7 @@ export default class CenaFase2 extends Cena{
         }
 
         // Cria inimigos
-        const en1 = new Sprite({x:360, y: 250, w: 32, h: 50, color:"darkblue", controlar: perseguePC, tags:["enemy"]});
+        const en1 = new Sprite({x:360, y: 250, w: 28, h: 46, color:"darkblue", controlar: perseguePC, tags:["enemy"]});
         this.adicionar(en1);
         //this.adicionar(new Sprite({x: 115, y:70, vy:10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
         //this.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["enemy"]}));
