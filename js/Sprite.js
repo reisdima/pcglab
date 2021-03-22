@@ -46,7 +46,7 @@ export default class Sprite{
     desenhar(ctx){ 
         const SIZE = this.cena.mapa.SIZE;
 
-        if(this.cena.mapa.tiles[this.my][this.mx] != 1){
+        if(this.cena.mapa.tiles[this.my][this.mx] === 0){
             // Desenho e movimentos de pc
             if(this.tags.has("pc")){
                 if(this.direcao === "dir"){
@@ -171,8 +171,10 @@ export default class Sprite{
             */
         
         } else  {
-            //this.x = this.randValue(43, ctx.canvas.width - 43);
-            //this.y = this.randValue(43, ctx.canvas.height - 43);
+            if(this.tags.has("coin")){
+                this.x = this.randValue(43, ctx.canvas.width - 43);
+                this.y = this.randValue(43, ctx.canvas.height - 43);
+            }
             //ctx.fillStyle = this.color;
             //ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
     
