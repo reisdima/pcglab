@@ -19,8 +19,13 @@ export default class CenaVitoria extends Cena{
         this.ctx.font = "20px Impact";
         this.ctx.fillStyle = "white";
         this.ctx.fillText("Continua (?)", this.canvas.width/2, this.canvas.height/2 + 50);
-        if(this.game.moedas === 20){
+        if(this.game.moedas === 20 && this.game.conquista === "false"){
             this.assets.play("conquista");
+            this.game.conquista = "true";
+            this.ctx.font = "20px Impact";
+            this.ctx.fillStyle = "white";
+            this.ctx.textAlign = "left";
+            this.ctx.fillText("Conquista desbloqueada! (20/20 moedas)", 60, 80);
         }
     }
 
