@@ -181,14 +181,6 @@ export default class Sprite{
                 this.x = this.randValue(43, ctx.canvas.width - 43);
                 this.y = this.randValue(43, ctx.canvas.height - 43);
             }
-            //ctx.fillStyle = this.color;
-            //ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-    
-            // Mostrar tile box
-            /*
-            ctx.strokeStyle = "blue";
-            ctx.strokeRect(this.mx * SIZE, this.my * SIZE, SIZE, SIZE);
-            */
         }
     }
     

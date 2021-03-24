@@ -135,10 +135,6 @@ export default class CenaFase1 extends Cena{
         
         this.adicionar(pc);
 
-        
-        // Cria esqueletos
-        //const en1 = new Sprite({x:360, w: 24, h: 42, controlar: perseguePC, tags:["esqueleto"]});
-        //this.adicionar(en1);
         this.adicionar(new Sprite({x: 263, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "baixo"}));
         this.adicionar(new Sprite({x: 263, y:554, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "cima"}));
         this.adicionar(new Sprite({x: 552, y:72, w: 24, h: 42, controlar: movimentoBasico, tags:["esqueleto","movBasic"], direcao: "baixo"}));
@@ -156,7 +152,6 @@ export default class CenaFase1 extends Cena{
 
         // Cria fantasma
         this.adicionar(new Sprite({x: 408, y:13*48/2, w: 32, h: 32, controlar: perseguePC, tags:["ghost"], direcao: "esq"}));
-        //this.adicionar(new Sprite({x: 72, y:72, w: 32, h: 32, controlar: perseguePC, color:"red", tags:["ghost"], direcao: "esq"}));
 
         
         // Cria saída
@@ -169,21 +164,16 @@ export default class CenaFase1 extends Cena{
         this.adicionar(new Sprite({x: 17*48 - 72, y: 554, w: 16, h: 16, tags:["coin"]}));
         this.adicionar(new Sprite({x: 72, y: 554, w: 16, h: 16, tags:["coin"]}));
 
-        // Gera escudos aleatoriamente
+        // Gera escudos
         setInterval(() => {
-            this.adicionar(new Sprite({x: randValue(72, this.canvas.width - 72), y: randValue(72, 12*32 - 72),
-                h: 16, w: 16, tags:["escudo"]}));
-        }, 4000);
-        
+            this.adicionar(new Sprite({x: randValue(72, this.canvas.width - 72), y: randValue(72, this.canvas.height - 72),
+                 h: 16, w: 16, tags:["escudo"]}));
+                 console.log("a");
+        }, 30000);
 
-                            // Criação de sprites experimental 
-                            
-        /*const mapa2 = new Mapa(10, 14, 32);
-        const cena = this;
-        mapa2.carregaMapa(modeloMapa2);
-        cena.configuraMapa(mapa2);
-        
-        // Adiciona sprites mais fortes ("Protagonistas")
+        // Criação de sprites experimental 
+                                              
+        /* //Adiciona sprites mais fortes ("Protagonistas")
         cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43), w:20, h:20,
                                     vy: randValue(-200, 200), vx: randValue(-200,200), color:"yellow", vida: 1000}));
                                     cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43), w:20, h:20,
@@ -197,53 +187,51 @@ export default class CenaFase1 extends Cena{
         setInterval(() => {
             cena.adicionar(new Sprite({x: randValue(43, 16*32 - 43), y: randValue(43, 12*32 - 43),
                 vy: randValue(-100, 100), vx: randValue(-100,100), color:"red"}));
-            }, 4000);
+            }, 4000);*/
             
-            */
-            
-            // Função de movimentação por perseguição
-            function perseguePC(dt){
-                this.vx = 40*Math.sign(pc.x - this.x);
-                this.vy = 40*Math.sign(pc.y - this.y);
-                if(pc.x > this.x){
-                    this.direcao = "dir";
-                }
-                if(pc.x < this.x){
-                    this.direcao = "esq";
-                }
-                /*if (pc.y < this.y){
-                    this.direcao = "cima";
-                }
-                if (pc.y > this.y){
-                    this.direcao = "baixo";
-                }*/
+        // Função de movimentação por perseguição
+        function perseguePC(dt){
+            this.vx = 40*Math.sign(pc.x - this.x);
+            this.vy = 40*Math.sign(pc.y - this.y);
+            if(pc.x > this.x){
+                this.direcao = "dir";
             }
-
-            // Função de movimentação básica
-            function movimentoBasico(dt){
-                if(this.direcao === "dir"){
-                    this.vx = 60;
-                }
-                if(this.direcao === "esq"){
-                    this.vx = -60;
-                }
-                if(this.direcao === "cima"){
-                    this.vy = -60;
-                }
-                if(this.direcao === "baixo"){
-                    this.vy = 60;
-                }
-                
-                //console.log(this.direcao);
+            if(pc.x < this.x){
+                this.direcao = "esq";
             }
-
-            // Função que gera valores aleatórios
-            function randValue(min, max) {
-                min = Math.ceil(min);
-                max = Math.floor(max);
-                return Math.floor(Math.random() * (max - min + 1)) + min;
+            /*if (pc.y < this.y){
+                this.direcao = "cima";
             }
+            if (pc.y > this.y){
+                this.direcao = "baixo";
+            }*/
         }
+
+        // Função de movimentação básica
+        function movimentoBasico(dt){
+            if(this.direcao === "dir"){
+                this.vx = 60;
+            }
+            if(this.direcao === "esq"){
+                this.vx = -60;
+            }
+            if(this.direcao === "cima"){
+                this.vy = -60;
+            }
+            if(this.direcao === "baixo"){
+                this.vy = 60;
+            }
+                
+            //console.log(this.direcao);
+        }
+
+        // Função geradora de valores aleatórios
+        function randValue(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+    }
         
         desenharHud(){
         // Fase

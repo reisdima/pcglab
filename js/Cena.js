@@ -92,55 +92,6 @@ export default class Cena {
     }
 
     quandoColidir(a, b){
-        /*//Colisão básica (elimina os dois)
-        if(!this.aRemover.includes(a)){
-            this.aRemover.push(a);
-        }
-        if(!this.aRemover.includes(b)){
-            this.aRemover.push(b);
-        }
-
-        //Colisão básica (elimina os dois)
-        if(a.vida === 0 && b.vida === 0){
-            if(!this.aRemover.includes(a)){
-                this.aRemover.push(a);
-            }
-            if(!this.aRemover.includes(b)){
-                this.aRemover.push(b);
-            }
-            console.log(this.aRemover);
-            this.assets.play("bruh");
-        }
-
-        //Colisão forte-fraco (Elimina um e outro perde vida)
-        if(a.vida > 0 && b.vida === 0){
-            if(!this.aRemover.includes(b)){
-                this.aRemover.push(b);
-            }
-            a.vida -= 1;
-            console.log(a.vida);
-            console.log(this.aRemover);
-            this.assets.play("bruh");
-        }
-        if(a.vida === 0 && b.vida > 0){
-            if(!this.aRemover.includes(a)){
-                this.aRemover.push(a);
-            }
-            b.vida -= 1;
-            console.log(b.vida);
-            console.log(this.aRemover);
-            this.assets.play("bruh");
-        }
-
-        //Colisão forte-forte (Os dois perdem vida)
-        /*
-        if(a.vida > 0 && b.vida > 0){
-            a.vida -= 1;
-            b.vida -= 1;
-            console.log(a.vida);
-            console.log(b.vida);
-        }
-        */
 
     }
 
@@ -168,7 +119,6 @@ export default class Cena {
         this.mapa = null;
         this.rodando = true;
     }
-
     
     desenharHud(){
         

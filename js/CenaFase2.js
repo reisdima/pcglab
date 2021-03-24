@@ -6,15 +6,37 @@ import modeloMapaFase1 from "../maps/mapaFase2.js";
 export default class CenaFase2 extends Cena{
     quandoColidir(a, b){
         if(a.tags.has("pc") && (b.tags.has("esqueleto") || b.tags.has("ghost"))){ // Se pc colidir com inimigo, remove os dois, emite som e Game Over
-            if(!this.aRemover.includes(a)){
-                this.aRemover.push(a);
+            if(this.game.playerShield != 4){ // Foi atingido sem escudo, morre
+                if(!this.aRemover.includes(a)){
+                    this.aRemover.push(a);
+                }
+                if(!this.aRemover.includes(b)){
+                    this.aRemover.push(b);
+                }
+                this.game.playerShield = 0;
+                this.assets.play("hurt");
+                this.game.selecionaCena("fim");
             }
-            if(!this.aRemover.includes(b)){
-                this.aRemover.push(b);
+            else if(this.game.playerShield === 4 && !b.tags.has("ghost")){ // Foi atingido por esqueleto, com escudo, esqueleto morre e perde escudo
+                if(!this.aRemover.includes(b)){
+                    this.aRemover.push(b);
+                    this.game.playerShield = 0;
+                    this.assets.play("ossos");
+                    this.adicionar(new Sprite({x: a.x, y: a.y, w: 16, h: 16, tags:["coin"]}));
+                    this.assets.play("escudo2");
+                }
             }
-            this.game.playerShield = 0;
-            this.assets.play("hurt");
-            this.game.selecionaCena("fim");
+            else if(this.game.playerShield === 4 && b.tags.has("ghost")){ // Tem escudo, mas foi atingido por fantasma, morre
+                if(!this.aRemover.includes(a)){
+                    this.aRemover.push(a);
+                }
+                if(!this.aRemover.includes(b)){
+                    this.aRemover.push(b);
+                }
+                this.game.playerShield = 0;
+                this.assets.play("hurt");
+                this.game.selecionaCena("fim");
+            }
         }
         if(a.tags.has("pc") && b.tags.has("exit")){ // Se pc colidir com saída, remove os dois e vai pra próx. fase
             if(!this.aRemover.includes(a)){
@@ -76,6 +98,16 @@ export default class CenaFase2 extends Cena{
             this.adicionar(new Sprite({x: b.x - b.w/2, y: b.y - b.h/2 - 10, w: 16, h: 16, tags:["coin"]}));
         }
 
+        if(a.tags.has("pc") && b.tags.has("escudo")){ // Se pc colidir com escudo
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+                if(this.game.playerShield <= 3){
+                    this.game.playerShield += 1;
+                }
+            }
+            this.assets.play("escudo1");
+        }
+
         //console.log(this.aRemover);
     }
 
@@ -121,9 +153,6 @@ export default class CenaFase2 extends Cena{
         
         // Cria inimigos
         const en1 = new Sprite({x:360, y: 250, w: 28, h: 46, color:"darkblue", controlar: perseguePC, tags:["esqueleto"]});
-        //this.adicionar(en1);
-        //this.adicionar(new Sprite({x: 115, y:70, vy:10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["esqueleto"]}));
-        //this.adicionar(new Sprite({x: 115, y:160, vy:-10, color:"red", h: 20, w:20, controlar: perseguePC, tags:["esqueleto"]}));
 
         // Cria alavancas
         this.adicionar(new Sprite({x: 265, y:13*48/2, w: 32, h: 32, tags:["alavanca","a1"]}));
@@ -139,6 +168,13 @@ export default class CenaFase2 extends Cena{
         // Cria moedas
         this.adicionar(new Sprite({x: 17*48 - 72, y: 216, w: 16, h: 16, tags:["coin"]}));
         this.adicionar(new Sprite({x: 17*48 - 72, y: 408, w: 16, h: 16, tags:["coin"]}));
+
+        /*// Gera escudos
+        setInterval(() => {
+            console.log("caju")
+            this.adicionar(new Sprite({x: randValue(72, this.canvas.width - 72), y: randValue(72, this.canvas.height - 72),
+                h: 16, w: 16, tags:["escudo"]}));
+        }, this.temporizador);*/
         
         // Função de perseguição
         function perseguePC(dt){
@@ -174,6 +210,13 @@ export default class CenaFase2 extends Cena{
             }
             
             //console.log(this.direcao);
+        }
+
+        // Função geradora de valores aleatórios
+        function randValue(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
     }
