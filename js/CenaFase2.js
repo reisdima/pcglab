@@ -188,5 +188,27 @@ export default class CenaFase2 extends Cena{
         this.ctx.font = "20px Impact";
         this.ctx.fillStyle = "yellow";
         this.ctx.fillText(": " + this.game.moedas, this.canvas.width - 30, 30);
+
+        // Escudo
+        switch (this.game.playerShield) {
+            case 0:
+                this.ctx.drawImage(this.assets.img("escudo"), 0, 0, 32, 32, this.canvas.width - 130, 12, 20, 20);
+                break;
+            case 1:
+                this.ctx.drawImage(this.assets.img("escudo"), 32, 0, 32, 32, this.canvas.width - 130, 12, 20, 20);
+                break;
+            case 2:
+                this.ctx.drawImage(this.assets.img("escudo"), 64, 0, 32, 32, this.canvas.width - 130, 12, 20, 20);
+                break;
+            case 3:
+                this.ctx.drawImage(this.assets.img("escudo"), 96, 0, 32, 32, this.canvas.width - 130, 12, 20, 20);
+                break;
+            case 4:
+                this.ctx.drawImage(this.assets.img("escudo"), 128, 0, 32, 32, this.canvas.width - 130, 12, 20, 20);
+                this.ctx.font = "20px Impact";
+                this.ctx.fillStyle = "yellow";
+                this.ctx.fillText(": ", this.canvas.width - 125, 30);
+                break;
+        }
     }
 }
