@@ -12,6 +12,7 @@ export default class CenaFase2 extends Cena{
             if(!this.aRemover.includes(b)){
                 this.aRemover.push(b);
             }
+            this.game.playerShield = 0;
             this.assets.play("hurt");
             this.game.selecionaCena("fim");
         }

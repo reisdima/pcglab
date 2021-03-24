@@ -6,14 +6,36 @@ import modeloMapaFase1 from "../maps/mapaFase1.js";
 export default class CenaFase1 extends Cena{
     quandoColidir(a, b){
         if(a.tags.has("pc") && (b.tags.has("esqueleto") || b.tags.has("ghost"))){ // Se pc colidir com inimigo, remove os dois, emite som e Game Over
-            if(!this.aRemover.includes(a)){
-                this.aRemover.push(a);
+            if(this.game.playerShield != 4){ // Foi atingido sem escudo, morre
+                if(!this.aRemover.includes(a)){
+                    this.aRemover.push(a);
+                }
+                if(!this.aRemover.includes(b)){
+                    this.aRemover.push(b);
+                }
+                this.game.playerShield = 0;
+                this.assets.play("hurt");
+                this.game.selecionaCena("fim");
             }
-            if(!this.aRemover.includes(b)){
-                this.aRemover.push(b);
+            else if(this.game.playerShield === 4 && !b.tags.has("ghost")){ // Foi atingido por esqueleto, com escudo, esqueleto morre e perde escudo
+                if(!this.aRemover.includes(b)){
+                    this.aRemover.push(b);
+                    this.game.playerShield = 0;
+                    this.assets.play("ossos");
+                    this.adicionar(new Sprite({x: a.x, y: a.y, w: 16, h: 16, tags:["coin"]}));
+                }
             }
-            this.assets.play("hurt");
-            this.game.selecionaCena("fim");
+            else if(this.game.playerShield === 4 && b.tags.has("ghost")){ // Tem escudo, mas foi atingido por fantasma, morre
+                if(!this.aRemover.includes(a)){
+                    this.aRemover.push(a);
+                }
+                if(!this.aRemover.includes(b)){
+                    this.aRemover.push(b);
+                }
+                this.game.playerShield = 0;
+                this.assets.play("hurt");
+                this.game.selecionaCena("fim");
+            }
         }
         if(a.tags.has("pc") && b.tags.has("exit")){ // Se pc colidir com saída, remove os dois e vai pra próx. fase
             if(!this.aRemover.includes(a)){
@@ -147,9 +169,9 @@ export default class CenaFase1 extends Cena{
 
         // Gera escudos aleatoriamente
         setInterval(() => {
-            cena.adicionar(new Sprite({x: randValue(72, this.canvas.width - 72), y: randValue(72, 12*32 - 72),
+            this.adicionar(new Sprite({x: randValue(72, this.canvas.width - 72), y: randValue(72, 12*32 - 72),
                 h: 16, w: 16, tags:["escudo"]}));
-        }, 20000);
+        }, 4000);
         
 
                             // Criação de sprites experimental 
