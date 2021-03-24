@@ -30,6 +30,8 @@ assets.carregaAudio("porta", "assets/porta.wav");
 assets.carregaAudio("click", "assets/click.wav");
 assets.carregaAudio("ossos", "assets/ossos.wav");
 assets.carregaAudio("conquista", "assets/conquista.wav");
+assets.carregaAudio("escudo1", "assets/escudo_coletado.wav");
+assets.carregaAudio("escudo2", "assets/escudo_quebrado.wav");
 assets.carregaAudio("hurt", "assets/hurt.mp3");
 assets.carregaAudio("bruh", "assets/bruh.mp3");
 

@@ -23,6 +23,7 @@ export default class CenaFase1 extends Cena{
                     this.game.playerShield = 0;
                     this.assets.play("ossos");
                     this.adicionar(new Sprite({x: a.x, y: a.y, w: 16, h: 16, tags:["coin"]}));
+                    this.assets.play("escudo2");
                 }
             }
             else if(this.game.playerShield === 4 && b.tags.has("ghost")){ // Tem escudo, mas foi atingido por fantasma, morre
@@ -90,6 +91,7 @@ export default class CenaFase1 extends Cena{
                     this.game.playerShield += 1;
                 }
             }
+            this.assets.play("escudo1");
         }
 
         //console.log(this.aRemover);
