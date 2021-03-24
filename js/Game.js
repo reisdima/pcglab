@@ -9,6 +9,7 @@ export default class Game{
         this.moedas = 0;
         this.pause = "false";
         this.conquista = "false";
+        this.playerShield = 0;
     }
 
     adicionarCena(chave, cena){
