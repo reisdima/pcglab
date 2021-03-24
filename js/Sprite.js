@@ -150,10 +150,16 @@ export default class Sprite{
                 } else {
                     ctx.drawImage(this.cena.assets.img("alavanca"), 0, 32, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
                 }
-            
-            // Desenho e movimentos básicos
+
+            // Desenho escudo
+            } else if(this.tags.has("escudo")) {
+                ctx.drawImage(this.cena.assets.img("escudo"), 0, 32, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                
+            // Desenho da porta
             } else if(this.tags.has("exit")){
                 ctx.drawImage(this.cena.assets.img("porta"), this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+
+            // Desenho e movimentos básicos
             } else {
                 ctx.fillStyle = this.color;
                 ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
@@ -171,7 +177,7 @@ export default class Sprite{
             */
         
         } else  {
-            if(this.tags.has("coin")){
+            if(this.tags.has("coin") || (this.tags.has("escudo"))){
                 this.x = this.randValue(43, ctx.canvas.width - 43);
                 this.y = this.randValue(43, ctx.canvas.height - 43);
             }

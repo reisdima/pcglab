@@ -1,8 +1,6 @@
 import Cena from "./Cena.js";
 import Mapa from "./Mapa.js";
 import Sprite from "./Sprite.js";
-import modeloMapa1 from "../maps/mapa1.js";
-import modeloMapa2 from "../maps/mapa2.js";
 import modeloMapaFase1 from "../maps/mapaFase1.js";
 
 export default class CenaFase1 extends Cena{
@@ -137,6 +135,12 @@ export default class CenaFase1 extends Cena{
         this.adicionar(new Sprite({x: 72, y: 72, w: 16, h: 16, tags:["coin"]}));
         this.adicionar(new Sprite({x: 17*48 - 72, y: 554, w: 16, h: 16, tags:["coin"]}));
         this.adicionar(new Sprite({x: 72, y: 554, w: 16, h: 16, tags:["coin"]}));
+
+        // Gera escudos aleatoriamente
+        setInterval(() => {
+            cena.adicionar(new Sprite({x: randValue(72, this.canvas.width - 72), y: randValue(72, 12*32 - 72),
+                h: 16, w: 16, tags:["escudo"]}));
+        }, 20000);
         
 
                             // Criação de sprites experimental 
@@ -162,11 +166,7 @@ export default class CenaFase1 extends Cena{
                 vy: randValue(-100, 100), vx: randValue(-100,100), color:"red"}));
             }, 4000);
             
-            function randValue(min, max) {
-                min = Math.ceil(min);
-                max = Math.floor(max);
-                return Math.floor(Math.random() * (max - min + 1)) + min;
-            }*/
+            */
             
             // Função de movimentação por perseguição
             function perseguePC(dt){
@@ -202,6 +202,13 @@ export default class CenaFase1 extends Cena{
                 }
                 
                 //console.log(this.direcao);
+            }
+
+            // Função que gera valores aleatórios
+            function randValue(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min + 1)) + min;
             }
         }
         
