@@ -205,9 +205,6 @@ export default class CenaFase2 extends Cena{
                 break;
             case 4:
                 this.ctx.drawImage(this.assets.img("escudo"), 128, 0, 32, 32, this.canvas.width - 130, 12, 20, 20);
-                this.ctx.font = "20px Impact";
-                this.ctx.fillStyle = "yellow";
-                this.ctx.fillText(": ", this.canvas.width - 125, 30);
                 break;
         }
     }

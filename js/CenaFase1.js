@@ -61,6 +61,15 @@ export default class CenaFase1 extends Cena{
             }
         }
 
+        if(a.tags.has("pc") && b.tags.has("escudo")){ // Se pc colidir com escudo
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+                if(this.game.playerShield <= 3){
+                    this.game.playerShield += 1;
+                }
+            }
+        }
+
         //console.log(this.aRemover);
     }
 
@@ -240,9 +249,6 @@ export default class CenaFase1 extends Cena{
                 break;
             case 4:
                 this.ctx.drawImage(this.assets.img("escudo"), 128, 0, 32, 32, this.canvas.width - 130, 12, 20, 20);
-                this.ctx.font = "20px Impact";
-                this.ctx.fillStyle = "yellow";
-                this.ctx.fillText(": ", this.canvas.width - 125, 30);
                 break;
         }
     }
