@@ -1,22 +1,30 @@
-# <p align="center"> Maze Runner</p><br> Tema: Estudo sobre aplicação de técnicas de Geração procedural de conteúdo em jogos digitais
-Link Github io: https://lucasdinizcosta.github.io/automatoCelularGeracaoProcedural/MazeRunner.html
+# PGCLab
+O PGCLab é uma ferramenta desenvolvida em para o estudo e aplicação de técnicas de geração procedural de conteúdo, desenvolvida completamente utilizando ferramentas abertas para web. Entre as principais aplicações estão os jogos digitais digitais.
 
-##  Instruções:
-- <p align="justify"> <b>Setas</b> : Movimentação do personagem;</p>
-- <p align="justify"> <b>P</b> : Ativa ou desativa o modo debug de modo que as colisões e detecção de grade não são verificadas;</p>
-- <p align="justify"> <b>M</b> : Muda os elementos que aparecem na bússola;</p>
-- <p align="justify"> <b>F</b> : Ativa e desativa a tela cheia (Fullscreen);</p>
-- <p align="justify"> <b>+</b> : Com o Debug mode ativado, este serve para aumentar o Zoom do mapa;</p>
-- <p align="justify"> <b>-</b> : Com o Debug mode ativado, este serve para diminuir o Zoom do mapa;</p>
-- <p align="justify"> <b>SHIFT Esquerdo</b> : Player corre em uma velocidade maior;</p>
-- <p align="justify"> <b>CTRL Esquerdo</b> : Player ataca usando a espada;</p>
-- <p align="justify"> <b>ESC</b> : Retorna ao menu principal e gera um novo Level;</p>
+O PGCLab foi desenvolvido 2020 como um projeto da disciplina DCC104 e DCC138 e, posteriormente, como iniciação científica por [Lucas Diniz Costa](https://github.com/lucasdinizcosta) sob a orientação de [Igor Knop](https://github.com/igorknop). Em 2021 o projeto foi renomeado para PGCLab e teve o código fonte aberto sob a GPLv3.
 
-##  Links das imagens:
+
+##  Instruções de uso:
+Uma versão online pode ser acessada [diretamente pelo navegador](https://igorknop.github.io/pgc)
+
+- *Setas do teclado*: Movimentação do personagem;</p>
+- *P*: Ativa ou desativa o modo debug de modo que as colisões e detecção de grade não são verificadas;</p>
+- *M*: Muda os elementos que aparecem na bússola;</p>
+- *F*: Ativa e desativa a tela cheia (Fullscreen);</p>
+- *+*: Com o Debug mode ativado, este serve para aumentar o Zoom do mapa;</p>
+- *-*: Com o Debug mode ativado, este serve para diminuir o Zoom do mapa;</p>
+- *SHIFT Esquerdo*: Player corre em uma velocidade maior;</p>
+- *CTRL Esquerdo*: Player ataca usando a espada;</p>
+- *ESC*: Retorna ao menu principal e gera um novo Level.</p>
+
+
+# Assets utilizados
+
+##  Imagens:
 - coin: https://opengameart.org/content/animated-coins
 - slime: https://opengameart.org/content/slime-sprite-sheet
 - flames: https://opengameart.org/content/lpc-flames
 
-##  Links dos audios:
+##  Áudios:
 - coin: http://soundbible.com/2081-Coin-Drop.html
 - teleporter - 01b: https://freesound.org/people/DWOBoyle/sounds/474179/
