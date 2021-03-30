@@ -1,7 +1,7 @@
 # PGCLab
-O PGCLab é uma ferramenta desenvolvida em para o estudo e aplicação de técnicas de geração procedural de conteúdo, desenvolvida completamente utilizando ferramentas abertas para web. Entre as principais aplicações estão os jogos digitais digitais.
+O PGCLab é uma ferramenta desenvolvida para o estudo e aplicação de técnicas de geração procedural de conteúdo, utilizando apenas ferramentas abertas para web. Entre as principais aplicações estão os jogos digitais digitais.
 
-O PGCLab foi desenvolvido 2020 como um projeto da disciplina DCC104 e DCC138 e, posteriormente, como iniciação científica por [Lucas Diniz Costa](https://github.com/lucasdinizcosta) sob a orientação de [Igor Knop](https://github.com/igorknop). Em 2021 o projeto foi renomeado para PGCLab e teve o código fonte aberto sob a GPLv3.
+O PGCLab foi desenvolvido durante 2020, como um projeto da disciplina DCC104 e DCC138 e, posteriormente, como iniciação científica por [Lucas Diniz Costa](https://github.com/lucasdinizcosta) sob a orientação de [Igor Knop](https://github.com/igorknop). Em 2021 o projeto foi renomeado para PGCLab e teve o código fonte aberto sob a GPLv3.
 
 
 ##  Instruções de uso:
