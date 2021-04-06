@@ -393,3 +393,5 @@ Sprite.prototype.atacar = function (alvo) {
   
   return true;
 };
+
+module.exports = Sprite;
