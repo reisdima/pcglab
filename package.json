@@ -1,0 +1,16 @@
+{
+  "name": "pgclab",
+  "version": "0.2.0",
+  "description": "A procedural content generation  laboratory",
+  "main": "index.js",
+  "repository": "https://github.com/pcglab/pcglab",
+  "author": "Igor Knop <igorknop@ice.ufjf.br>, Lucas Diniz Costa <lucasdinizcosta@ice.ufjf.br>",
+  "license": "GPLv3",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}
