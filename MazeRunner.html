@@ -3,8 +3,8 @@
 
 <head>
   <meta charset="utf-8">
-  <link rel='icon' type='image/png' sizes='32x32' href='Assets/Imagens/favicon-32x32.png'>
-  <link rel='icon' type='image/png' sizes='64x64' href='Assets/Imagens/favicon-64x64.png'>
+  <link rel='icon' type='image/png' sizes='32x32' href='assets/images/favicon-32x32.png'>
+  <link rel='icon' type='image/png' sizes='64x64' href='assets/images/favicon-64x64.png'>
   <title>Maze Runner - Aplicação de técnicas na geração procedural de conteúdo</title>
   <script src="classes/Map.js"></script>
   <script src="classes/Room.js"></script>
@@ -24,7 +24,7 @@
   <script src="classes/AssetsManager.js"></script>
   <script src="classes/CellularAutomata.js"></script>
   <script src="classes/SeedGenerator.js"></script>
-  <link rel="stylesheet" href="CSS/default.css">
+  <link rel="stylesheet" href="css/default.css">
 </head>
 
 <body>
@@ -51,20 +51,20 @@
     var assetsMng = new AssetsManager();
 
     // Carregamento das imagens do jogo
-    assetsMng.loadImage("brick_gray", "Assets/Imagens/brick_gray.png");
-    assetsMng.loadImage("brick_dark_Tp_0", "Assets/Imagens/brick_dark0.png");
-    assetsMng.loadImage("coin_copper", "Assets/Imagens/coin_copper.png");    
-    assetsMng.loadImage("coin_gold", "Assets/Imagens/coin_gold.png");    
-    assetsMng.loadImage("coin_silver", "Assets/Imagens/coin_silver.png");    
-    assetsMng.loadImage("flames", "Assets/Imagens/flames.png");    
-    assetsMng.loadImage("floor_sand", "Assets/Imagens/floor_sand_stone0.png");
-    assetsMng.loadImage("grass_full", "Assets/Imagens/grass_full.png");
-    assetsMng.loadImage("player", "Assets/Imagens/player-sprite.png");    
-    assetsMng.loadImage("rockBlock", "Assets/Imagens/rock.png");
-    assetsMng.loadImage("slime", "Assets/Imagens/slime.png");    
+    assetsMng.loadImage("brick_gray", "assets/images/brick_gray.png");
+    assetsMng.loadImage("brick_dark_Tp_0", "assets/images/brick_dark0.png");
+    assetsMng.loadImage("coin_copper", "assets/images/coin_copper.png");    
+    assetsMng.loadImage("coin_gold", "assets/images/coin_gold.png");    
+    assetsMng.loadImage("coin_silver", "assets/images/coin_silver.png");    
+    assetsMng.loadImage("flames", "assets/images/flames.png");    
+    assetsMng.loadImage("floor_sand", "assets/images/floor_sand_stone0.png");
+    assetsMng.loadImage("grass_full", "assets/images/grass_full.png");
+    assetsMng.loadImage("player", "assets/images/player-sprite.png");    
+    assetsMng.loadImage("rockBlock", "assets/images/rock.png");
+    assetsMng.loadImage("slime", "assets/images/slime.png");    
 
     // Carregamento dos audios presentes no jogo
-    assetsMng.loadAudio("teleporte", "Assets/Audios/Teleport.wav");
+    assetsMng.loadAudio("teleporte", "assets/audios/Teleport.wav");
 
     // SeedGenerator ===> Utilizado para retornar ao mesmo mapa com apenas o código da seed
     var seedValueURL = location.search;
