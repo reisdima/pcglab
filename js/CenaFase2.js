@@ -171,7 +171,6 @@ export default class CenaFase2 extends Cena{
 
         /*// Gera escudos
         setInterval(() => {
-            console.log("caju")
             this.adicionar(new Sprite({x: randValue(72, this.canvas.width - 72), y: randValue(72, this.canvas.height - 72),
                 h: 16, w: 16, tags:["escudo"]}));
         }, this.temporizador);*/

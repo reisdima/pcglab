@@ -165,11 +165,11 @@ export default class CenaFase1 extends Cena{
         this.adicionar(new Sprite({x: 72, y: 554, w: 16, h: 16, tags:["coin"]}));
 
         // Gera escudos
-        setInterval(() => {
+        /*setInterval(() => {
             this.adicionar(new Sprite({x: randValue(72, this.canvas.width - 72), y: randValue(72, this.canvas.height - 72),
                  h: 16, w: 16, tags:["escudo"]}));
                  console.log("a");
-        }, 30000);
+        }, 30000);*/
 
         // Criação de sprites experimental 
                                               
