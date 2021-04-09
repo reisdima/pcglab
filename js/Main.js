@@ -1,19 +1,15 @@
 import AssetManager from "./AssetManager.js";
 import CenaFase1 from "./CenaFase1.js";
-import CenaFase2 from "./CenaFase2.js";
+import CenaFim from "./CenaFim.js";
 import Mixer from "./Mixer.js";
 import InputManager from "./InputManager.js";
 import Game from "./Game.js";
-import CenaCarregando from "./CenaCarregando.js";
-import CenaFim from "./CenaFim.js";
-import CenaVitoria from "./CenaVitoria.js";
-import CenaTutorial from "./CenaTutorial.js";
 
 const input = new InputManager();
 const mixer = new Mixer(10);
 const assets = new AssetManager(mixer);
 
-assets.carregaImagem("skelly", "assets/skelly2.png"); // 32x50
+/*assets.carregaImagem("skelly", "assets/skelly2.png"); // 32x50
 assets.carregaImagem("guerreiro", "assets/guerreiro.png"); // 30x54
 assets.carregaImagem("moeda", "assets/moeda.png"); // 32x32
 assets.carregaImagem("alavanca", "assets/alavanca.png"); // 32x32
@@ -33,7 +29,7 @@ assets.carregaAudio("conquista", "assets/conquista.wav");
 assets.carregaAudio("escudo1", "assets/escudo_coletado.wav");
 assets.carregaAudio("escudo2", "assets/escudo_quebrado.wav");
 assets.carregaAudio("hurt", "assets/hurt.mp3");
-assets.carregaAudio("bruh", "assets/bruh.mp3");
+assets.carregaAudio("bruh", "assets/bruh.mp3");*/
 
 const canvas = document.querySelector("canvas");
 canvas.width = 17*48;
@@ -51,18 +47,10 @@ input.configurarTeclado({
 
 const game = new Game(canvas, assets, input);
 
-const cena0 = new CenaCarregando();
 const cena1 = new CenaFase1();
-const cena2 = new CenaFase2();
 const cenaFim = new CenaFim();
-const cenaVitoria = new CenaVitoria();
-const cenaTutorial = new CenaTutorial();
-game.adicionarCena("carregando", cena0);
 game.adicionarCena("fase1", cena1);
-game.adicionarCena("fase2", cena2);
 game.adicionarCena("fim", cenaFim);
-game.adicionarCena("win", cenaVitoria);
-game.adicionarCena("tutorial", cenaTutorial);
 
 game.iniciar();
 
