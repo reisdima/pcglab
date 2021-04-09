@@ -1,6 +1,6 @@
 export default class Sprite{
     // É responsável por modelar algo que se move na tela.
-    constructor({x=100, y=100, w=45, h=45, color="white", vx=0, vy=0, vida=0, direcao="dir",controlar = ()=>{}, tags = []}={}){
+    constructor({x=20, y=20, w=45, h=45, color="white", vx=0, vy=0, vida=0, direcao="dir",controlar = ()=>{}, tags = []}={}){
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -38,131 +38,29 @@ export default class Sprite{
         this.POSES_MOEDA = [
             {qmax: 6, pv: 9}
         ];
-        this.POSES_FANTASMA = [
-            {qmax: 2, pv: 9}
-        ];
     }
 
     desenhar(ctx){ 
         const SIZE = this.cena.mapa.SIZE;
 
         if(this.cena.mapa.tiles[this.my][this.mx] === 0){
-            // Desenho e movimentos de pc
-            if(this.tags.has("pc")){
-                if(this.direcao === "dir"){
-                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[3].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[3].pv*this.cena.dt;
-                    if(this.vx === 0 && this.vy === 0){
-                        ctx.drawImage(this.cena.assets.img("guerreiro"), 0*30, 3*54, 30, 54, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    } else {
-                        ctx.drawImage(this.cena.assets.img("guerreiro"), Math.floor(this.quadro)*30, 3*54, 30, 54, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    }
-                }
-                if(this.direcao === "esq"){
-                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[1].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[1].pv*this.cena.dt;
-                    if(this.vx === 0 && this.vy === 0){
-                        ctx.drawImage(this.cena.assets.img("guerreiro"), 0*30, 1*54, 30, 54, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    } else {
-                        ctx.drawImage(this.cena.assets.img("guerreiro"), Math.floor(this.quadro)*30, 1*54, 30, 54, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    }
-                }
-                if(this.direcao === "cima"){
-                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[0].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[0].pv*this.cena.dt;
-                    if(this.vx === 0 && this.vy === 0){
-                        ctx.drawImage(this.cena.assets.img("guerreiro"), 0*30, 0*54, 30, 54, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    } else {
-                        ctx.drawImage(this.cena.assets.img("guerreiro"), Math.floor(this.quadro)*30, 0*54, 30, 54, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    }
-                }
-                if(this.direcao === "baixo"){
-                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[2].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[2].pv*this.cena.dt;
-                    if(this.vx === 0 && this.vy === 0){
-                        ctx.drawImage(this.cena.assets.img("guerreiro"), 0*30, 2*54, 30, 54, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    } else {
-                        ctx.drawImage(this.cena.assets.img("guerreiro"), Math.floor(this.quadro)*30, 2*54, 30, 54, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    }
-                }
-                if(this.hitbox === "true"){
-                    ctx.strokeStyle = "blue";
-                    ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                }
-
-            // Desenho e movimentos de esqueleto
-            } else if (this.tags.has("esqueleto")){
-                if(this.direcao === "dir"){
-                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[3].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[3].pv*this.cena.dt;
-                    if(this.vx === 0 && this.vy === 0){
-                        ctx.drawImage(this.cena.assets.img("skelly"), 0*32, 3*50, 32, 50, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    } else {
-                        ctx.drawImage(this.cena.assets.img("skelly"), Math.floor(this.quadro)*32, 3*50, 32, 50, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    }
-                }
-                if(this.direcao === "esq"){
-                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[1].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[1].pv*this.cena.dt;
-                    if(this.vx === 0 && this.vy === 0){
-                        ctx.drawImage(this.cena.assets.img("skelly"), 0*32, 1*50, 32, 50, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    } else {
-                        ctx.drawImage(this.cena.assets.img("skelly"), Math.floor(this.quadro)*32, 1*50, 32, 50, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    }
-                }
-                if(this.direcao === "cima"){
-                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[0].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[0].pv*this.cena.dt;
-                    if(this.vx === 0 && this.vy === 0){
-                        ctx.drawImage(this.cena.assets.img("skelly"), 0*32, 0*50, 32, 50, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    } else {
-                        ctx.drawImage(this.cena.assets.img("skelly"), Math.floor(this.quadro)*32, 0*50, 32, 50, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    }
-                }
-                if(this.direcao === "baixo"){
-                    this.quadro = (this.quadro >= this.POSES_PERSONAGENS[2].qmax - 1) ? 0 : this.quadro + this.POSES_PERSONAGENS[2].pv*this.cena.dt;
-                    if(this.vx === 0 && this.vy === 0){
-                        ctx.drawImage(this.cena.assets.img("skelly"), 0*32, 2*50, 32, 50, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    } else {
-                        ctx.drawImage(this.cena.assets.img("skelly"), Math.floor(this.quadro)*32, 2*50, 32, 50, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                    }
-                }
-                if(this.hitbox === "true"){
-                    ctx.strokeStyle = "blue";
-                    ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                }
-
             // Desenho e movimentos moeda
-            } else if(this.tags.has("coin")) {
+            if(this.tags.has("coin")) {
                 this.quadro = (this.quadro >= this.POSES_MOEDA[0].qmax - 1) ? 0 : this.quadro + this.POSES_MOEDA[0].pv*this.cena.dt;
                 ctx.drawImage(this.cena.assets.img("moeda"), Math.floor(this.quadro)*32, 0, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-
-            // Desenho e movimento fantasma
-            } else if(this.tags.has("ghost")) {
-                if(this.direcao === "dir"){
-                    ctx.drawImage(this.cena.assets.img("ghost"), 0, 0, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                }
-                if(this.direcao === "esq"){
-                    ctx.drawImage(this.cena.assets.img("ghost"), 0, 64, 64, 64, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                }
                 if(this.hitbox === "true"){
                     ctx.strokeStyle = "blue";
                     ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                }
-
-            // Desenho e movimento alavanca
-            } else if(this.tags.has("alavanca")){
-                if(!this.tags.has("ativa")){
-                    ctx.drawImage(this.cena.assets.img("alavanca"), 0, 0, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                } else {
-                    ctx.drawImage(this.cena.assets.img("alavanca"), 0, 32, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                }
-
-            // Desenho escudo
-            } else if(this.tags.has("escudo")) {
-                ctx.drawImage(this.cena.assets.img("escudo"), 0, 32, 32, 32, this.x - this.w/2, this.y - this.h/2, this.w, this.h);
-                
-            // Desenho da porta
-            } else if(this.tags.has("exit")){
-                ctx.drawImage(this.cena.assets.img("porta"), this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                } 
 
             // Desenho e movimentos básicos
             } else {
                 ctx.fillStyle = this.color;
                 ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                if(this.hitbox === "true"){
+                    ctx.strokeStyle = "blue";
+                    ctx.strokeRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+                } 
             }
 
             // Modelo de desenho:
