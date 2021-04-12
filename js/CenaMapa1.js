@@ -5,7 +5,12 @@ import modeloMapaFase1 from "../maps/mapa1.js";
 
 export default class CenaFase1 extends Cena{
     quandoColidir(a, b){
-    
+        if(a.tags.has("pc") && b.tags.has("coin")){
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+            }
+            this.game.moedas += 1;
+        }
     }
 
     preparar(){
@@ -17,13 +22,13 @@ export default class CenaFase1 extends Cena{
         this.configuraMapa(mapa1);
 
         // Desenha o pc
-        const pc = new Sprite({x: 80, y :80, w: 20, h: 20, color: "red"});
+        const pc = new Sprite({x: 65, y :192, w: 20, h: 20, color: "red"});
         pc.tags.add("pc");
 
         const cena = this;
 
         // Define controle do pc
-        pc.controlar = function(dt){
+        /*pc.controlar = function(dt){
             if(cena.input.comandos.get("MOVE_ESQUERDA")){
                 this.direcao = "esq";
                 this.vx = -150;
@@ -42,16 +47,34 @@ export default class CenaFase1 extends Cena{
             } else {
                 this.vy = 0;
             }
-        };
+        };*/
+
+        pc.controlar = function(dt){
+            //console.log(cena.sprites.length);
+            for (let i = 0; i < cena.sprites.length; i++) {
+                if(cena.sprites[i].tags.has("coin")){
+                    this.vx = 100*Math.sign(cena.sprites[i].x - this.x);
+                    this.vy = 100*Math.sign(cena.sprites[i].y - this.y);
+                }
+                if(cena.sprites[i].tags.has("exit") && cena.sprites.length === 2){
+                    this.vx = 100*Math.sign(cena.sprites[i].x - this.x);
+                    this.vy = 100*Math.sign(cena.sprites[i].y - this.y);
+                }
+            }
+        }
         
         this.adicionar(pc);
         
         // Cria saída
-        const exit = new Sprite({x: 200, y: 100, w: 20, h: 20, tags:["exit"]});
+        const exit = new Sprite({x: 510, y: 192, w: 20, h: 20, tags:["exit"]});
         this.adicionar(exit);
         
         // Cria moedas
-        this.adicionar(new Sprite({x: 100, y: 100, w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 340), w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 340), w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 340), w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 340), w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 340), w: 16, h: 16, tags:["coin"]}));
             
         // Função de movimentação por perseguição
         function perseguePC(dt){
@@ -97,5 +120,11 @@ export default class CenaFase1 extends Cena{
         }
     }
         
-        
+    desenharHud(){
+        // Fase
+        this.ctx.font = "15px Arial";
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText("Moedas: " + this.game.moedas, 10, 20);
+        this.ctx.fillText("Sprites: " + this.sprites.length, 10, 40);
+    }
 }
