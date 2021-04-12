@@ -28,7 +28,30 @@ export default class CenaFase1 extends Cena{
         const cena = this;
 
         // Define controle do pc
-        /*pc.controlar = function(dt){
+
+        pc.controlar = caminhoMinimo;
+        
+        this.adicionar(pc);
+        
+        // Cria saída
+        const exit = new Sprite({x: 510, y: 192, w: 20, h: 20, tags:["exit"]});
+        this.adicionar(exit);
+        
+        // Cria moedas
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        //this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16}));  // Sprite que deve ser ignorado pelo pc
+
+        for (let i = 0; i < cena.sprites.length; i++) {
+            pc.distancias.push(dist(pc, cena.sprites[i]));
+            console.log(pc.distancias);
+        }
+            
+        //Função de movimentação pelo teclado
+        function movimentoTeclado(dt){
             if(cena.input.comandos.get("MOVE_ESQUERDA")){
                 this.direcao = "esq";
                 this.vx = -150;
@@ -47,23 +70,8 @@ export default class CenaFase1 extends Cena{
             } else {
                 this.vy = 0;
             }
-        };*/
+        };
 
-        pc.controlar = caminhoAleatorio;
-        
-        this.adicionar(pc);
-        
-        // Cria saída
-        const exit = new Sprite({x: 510, y: 192, w: 20, h: 20, tags:["exit"]});
-        this.adicionar(exit);
-        
-        // Cria moedas
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 340), w: 16, h: 16, tags:["coin"]}));
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 340), w: 16, h: 16, tags:["coin"]}));
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 340), w: 16, h: 16, tags:["coin"]}));
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 340), w: 16, h: 16, tags:["coin"]}));
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 340), w: 16, h: 16, tags:["coin"]}));
-            
         // Função de movimentação por perseguição
         function perseguePC(dt){
             this.vx = 40*Math.sign(pc.x - this.x);
@@ -77,11 +85,16 @@ export default class CenaFase1 extends Cena{
                     this.vx = 100*Math.sign(cena.sprites[i].x - this.x);
                     this.vy = 100*Math.sign(cena.sprites[i].y - this.y);
                 }
-                if(cena.sprites[i].tags.has("exit") && cena.sprites.length === 2){
-                    this.vx = 100*Math.sign(cena.sprites[i].x - this.x);
-                    this.vy = 100*Math.sign(cena.sprites[i].y - this.y);
+                if(!cena.sprites[i].tags.has("coin")){
+                    this.vx = 100*Math.sign(exit.x - this.x);
+                    this.vy = 100*Math.sign(exit.y - this.y);
                 }
             }
+        }
+
+        //Função de caminho mínimo (adaptação do caixeiro viajante)
+        function caminhoMinimo(dt){
+            
         }
 
         // Função geradora de valores aleatórios
@@ -89,6 +102,11 @@ export default class CenaFase1 extends Cena{
             min = Math.ceil(min);
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Função de cálculo de distância entre dois pontos
+        function dist(a, b) {
+            return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
         }
     }
         

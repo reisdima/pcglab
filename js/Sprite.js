@@ -38,6 +38,7 @@ export default class Sprite{
         this.POSES_MOEDA = [
             {qmax: 6, pv: 9}
         ];
+        this.distancias = [];
     }
 
     desenhar(ctx){ 
