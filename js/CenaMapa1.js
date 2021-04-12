@@ -49,19 +49,7 @@ export default class CenaFase1 extends Cena{
             }
         };*/
 
-        pc.controlar = function(dt){
-            //console.log(cena.sprites.length);
-            for (let i = 0; i < cena.sprites.length; i++) {
-                if(cena.sprites[i].tags.has("coin")){
-                    this.vx = 100*Math.sign(cena.sprites[i].x - this.x);
-                    this.vy = 100*Math.sign(cena.sprites[i].y - this.y);
-                }
-                if(cena.sprites[i].tags.has("exit") && cena.sprites.length === 2){
-                    this.vx = 100*Math.sign(cena.sprites[i].x - this.x);
-                    this.vy = 100*Math.sign(cena.sprites[i].y - this.y);
-                }
-            }
-        }
+        pc.controlar = caminhoAleatorio;
         
         this.adicionar(pc);
         
@@ -80,36 +68,20 @@ export default class CenaFase1 extends Cena{
         function perseguePC(dt){
             this.vx = 40*Math.sign(pc.x - this.x);
             this.vy = 40*Math.sign(pc.y - this.y);
-            if(pc.x > this.x){
-                this.direcao = "dir";
-            }
-            if(pc.x < this.x){
-                this.direcao = "esq";
-            }
-            /*if (pc.y < this.y){
-                this.direcao = "cima";
-            }
-            if (pc.y > this.y){
-                this.direcao = "baixo";
-            }*/
         }
 
-        // Função de movimentação básica
-        function movimentoBasico(dt){
-            if(this.direcao === "dir"){
-                this.vx = 60;
+        //Função de caminho aleatório
+        function caminhoAleatorio(dt){
+            for (let i = 0; i < cena.sprites.length; i++) {
+                if(cena.sprites[i].tags.has("coin")){
+                    this.vx = 100*Math.sign(cena.sprites[i].x - this.x);
+                    this.vy = 100*Math.sign(cena.sprites[i].y - this.y);
+                }
+                if(cena.sprites[i].tags.has("exit") && cena.sprites.length === 2){
+                    this.vx = 100*Math.sign(cena.sprites[i].x - this.x);
+                    this.vy = 100*Math.sign(cena.sprites[i].y - this.y);
+                }
             }
-            if(this.direcao === "esq"){
-                this.vx = -60;
-            }
-            if(this.direcao === "cima"){
-                this.vy = -60;
-            }
-            if(this.direcao === "baixo"){
-                this.vy = 60;
-            }
-                
-            //console.log(this.direcao);
         }
 
         // Função geradora de valores aleatórios
