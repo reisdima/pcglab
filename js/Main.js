@@ -43,7 +43,8 @@ input.configurarTeclado({
     ArrowDown: "MOVE_BAIXO",
     " ": "PROXIMA_CENA",
     h: "MOSTRA_HITBOX",
-    t: "CENA_TUTORIAL"
+    t: "CENA_TUTORIAL",
+    m: "VER_DISTANCIAS"
 });
 
 const game = new Game(canvas, assets, input);

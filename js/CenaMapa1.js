@@ -8,6 +8,7 @@ export default class CenaFase1 extends Cena{
         if(a.tags.has("pc") && b.tags.has("coin")){
             if(!this.aRemover.includes(b)){
                 this.aRemover.push(b);
+                a.distancias.clear();
             }
             this.game.moedas += 1;
         }
@@ -29,7 +30,7 @@ export default class CenaFase1 extends Cena{
 
         // Define controle do pc
 
-        pc.controlar = caminhoMinimo;
+        pc.controlar = caminhoAleatorio;
         
         this.adicionar(pc);
         
@@ -40,15 +41,10 @@ export default class CenaFase1 extends Cena{
         // Cria moedas
         this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
         this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        //this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        //this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        //this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
         //this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16}));  // Sprite que deve ser ignorado pelo pc
-
-        for (let i = 0; i < cena.sprites.length; i++) {
-            pc.distancias.push(dist(pc, cena.sprites[i]));
-            console.log(pc.distancias);
-        }
             
         //Função de movimentação pelo teclado
         function movimentoTeclado(dt){
@@ -70,6 +66,11 @@ export default class CenaFase1 extends Cena{
             } else {
                 this.vy = 0;
             }
+            if(cena.input.comandos.get("VER_DISTANCIAS")){
+                console.log(this.distancias);
+            }
+
+            atualizaDistancias();
         };
 
         // Função de movimentação por perseguição
@@ -90,6 +91,12 @@ export default class CenaFase1 extends Cena{
                     this.vy = 100*Math.sign(exit.y - this.y);
                 }
             }
+
+            if(cena.input.comandos.get("VER_DISTANCIAS")){
+                console.log(this.distancias);
+            }
+
+            atualizaDistancias();
         }
 
         //Função de caminho mínimo (adaptação do caixeiro viajante)
@@ -108,13 +115,23 @@ export default class CenaFase1 extends Cena{
         function dist(a, b) {
             return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
         }
+
+        //Função que atualiza distâncias de pc aos demais sprites
+        function atualizaDistancias(){
+
+            for (let i = 0; i < cena.sprites.length; i++) {
+                if(cena.sprites[i].tags.has("coin") ){
+                    pc.distancias.set(i,dist(pc, cena.sprites[i]));
+                }
+            }
+        }
     }
         
     desenharHud(){
         // Fase
         this.ctx.font = "15px Arial";
         this.ctx.fillStyle = "white";
-        this.ctx.fillText("Moedas: " + this.game.moedas, 10, 20);
-        this.ctx.fillText("Sprites: " + this.sprites.length, 10, 40);
+        this.ctx.fillText("Moedas coletadas: " + this.game.moedas, 10, 20);
+        this.ctx.fillText("Sprites na tela: " + this.sprites.length, 10, 40);
     }
 }
