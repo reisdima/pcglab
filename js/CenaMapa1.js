@@ -30,7 +30,7 @@ export default class CenaFase1 extends Cena{
 
         // Define controle do pc
 
-        pc.controlar = caminhoAleatorio;
+        pc.controlar = caminhoMinimo;
         
         this.adicionar(pc);
         
@@ -41,9 +41,9 @@ export default class CenaFase1 extends Cena{
         // Cria moedas
         this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
         this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
-        //this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
-        //this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
-        //this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
         //this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16}));  // Sprite que deve ser ignorado pelo pc
             
         //Função de movimentação pelo teclado
@@ -68,6 +68,8 @@ export default class CenaFase1 extends Cena{
             }
             if(cena.input.comandos.get("VER_DISTANCIAS")){
                 console.log(this.distancias);
+                //console.log(cena.sprites[2].x);
+                //console.log(cena.sprites[3].x);
             }
 
             atualizaDistancias();
@@ -101,7 +103,36 @@ export default class CenaFase1 extends Cena{
 
         //Função de caminho mínimo (adaptação do caixeiro viajante)
         function caminhoMinimo(dt){
-            
+            let menorIndice = 0;
+            let menorDist = 0;
+
+            for (let d of pc.distancias) {
+                if(menorDist === 0){
+                    menorIndice = d[0];
+                    menorDist = d[1];
+                } else {
+                    if(menorDist > d[1]){
+                        menorIndice = d[0];
+                        menorDist = d[1];
+                    }
+                }
+                this.vx = 100*Math.sign(cena.sprites[menorIndice].x - this.x);
+                this.vy = 100*Math.sign(cena.sprites[menorIndice].y - this.y);             
+            }
+
+            if(pc.distancias.size === 0){
+                this.vy = 100*Math.sign(exit.y - this.y);
+                this.vx = 100*Math.sign(exit.x - this.x);
+            }
+
+            if(cena.input.comandos.get("VER_DISTANCIAS")){
+                console.log("Tamanho do map: " + pc.distancias.size);
+                console.log(this.distancias);
+                console.log(menorIndice);
+                console.log(menorDist);
+            }
+
+            atualizaDistancias();
         }
 
         // Função geradora de valores aleatórios
@@ -120,11 +151,12 @@ export default class CenaFase1 extends Cena{
         function atualizaDistancias(){
 
             for (let i = 0; i < cena.sprites.length; i++) {
-                if(cena.sprites[i].tags.has("coin") ){
+                if(cena.sprites[i].tags.has("coin")){
                     pc.distancias.set(i,dist(pc, cena.sprites[i]));
                 }
             }
         }
+
     }
         
     desenharHud(){
