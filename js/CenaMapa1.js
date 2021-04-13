@@ -12,6 +12,15 @@ export default class CenaFase1 extends Cena{
             }
             this.game.moedas += 1;
         }
+        if(a.tags.has("pc") && b.tags.has("exit")){ // Se pc colidir com saída, remove os dois e reinicia a cena
+            if(!this.aRemover.includes(a)){
+                this.aRemover.push(a);
+            }
+            if(!this.aRemover.includes(b)){
+                this.aRemover.push(b);
+            }
+            this.game.selecionaCena("fase1");
+        }
     }
 
     preparar(){
@@ -39,11 +48,10 @@ export default class CenaFase1 extends Cena{
         this.adicionar(exit);
         
         // Cria moedas
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
-        this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        let qtdMoedas = randValue(4,8);
+        for (let i = 0; i < qtdMoedas; i++) {
+            this.adicionar(new Sprite({x: randValue(65, 450), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+        }
         //this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16}));  // Sprite que deve ser ignorado pelo pc
             
         //Função de movimentação pelo teclado
