@@ -4,6 +4,7 @@ import CenaFim from "./CenaFim.js";
 import Mixer from "./Mixer.js";
 import InputManager from "./InputManager.js";
 import Game from "./Game.js";
+import CenaInicio from "./CenaInicio.js";
 
 const input = new InputManager();
 const mixer = new Mixer(10);
@@ -43,14 +44,17 @@ input.configurarTeclado({
     ArrowDown: "MOVE_BAIXO",
     " ": "PROXIMA_CENA",
     h: "MOSTRA_HITBOX",
-    t: "CENA_TUTORIAL",
-    m: "VER_DISTANCIAS"
+    t: "CENA_INICIO",
+    m: "VER_DISTANCIAS",
+
 });
 
 const game = new Game(canvas, assets, input);
 
 const cena1 = new CenaMapa1();
+const cenaInicio = new CenaInicio();
 const cenaFim = new CenaFim();
+game.adicionarCena("inicio", cenaInicio);
 game.adicionarCena("fase1", cena1);
 game.adicionarCena("fim", cenaFim);
 
