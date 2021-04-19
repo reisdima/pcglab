@@ -36,7 +36,7 @@ export default class CenaFase1 extends Cena{
         this.adicionar(entrada);
 
         // Desenha o pc
-        const pc = new Sprite({x: entrada.x - entrada.w/2, y :entrada.y - entrada.h/2, w: 15, h: 15, color: "red"});
+        const pc = new Sprite({x: entrada.x, y :entrada.y, w: 15, h: 15, color: "red"});
         pc.tags.add("pc");
 
         const cena = this;
