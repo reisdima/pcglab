@@ -174,6 +174,7 @@ export default class CenaFase1 extends Cena{
     desenharHud(){
         // Fase
         this.ctx.font = "15px Arial";
+        this.ctx.textAlign = "left";
         this.ctx.fillStyle = "white";
         this.ctx.fillText("Moedas coletadas: " + this.game.moedas, 10, 20);
         this.ctx.fillText("Sprites na tela: " + this.sprites.length, 10, 40);
