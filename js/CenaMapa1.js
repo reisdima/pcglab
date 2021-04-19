@@ -31,8 +31,12 @@ export default class CenaFase1 extends Cena{
         mapa1.carregaMapa(modeloMapaFase1);
         this.configuraMapa(mapa1);
 
+        // Cria entrada
+        const entrada = new Sprite({x: 65, y: randValue(65,310), w: 20, h: 20, color:"yellow", tags:["entrada"]});
+        this.adicionar(entrada);
+
         // Desenha o pc
-        const pc = new Sprite({x: 65, y :192, w: 20, h: 20, color: "red"});
+        const pc = new Sprite({x: entrada.x - entrada.w/2, y :entrada.y - entrada.h/2, w: 15, h: 15, color: "red"});
         pc.tags.add("pc");
 
         const cena = this;
@@ -44,13 +48,13 @@ export default class CenaFase1 extends Cena{
         this.adicionar(pc);
         
         // Cria saída
-        const exit = new Sprite({x: 510, y: 192, w: 20, h: 20, tags:["exit"]});
+        const exit = new Sprite({x: 510, y: randValue(65,310), w: 20, h: 20, tags:["exit"]});
         this.adicionar(exit);
         
         // Cria moedas
         let qtdMoedas = randValue(4,8);
         for (let i = 0; i < qtdMoedas; i++) {
-            this.adicionar(new Sprite({x: randValue(65, 450), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
+            this.adicionar(new Sprite({x: randValue(100, 450), y: randValue(65, 310), w: 16, h: 16, tags:["coin"]}));
         }
         //this.adicionar(new Sprite({x: randValue(65, 510), y: randValue(65, 310), w: 16, h: 16}));  // Sprite que deve ser ignorado pelo pc
             
