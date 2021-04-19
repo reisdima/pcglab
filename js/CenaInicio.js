@@ -17,8 +17,12 @@ export default class CenaInicio extends Cena{
 
         // Menu de comandos
         if(this.assets.acabou()){
-            if(this.input.comandos.get("CENA_INICIO")){
+            if(this.input.comandos.get("CENA_CAMINHO_SPRITE")){
                 this.game.selecionaCena("fase1");
+                return;
+            }
+            if(this.input.comandos.get("CENA_CAMINHO_GRID")){
+                this.game.selecionaCena("fase2");
                 return;
             }
         }

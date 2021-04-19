@@ -3,7 +3,7 @@ import Mapa from "./Mapa.js";
 import Sprite from "./Sprite.js";
 import modeloMapaFase1 from "../maps/mapa1.js";
 
-export default class CenaFase1 extends Cena{
+export default class CenaMapa1 extends Cena{
     quandoColidir(a, b){
         if(a.tags.has("pc") && b.tags.has("coin")){
             if(!this.aRemover.includes(b)){
