@@ -168,7 +168,6 @@ export default class CenaMapa1 extends Cena{
                 }
             }
         }
-
     }
         
     desenharHud(){

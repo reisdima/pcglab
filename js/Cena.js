@@ -24,6 +24,11 @@ export default class Cena {
             }
         }
 
+        if(this.input.comandos.get("MENU")){
+            this.game.selecionaCena("inicio");
+            return;
+        }
+
         //this.ctx.fillStyle = "black";
         //this.ctx.fillRect(17*48 - 72, 554, 10, 10);
     }

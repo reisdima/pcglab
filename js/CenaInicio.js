@@ -8,7 +8,8 @@ export default class CenaInicio extends Cena{
         this.ctx.font = "20px Times";
         this.ctx.fillStyle = "white";
         this.ctx.textAlign = "center";
-        this.ctx.fillText("Aperte T para caminho mínimo por sprites", this.canvas.width/2, this.canvas.height/2);
+        this.ctx.fillText("Aperte T para caminho mínimo por sprites", this.canvas.width/2, this.canvas.height/2 - 50);
+        this.ctx.fillText("Aperte R para caminho mínimo por grid", this.canvas.width/2, this.canvas.height/2);
     }
 
     quadro(t){

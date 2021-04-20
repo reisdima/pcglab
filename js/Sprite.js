@@ -9,8 +9,8 @@ export default class Sprite{
         this.h = h;
         this.color = color;
         this.cena = null;
-        this.mx = 0;
-        this.my = 0;
+        this.mx = 0; // x do tile
+        this.my = 0; // y do tile 
         this.vida = vida;
         this.direcao = direcao;
         this.hitbox = "false";
@@ -70,10 +70,9 @@ export default class Sprite{
               // dx: x de destino; dy: y de destino; dw: w de destino; dh: h de origem;
             
             // Mostrar tile box
-            /*
             ctx.strokeStyle = "blue";
             ctx.strokeRect(this.mx * SIZE, this.my * SIZE, SIZE, SIZE);
-            */
+            
         
         } else  {
             if(this.tags.has("coin") || (this.tags.has("escudo"))){

@@ -47,7 +47,8 @@ input.configurarTeclado({
     h: "MOSTRA_HITBOX",
     t: "CENA_CAMINHO_SPRITE",
     r: "CENA_CAMINHO_GRID",
-    m: "VER_DISTANCIAS",
+    n: "VER_DISTANCIAS",
+    m: "MENU",
 
 });
 

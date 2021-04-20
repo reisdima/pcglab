@@ -36,7 +36,7 @@ export default class Mapa{
                         ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);
                         ctx.drawImage(this.cena.assets.img("grama"), c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);
                     }
-                    //ctx.strokeRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE); 
+                    ctx.strokeRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE); 
             }
         }
     }
