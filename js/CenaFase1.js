@@ -80,12 +80,18 @@ export default class CenaMapa1 extends Cena{
             }
             if(cena.input.comandos.get("VER_DISTANCIAS")){
                 console.log(this.distancias);
-                //console.log(cena.sprites[2].x);
-                //console.log(cena.sprites[3].x);
             }
 
             atualizaDistancias();
         };
+
+        // Função de estatica
+        function estatico(dt){
+            if(cena.input.comandos.get("VER_DISTANCIAS")){
+                console.log(this.distancias);
+            }
+            atualizaDistancias();
+        }
 
         // Função de movimentação por perseguição
         function perseguePC(dt){
@@ -164,7 +170,7 @@ export default class CenaMapa1 extends Cena{
 
             for (let i = 0; i < cena.sprites.length; i++) {
                 if(cena.sprites[i].tags.has("coin")){
-                    pc.distancias.set(i,dist(pc, cena.sprites[i]));
+                    pc.distancias.set(i,Math.floor(dist(pc, cena.sprites[i])));
                 }
             }
         }
