@@ -46,9 +46,12 @@ export default class CenaFase1 extends Cena{
             if(cena.input.comandos.get("VER_MATRIZ")){
                 //console.log(entrada.mapaDistancias);
                 for (let l = 0; l < cena.mapa.LINHAS; l++) {
+                    let print = "[";
                     for (let c = 0; c < cena.mapa.COLUNAS; c++) {
-                        console.log(entrada.mapaDistancias[l][c]);
+                        print = print + "(" + entrada.mapaDistancias[l][c] + "), "; 
                     }
+                    print = print + "]";
+                    console.log(print);
                 }
             }
             
@@ -74,9 +77,18 @@ export default class CenaFase1 extends Cena{
             for (let l = 0; l < cena.mapa.LINHAS; l++) {
                 entrada.mapaDistancias[l] = [];
                 for (let c = 0; c < cena.mapa.COLUNAS; c++) {
-                    entrada.mapaDistancias[l][c] = l + " ," + c ;
+                    let distL = entrada.my - l;
+                    let distC = entrada.mx - c;
+                    entrada.mapaDistancias[l][c] = Math.abs(distL) + Math.abs(distC);
+                    //entrada.mapaDistancias[l][c] = l + " ," + c ;
+                    //entrada.mapaDistancias[l][c] = cena.mapa.tiles[l][c];
                 }
             }
+        }
+
+        // Função de cálculo de distâncias entre tiles
+        function distTiles(){
+
         }
     }
         
