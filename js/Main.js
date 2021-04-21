@@ -49,6 +49,7 @@ input.configurarTeclado({
     r: "CENA_CAMINHO_GRID",
     d: "VER_DISTANCIAS",
     m: "MENU",
+    s: "VER_MATRIZ",
 
 });
 

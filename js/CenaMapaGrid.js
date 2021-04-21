@@ -38,9 +38,22 @@ export default class CenaFase1 extends Cena{
         //Função de movimento estático
         function estatico(dt){
             if(cena.input.comandos.get("VER_DISTANCIAS")){
-                    console.log(this.distancias);
+                console.log(this.distancias);
+                for (let i = 0; i < cena.sprites.length; i++) {
+                    console.log("Sprite " + i + ": MX = " + cena.sprites[i].mx + " MY = " + cena.sprites[i].my + " {" + cena.sprites[i].color + "}");
+                }
             }
-            atualizaDistancias();
+            if(cena.input.comandos.get("VER_MATRIZ")){
+                //console.log(entrada.mapaDistancias);
+                for (let l = 0; l < cena.mapa.LINHAS; l++) {
+                    for (let c = 0; c < cena.mapa.COLUNAS; c++) {
+                        console.log(entrada.mapaDistancias[l][c]);
+                    }
+                }
+            }
+            
+            atualizaDistanciasLinhaReta();
+            atualizaDistanciasTiles();
         }
 
         // Função de cálculo de distância entre dois pontos
@@ -48,11 +61,21 @@ export default class CenaFase1 extends Cena{
             return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
         }
 
-        //Função que atualiza distâncias de pc aos demais sprites
-        function atualizaDistancias(){
+        //Função que atualiza distâncias de entrada aos demais sprites
+        function atualizaDistanciasLinhaReta(){
 
             for (let i = 0; i < cena.sprites.length; i++) {
-                entrada.distancias.set(i,dist(entrada, cena.sprites[i]));
+                entrada.distancias.set(i,Math.floor(dist(entrada, cena.sprites[i])));
+            }
+        }
+
+        //Função que atualiza matriz de distâncias até entrada 
+        function atualizaDistanciasTiles(){
+            for (let l = 0; l < cena.mapa.LINHAS; l++) {
+                entrada.mapaDistancias[l] = [];
+                for (let c = 0; c < cena.mapa.COLUNAS; c++) {
+                    entrada.mapaDistancias[l][c] = l + " ," + c ;
+                }
             }
         }
     }

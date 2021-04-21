@@ -9,8 +9,8 @@ export default class Sprite{
         this.h = h;
         this.color = color;
         this.cena = null;
-        this.mx = 0; // x do tile
-        this.my = 0; // y do tile 
+        this.mx = 0; // x do tile (coluna) 
+        this.my = 0; // y do tile (linha)
         this.vida = vida;
         this.direcao = direcao;
         this.hitbox = "false";
@@ -39,6 +39,7 @@ export default class Sprite{
             {qmax: 6, pv: 9}
         ];
         this.distancias = new Map();
+        this.mapaDistancias = [];
     }
 
     desenhar(ctx){ 
