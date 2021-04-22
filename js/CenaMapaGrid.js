@@ -55,8 +55,8 @@ export default class CenaFase1 extends Cena{
                 }
             }
             
-            atualizaDistanciasLinhaReta();
-            atualizaDistanciasTiles();
+            atualizaDistanciasLinhaReta(this);
+            atualizaDistanciasTiles(this);
         }
 
         // Função de cálculo de distância entre dois pontos
@@ -65,23 +65,27 @@ export default class CenaFase1 extends Cena{
         }
 
         //Função que atualiza distâncias de entrada aos demais sprites
-        function atualizaDistanciasLinhaReta(){
+        function atualizaDistanciasLinhaReta(a){
 
             for (let i = 0; i < cena.sprites.length; i++) {
-                entrada.distancias.set(i,Math.floor(dist(entrada, cena.sprites[i])));
+                a.distancias.set(i,Math.floor(dist(a, cena.sprites[i])));
             }
         }
 
         //Função que atualiza matriz de distâncias até entrada 
-        function atualizaDistanciasTiles(){
+        function atualizaDistanciasTiles(a){
             for (let l = 0; l < cena.mapa.LINHAS; l++) {
-                entrada.mapaDistancias[l] = [];
+                a.mapaDistancias[l] = [];
                 for (let c = 0; c < cena.mapa.COLUNAS; c++) {
-                    let distL = entrada.my - l;
-                    let distC = entrada.mx - c;
-                    entrada.mapaDistancias[l][c] = Math.abs(distL) + Math.abs(distC);
-                    //entrada.mapaDistancias[l][c] = l + " ," + c ;
-                    //entrada.mapaDistancias[l][c] = cena.mapa.tiles[l][c];
+                    if(cena.mapa.tiles[l][c] != 0){
+                        a.mapaDistancias[l][c] = -1;
+                    } else {
+                        let distL = a.my - l;
+                        let distC = a.mx - c;
+                        a.mapaDistancias[l][c] = Math.abs(distL) + Math.abs(distC);
+                        //a.mapaDistancias[l][c] = l + " ," + c ;
+                        //a.mapaDistancias[l][c] = cena.mapa.tiles[l][c];
+                    }
                 }
             }
         }
