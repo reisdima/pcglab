@@ -21,6 +21,7 @@ export default class CenaFase1 extends Cena{
         // Cria entrada
         const entrada = new Sprite({x: 65, y: randValue(65,310), w: 20, h: 20, color:"yellow", controlar:estatico, tags:["entrada"]});
         this.adicionar(entrada);
+        iniciaDistanciasTiles(entrada);
         
         // Cria saída
         const exit = new Sprite({x: 510, y: randValue(65,310), w: 20, h: 20, tags:["exit"]});
@@ -55,8 +56,10 @@ export default class CenaFase1 extends Cena{
                 }
             }
             
+            iniciaDistanciasTiles(this);
             atualizaDistanciasLinhaReta(this);
-            atualizaDistanciasTiles(this);
+            inundar(this, this.my, this.mx);
+            //atualizaDistanciasTiles(this);
         }
 
         // Função de cálculo de distância entre dois pontos
@@ -91,8 +94,77 @@ export default class CenaFase1 extends Cena{
         }
 
         // Função de cálculo de distâncias entre tiles
-        function distTiles(){
+        function iniciaDistanciasTiles(a){
+            for (let l = 0; l < cena.mapa.LINHAS; l++) {
+                a.mapaDistancias[l] = [];
+                for (let c = 0; c < cena.mapa.COLUNAS; c++) {
+                    if(cena.mapa.tiles[l][c] != 0){
+                        a.mapaDistancias[l][c] = -1;
+                    } else {
+                        a.mapaDistancias[l][c] = 0;
+                    }
+                }
+            }
+        }
 
+        // Função de inundação (flood fill)
+        function inundar(a, linha, coluna){
+            if((a.my === linha && a.mx === coluna) && a.mapaDistancias[linha][coluna] != -1){
+                a.mapaDistancias[linha][coluna] = 0;
+                if(a.mapaDistancias[linha-1][coluna] != -1) {
+                    a.mapaDistancias[linha-1][coluna] = a.mapaDistancias[linha][coluna] + 1;
+                    inundar(a, linha-1, coluna);
+                } 
+                if(a.mapaDistancias[linha+1][coluna] != -1){
+                    a.mapaDistancias[linha+1][coluna] = a.mapaDistancias[linha][coluna] + 1;
+                    inundar(a, linha+1, coluna);
+                } 
+                if(a.mapaDistancias[linha][coluna-1] != -1){
+                    a.mapaDistancias[linha][coluna-1] = a.mapaDistancias[linha][coluna] + 1;
+                    inundar(a, linha, coluna-1);
+                } 
+                if(a.mapaDistancias[linha][coluna+1] != -1){
+                    a.mapaDistancias[linha][coluna+1] = a.mapaDistancias[linha][coluna] + 1;
+                    inundar(a, linha, coluna+1);
+                } 
+            }  else {
+                if((a.my != linha || a.mx != coluna) && a.mapaDistancias[linha-1][coluna] != -1){
+                    if((a.my != linha-1 || a.mx != coluna) && a.mapaDistancias[linha-1][coluna] === 0 ){
+                        a.mapaDistancias[linha-1][coluna] = a.mapaDistancias[linha][coluna] + 1;
+                        inundar(a, linha-1, coluna);
+                    } else if ((a.my != linha-1 || a.mx != coluna) && a.mapaDistancias[linha-1][coluna] > a.mapaDistancias[linha][coluna] + 1){
+                        a.mapaDistancias[linha-1][coluna] = a.mapaDistancias[linha][coluna] + 1;
+                        inundar(a, linha-1, coluna);
+                    }
+                }
+                if((a.my != linha || a.mx != coluna) && a.mapaDistancias[linha+1][coluna] != -1){
+                    if((a.my != linha+1 || a.mx != coluna) && a.mapaDistancias[linha+1][coluna] === 0){
+                        a.mapaDistancias[linha+1][coluna] = a.mapaDistancias[linha][coluna] + 1;
+                        inundar(a, linha+1, coluna);
+                    } else if ((a.my != linha+1 || a.mx != coluna) && a.mapaDistancias[linha+1][coluna] > a.mapaDistancias[linha][coluna] + 1){
+                        a.mapaDistancias[linha+1][coluna] = a.mapaDistancias[linha][coluna] + 1;
+                        inundar(a, linha+1, coluna);
+                    }
+                }
+                if((a.my != linha || a.mx != coluna) && a.mapaDistancias[linha][coluna-1] != -1){
+                    if((a.my != linha || a.mx != coluna-1) && a.mapaDistancias[linha][coluna-1] === 0){
+                        a.mapaDistancias[linha][coluna-1] = a.mapaDistancias[linha][coluna] + 1;
+                        inundar(a, linha, coluna-1);
+                    } else if ((a.my != linha || a.mx != coluna-1) && a.mapaDistancias[linha][coluna-1] > a.mapaDistancias[linha][coluna] + 1){
+                        a.mapaDistancias[linha][coluna-1] = a.mapaDistancias[linha][coluna] + 1;
+                        inundar(a, linha, coluna-1);
+                    }
+                }
+                if((a.my != linha || a.mx != coluna) && a.mapaDistancias[linha][coluna+1] != -1){
+                    if((a.my != linha || a.mx != coluna+1) && a.mapaDistancias[linha][coluna+1] === 0){
+                        a.mapaDistancias[linha][coluna+1] = a.mapaDistancias[linha][coluna] + 1;
+                        inundar(a, linha, coluna+1);
+                    }else if ((a.my != linha || a.mx != coluna+1) && a.mapaDistancias[linha][coluna+1] > a.mapaDistancias[linha][coluna] + 1){
+                        a.mapaDistancias[linha][coluna+1] = a.mapaDistancias[linha][coluna] + 1;
+                        inundar(a, linha, coluna+1);
+                    }
+                }
+            }
         }
     }
         
