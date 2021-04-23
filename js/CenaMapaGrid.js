@@ -55,11 +55,32 @@ export default class CenaFase1 extends Cena{
                     console.log(print);
                 }
             }
+            if(cena.input.comandos.get("MOVE_ESQUERDA")){
+                this.direcao = "esq";
+                this.vx = -150;
+            } else if (cena.input.comandos.get("MOVE_DIREITA")){
+                this.direcao = "dir";
+                this.vx = +150;
+            } else {
+                this.vx = 0;
+            }
+            if(cena.input.comandos.get("MOVE_CIMA")){
+                this.direcao = "cima";
+                this.vy = -150;
+            } else if (cena.input.comandos.get("MOVE_BAIXO")){
+                this.direcao = "baixo";
+                this.vy = +150;
+            } else {
+                this.vy = 0;
+            }
+            if(cena.input.comandos.get("VER_DISTANCIAS")){
+                console.log(this.distancias);
+            }
             
             iniciaDistanciasTiles(this);
             atualizaDistanciasLinhaReta(this);
             inundar(this, this.my, this.mx);
-            //atualizaDistanciasTiles(this);
+            //atualizaDistanciasManhattan(this);
         }
 
         // Função de cálculo de distância entre dois pontos
@@ -75,8 +96,8 @@ export default class CenaFase1 extends Cena{
             }
         }
 
-        //Função que atualiza matriz de distâncias até entrada 
-        function atualizaDistanciasTiles(a){
+        //Função que atualiza matriz de distâncias de Manhattan
+        function atualizaDistanciasManhattan(a){
             for (let l = 0; l < cena.mapa.LINHAS; l++) {
                 a.mapaDistancias[l] = [];
                 for (let c = 0; c < cena.mapa.COLUNAS; c++) {
