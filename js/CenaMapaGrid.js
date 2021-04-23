@@ -2,6 +2,7 @@ import Cena from "./Cena.js";
 import Mapa from "./Mapa.js";
 import Sprite from "./Sprite.js";
 import modeloMapaFase1 from "../maps/mapa1.js";
+import Layer from "./Layer.js";
 
 export default class CenaFase1 extends Cena{
     quandoColidir(a, b){
@@ -15,6 +16,11 @@ export default class CenaFase1 extends Cena{
         const mapa1 = new Mapa(8, 12, 48);
         mapa1.carregaMapa(modeloMapaFase1);
         this.configuraMapa(mapa1);
+
+        // Desenha o layer
+        const layer1 = new Layer(8, 12, 48);
+        layer1.carregaLayer(modeloMapaFase1);
+        this.configuraLayer(layer1);
         
         const cena = this;
 

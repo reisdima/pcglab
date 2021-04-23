@@ -14,6 +14,7 @@ export default class Cena {
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.mapa?.desenhar(this.ctx);
+        this.layer?.desenhar(this.ctx);
         this.desenharHud();
 
         if(this.assets.acabou()){
@@ -115,6 +116,11 @@ export default class Cena {
         this.mapa.cena = this;
     }
 
+    configuraLayer(layer){
+        this.layer = layer;
+        this.layer.cena = this;
+    }
+
     preparar(){
         this.sprites = [];
         this.aRemover = [];
@@ -122,6 +128,7 @@ export default class Cena {
         this.dt = 0;
         this.idAnim = null;
         this.mapa = null;
+        this.layer = null;
         this.rodando = true;
     }
     
