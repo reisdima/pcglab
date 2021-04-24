@@ -13,6 +13,9 @@ export default class Layer{
         this.cena = cena;
         this.mostrar = false;
         this.ativar = ativar;
+        this.layers = [];
+        this.pcx = null;
+        this.pcy = null;
     }
 
     desenhar(ctx){
@@ -27,7 +30,7 @@ export default class Layer{
                             ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
                             ctx.font = "15px Arial";
                             ctx.fillStyle = "white";
-                            ctx.fillText(this.tiles[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
+                            ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
                         }
                     break;
                     case 2:
@@ -38,7 +41,7 @@ export default class Layer{
                             ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
                             ctx.font = "15px Arial";
                             ctx.fillStyle = "white";
-                            ctx.fillText(this.tiles[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
+                            ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
                         }
                     break;
                     default:
@@ -49,7 +52,7 @@ export default class Layer{
                             ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
                             ctx.font = "15px Arial";
                             ctx.fillStyle = "white";
-                            ctx.fillText(this.tiles[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
+                            ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
                         }
                 }
                 if(this.mostrar){
@@ -79,6 +82,26 @@ export default class Layer{
             this.mostrar = false;
         } else {
             this.mostrar = true;
+        }
+    }
+
+    detectarSprite(a){
+        console.log(a.color);
+    }
+
+    //Função que atualiza matriz de distâncias de Manhattan
+    atualizaDistanciasManhattan(mx, my){
+        for (let l = 0; l < this.LINHAS; l++) {
+            this.layers[l] = [];
+            for (let c = 0; c < this.COLUNAS; c++) {
+                if(this.tiles[l][c] === 1){
+                    this.layers[l][c] = -1;
+                } else {
+                    let distL = my - l;
+                    let distC = mx - c;
+                    this.layers[l][c] = Math.abs(distL) + Math.abs(distC);
+                }
+            }
         }
     }
 }
