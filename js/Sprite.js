@@ -21,24 +21,10 @@ export default class Sprite{
         });
         this.pose = 0;
         this.quadro = 0;
-        this.POSES_PERSONAGENS = [ // qmax: numero de poses em cada quadro // pv: velocidade da pose
-            {qmax: 7, pv: 9}, // Quadro (linha) 0 -----> Andar p/ cima
-            {qmax: 7, pv: 9}, // Quadro (linha) 1 -----> Andar p/ esquerda
-            {qmax: 7, pv: 9}, // Quadro (linha) 2 -----> Andar p/ baixo
-            {qmax: 7, pv: 9}, // Quadro (linha) 3 -----> Andar p/ direita
-            {qmax: 8, pv: 9}, // Quadro (linha) 4
-            {qmax: 8, pv: 9}, // Quadro (linha) 5
-            {qmax: 8, pv: 9}, // Quadro (linha) 6
-            {qmax: 8, pv: 9}, // Quadro (linha) 7
-            {qmax: 9, pv: 12}, // Quadro (linha) 8 -----> Andar p/ cima
-            {qmax: 9, pv: 12}, // Quadro (linha) 9 -----> Andar p/ esquerda
-            {qmax: 9, pv: 12}, // Quadro (linha) 10 ----> Andar p/ baixo
-            {qmax: 9, pv: 12}  // Quadro (linha) 11 ----> Andar p/ direita
-        ];
         this.POSES_MOEDA = [
             {qmax: 6, pv: 9}
         ];
-        this.distancias = new Map();
+        this.distancias = new Map(); // Isso vai virar um conjunto de layers
         this.mapaDistancias = [];
     }
 

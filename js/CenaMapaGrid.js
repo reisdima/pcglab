@@ -4,30 +4,41 @@ import Sprite from "./Sprite.js";
 import modeloMapaFase1 from "../maps/mapa1.js";
 import Layer from "./Layer.js";
 
-export default class CenaFase1 extends Cena{
+export default class CenaMapaGrid extends Cena{
     quandoColidir(a, b){
 
     }
 
     preparar(){
         super.preparar();
+
+        // Define dimensões do mapa
+        const LINHAS = 8;
+        const COLUNAS = 12;
+        const TAMANHO_TILE = 48;
         
         // Desenha o mapa
-        const mapa1 = new Mapa(8, 12, 48);
+        const mapa1 = new Mapa(LINHAS, COLUNAS, TAMANHO_TILE);
         mapa1.carregaMapa(modeloMapaFase1);
         this.configuraMapa(mapa1);
 
         // Desenha o layer
-        const layer1 = new Layer(8, 12, 48);
+        const layer1 = new Layer(LINHAS, COLUNAS, TAMANHO_TILE);
         layer1.carregaLayer(modeloMapaFase1);
         this.configuraLayer(layer1);
         
         const cena = this;
 
         // Cria entrada
-        const entrada = new Sprite({x: 65, y: randValue(65,310), w: 20, h: 20, color:"yellow", controlar:estatico, tags:["entrada"]});
+        const entrada = new Sprite({x: 65, y: randValue(65,310), w: 20, h: 20, color:"yellow", tags:["entrada"]});
         this.adicionar(entrada);
-        iniciaDistanciasTiles(entrada);
+
+        // Cria pc
+        const pc = new Sprite({x: entrada.x, y :entrada.y, w: 15, h: 15, color: "red", controlar:estatico});
+        pc.tags.add("pc");
+        this.adicionar(pc);
+        iniciaDistanciasTiles(pc);
+
         
         // Cria saída
         const exit = new Sprite({x: 510, y: randValue(65,310), w: 20, h: 20, tags:["exit"]});
@@ -55,7 +66,7 @@ export default class CenaFase1 extends Cena{
                 for (let l = 0; l < cena.mapa.LINHAS; l++) {
                     let print = "[";
                     for (let c = 0; c < cena.mapa.COLUNAS; c++) {
-                        print = print + "(" + entrada.mapaDistancias[l][c] + "), "; 
+                        print = print + "(" + this.mapaDistancias[l][c] + "), "; 
                     }
                     print = print + "]";
                     console.log(print);
@@ -197,10 +208,10 @@ export default class CenaFase1 extends Cena{
         
     desenharHud(){
         // Fase
-        this.ctx.font = "15px Arial";
+        /*this.ctx.font = "15px Arial";
         this.ctx.textAlign = "left";
         this.ctx.fillStyle = "white";
         this.ctx.fillText("Moedas coletadas: " + this.game.moedas, 10, 20);
-        this.ctx.fillText("Sprites na tela: " + this.sprites.length, 10, 40);
+        this.ctx.fillText("Sprites na tela: " + this.sprites.length, 10, 40);*/
     }
 }

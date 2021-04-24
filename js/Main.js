@@ -49,6 +49,7 @@ input.configurarTeclado({
     d: "VER_DISTANCIAS",
     m: "MENU",
     s: "VER_MATRIZ",
+    a: "ATIVAR_LAYER",
 
 });
 

@@ -1,5 +1,5 @@
 export default class Layer{
-    constructor(linhas = 8, colunas = 12, tamanho = 32, cena = null){
+    constructor(linhas = 8, colunas = 12, tamanho = 32, cena = null, ativar = ()=>{}){
         this.LINHAS = linhas;
         this.COLUNAS = colunas;
         this.SIZE = tamanho;
@@ -11,6 +11,8 @@ export default class Layer{
             }
         }
         this.cena = cena;
+        this.mostrar = false;
+        this.ativar = ativar;
     }
 
     desenhar(ctx){
@@ -18,23 +20,45 @@ export default class Layer{
             for (let c = 0; c < this.COLUNAS; c++) {
                 switch (this.tiles[l][c]){
                     case 1:
-                        ctx.fillStyle = "grey";
-                        ctx.lineWidth = 1;
-                        ctx.strokeStyle = "black";
+                        if(this.mostrar){
+                            /*ctx.fillStyle = "grey";
+                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = "black";
+                            ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
+                            ctx.font = "15px Arial";
+                            ctx.fillStyle = "white";
+                            ctx.fillText(this.tiles[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
+                        }
                     break;
                     case 2:
-                        ctx.fillStyle = "red";
-                        ctx.lineWidth = 2;
-                        ctx.strokeStyle = "orange"; 
+                        if(this.mostrar){
+                            /*ctx.fillStyle = "red";
+                            ctx.lineWidth = 2;
+                            ctx.strokeStyle = "orange"; 
+                            ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
+                            ctx.font = "15px Arial";
+                            ctx.fillStyle = "white";
+                            ctx.fillText(this.tiles[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
+                        }
                     break;
                     default:
-                        ctx.fillStyle = "black";
-                        ctx.lineWidth = 1;
-                        ctx.strokeStyle = "grey";
-                        ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);
+                        if(this.mostrar){
+                            /*ctx.fillStyle = "black";
+                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = "grey";
+                            ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
+                            ctx.font = "15px Arial";
+                            ctx.fillStyle = "white";
+                            ctx.fillText(this.tiles[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
+                        }
                 }
-                ctx.strokeRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE); 
+                if(this.mostrar){
+                    ctx.strokeRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE); 
+                }
             }
+        }
+        if(this.cena.input.comandos.get("ATIVAR_LAYER")){
+            this.ativarLayer();
         }
     }
 
@@ -47,6 +71,14 @@ export default class Layer{
             for (let c = 0; c < this.COLUNAS; c++) {
                 this.tiles[l][c] = modelo[l][c];
             }
+        }
+    }
+
+    ativarLayer(){
+        if(this.mostrar) {
+            this.mostrar = false;
+        } else {
+            this.mostrar = true;
         }
     }
 }
