@@ -89,6 +89,19 @@ export default class Layer{
         console.log(a.color);
     }
 
+    iniciaLayers(){
+        for (let l = 0; l < this.LINHAS; l++) {
+            this.layers[l] = [];
+            for (let c = 0; c < this.COLUNAS; c++) {
+                if(this.tiles[l][c] != 0){
+                    this.layers[l][c] = -1;
+                } else {
+                    this.layers[l][c] = 0;
+                }
+            }
+        }
+    }
+
     //Função que atualiza matriz de distâncias de Manhattan
     atualizaDistanciasManhattan(mx, my){
         for (let l = 0; l < this.LINHAS; l++) {
@@ -100,6 +113,66 @@ export default class Layer{
                     let distL = my - l;
                     let distC = mx - c;
                     this.layers[l][c] = Math.abs(distL) + Math.abs(distC);
+                }
+            }
+        }
+    }
+
+    // Função de inundação
+    inundar(mx, my, linha, coluna){
+        if((my === linha && mx === coluna) && this.layers[linha][coluna] != -1){
+            this.layers[linha][coluna] = 0;
+            if(this.layers[linha-1][coluna] != -1) {
+                this.layers[linha-1][coluna] = this.layers[linha][coluna] + 1;
+                this.inundar(mx, my, linha-1, coluna);
+            } 
+            if(this.layers[linha+1][coluna] != -1){
+                this.layers[linha+1][coluna] = this.layers[linha][coluna] + 1;
+                this.inundar(mx, my, linha+1, coluna);
+            } 
+            if(this.layers[linha][coluna-1] != -1){
+                this.layers[linha][coluna-1] = this.layers[linha][coluna] + 1;
+                this.inundar(mx, my, linha, coluna-1);
+            } 
+            if(this.layers[linha][coluna+1] != -1){
+                this.layers[linha][coluna+1] = this.layers[linha][coluna] + 1;
+                this.inundar(mx, my, linha, coluna+1);
+            } 
+        }  else {
+            if((my != linha || mx != coluna) && this.layers[linha-1][coluna] != -1){
+                if((my != linha-1 || mx != coluna) && this.layers[linha-1][coluna] === 0 ){
+                    this.layers[linha-1][coluna] = this.layers[linha][coluna] + 1;
+                    this.inundar(mx, my, linha-1, coluna);
+                } else if ((my != linha-1 || mx != coluna) && this.layers[linha-1][coluna] > this.layers[linha][coluna] + 1){
+                    this.layers[linha-1][coluna] = this.layers[linha][coluna] + 1;
+                    this.inundar(mx, my, linha-1, coluna);
+                }
+            }
+            if((my != linha || mx != coluna) && this.layers[linha+1][coluna] != -1){
+                if((my != linha+1 || mx != coluna) && this.layers[linha+1][coluna] === 0){
+                    this.layers[linha+1][coluna] = this.layers[linha][coluna] + 1;
+                    this.inundar(mx, my, linha+1, coluna);
+                } else if ((my != linha+1 || mx != coluna) && this.layers[linha+1][coluna] > this.layers[linha][coluna] + 1){
+                    this.layers[linha+1][coluna] = this.layers[linha][coluna] + 1;
+                    this.inundar(mx, my, linha+1, coluna);
+                }
+            }
+            if((my != linha || mx != coluna) && this.layers[linha][coluna-1] != -1){
+                if((my != linha || mx != coluna-1) && this.layers[linha][coluna-1] === 0){
+                    this.layers[linha][coluna-1] = this.layers[linha][coluna] + 1;
+                    this.inundar(mx, my, linha, coluna-1);
+                } else if ((my != linha || mx != coluna-1) && this.layers[linha][coluna-1] > this.layers[linha][coluna] + 1){
+                    this.layers[linha][coluna-1] = this.layers[linha][coluna] + 1;
+                    this.inundar(mx, my, linha, coluna-1);
+                }
+            }
+            if((my != linha || mx != coluna) && this.layers[linha][coluna+1] != -1){
+                if((my != linha || mx != coluna+1) && this.layers[linha][coluna+1] === 0){
+                    this.layers[linha][coluna+1] = this.layers[linha][coluna] + 1;
+                    this.inundar(mx, my, linha, coluna+1);
+                }else if ((my != linha || mx != coluna+1) && this.layers[linha][coluna+1] > this.layers[linha][coluna] + 1){
+                    this.layers[linha][coluna+1] = this.layers[linha][coluna] + 1;
+                    this.inundar(mx, my, linha, coluna+1);
                 }
             }
         }

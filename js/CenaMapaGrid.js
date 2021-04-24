@@ -101,7 +101,9 @@ export default class CenaMapaGrid extends Cena{
             atualizaDistanciasLinhaReta(this);
             inundar(this, this.my, this.mx);
             //atualizaDistanciasManhattan(this);
-            cena.layer.atualizaDistanciasManhattan(pc.mx, pc.my);
+            cena.layer.iniciaLayers();
+            //cena.layer.atualizaDistanciasManhattan(pc.mx, pc.my);
+            cena.layer.inundar(pc.my, pc.mx, pc.my, pc.mx);
         }
 
         // Função de cálculo de distância entre dois pontos
