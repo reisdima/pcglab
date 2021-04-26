@@ -39,7 +39,6 @@ export default class CenaMapaGrid extends Cena{
         this.adicionar(pc);
         iniciaDistanciasTiles(pc);
 
-        this.layer.detectarSprite(pc);
         this.layer.atualizaDistanciasManhattan(pc.mx, pc.my);
 
         
@@ -104,6 +103,7 @@ export default class CenaMapaGrid extends Cena{
             cena.layer.iniciaLayers();
             //cena.layer.atualizaDistanciasManhattan(pc.mx, pc.my);
             cena.layer.inundar(pc.my, pc.mx, pc.my, pc.mx);
+            cena.layer.apontarDirecoes();
         }
 
         // Função de cálculo de distância entre dois pontos

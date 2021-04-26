@@ -14,6 +14,7 @@ export default class Layer{
         this.mostrar = false;
         this.ativar = ativar;
         this.layers = [];
+        this.direcoes = [];
         this.pcx = null;
         this.pcy = null;
     }
@@ -30,7 +31,8 @@ export default class Layer{
                             ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
                             ctx.font = "15px Arial";
                             ctx.fillStyle = "white";
-                            ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
+                            //ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
+                            ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
                         }
                     break;
                     case 2:
@@ -41,7 +43,8 @@ export default class Layer{
                             ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
                             ctx.font = "15px Arial";
                             ctx.fillStyle = "white";
-                            ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
+                            //ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
+                            ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 -10);
                         }
                     break;
                     default:
@@ -52,7 +55,8 @@ export default class Layer{
                             ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
                             ctx.font = "15px Arial";
                             ctx.fillStyle = "white";
-                            ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
+                            //ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
+                            ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
                         }
                 }
                 if(this.mostrar){
@@ -83,10 +87,6 @@ export default class Layer{
         } else {
             this.mostrar = true;
         }
-    }
-
-    detectarSprite(a){
-        console.log(a.color);
     }
 
     iniciaLayers(){
@@ -174,6 +174,44 @@ export default class Layer{
                     this.layers[linha][coluna+1] = this.layers[linha][coluna] + 1;
                     this.inundar(my, mx, linha, coluna+1);
                 }
+            }
+        }
+    }
+
+    // Função de cálculo de direções
+    apontarDirecoes(){
+        let temp = [];
+        for (let l = 0; l < this.LINHAS; l++) {
+            temp[l] = [];
+            for (let c = 0; c < this.COLUNAS; c++) {
+                if(this.layers[l][c] === -1){
+                    temp[l][c] = Infinity;
+                } else {
+                    temp[l][c] = this.layers[l][c];
+                }
+            }
+        }
+
+        for (let l = 0; l < this.LINHAS; l++) {
+            this.direcoes[l] = [];
+            for (let c = 0; c < this.COLUNAS; c++) {
+                if(temp[l][c] != 0 && temp[l][c] != Infinity){
+                    if((temp[l][c-1] <= temp[l][c+1]) && (temp[l][c-1] <= temp[l+1][c]) && (temp[l][c-1] <= temp[l-1][c])){
+                        this.direcoes[l][c] = "<";
+                    }
+                    else if((temp[l][c+1] <= temp[l][c-1]) && (temp[l][c+1] <= temp[l+1][c]) && (temp[l][c+1] <= temp[l-1][c])){
+                        this.direcoes[l][c] = ">";
+                    }
+                    else if((temp[l-1][c] <= temp[l+1][c]) && (temp[l-1][c] <= temp[l][c-1]) && (temp[l-1][c] <= temp[l][c+1])){
+                        this.direcoes[l][c] = "^";
+                    }
+                    else if((temp[l+1][c] <= temp[l-1][c]) && (temp[l+1][c] <= temp[l][c-1]) && (temp[l+1][c] <= temp[l][c+1])){
+                        this.direcoes[l][c] = "V";
+                    }
+                } else {
+                    this.direcoes[l][c] = " ";
+                }
+                //this.direcoes[l][c] = temp[l][c];
             }
         }
     }
