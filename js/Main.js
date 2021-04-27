@@ -42,7 +42,7 @@ input.configurarTeclado({
     ArrowRight: "MOVE_DIREITA",
     ArrowUp: "MOVE_CIMA",
     ArrowDown: "MOVE_BAIXO",
-    " ": "PROXIMA_CENA",
+    " ": "ALTERNAR_EXIBICAO",
     h: "MOSTRA_HITBOX",
     t: "CENA_CAMINHO_SPRITE",
     r: "CENA_CAMINHO_GRID",

@@ -1,5 +1,5 @@
 export default class Layer{
-    constructor(linhas = 8, colunas = 12, tamanho = 32, cena = null, ativar = ()=>{}){
+    constructor(linhas = 8, colunas = 12, tamanho = 32, cena = null){
         this.LINHAS = linhas;
         this.COLUNAS = colunas;
         this.SIZE = tamanho;
@@ -12,7 +12,8 @@ export default class Layer{
         }
         this.cena = cena;
         this.mostrar = false;
-        this.ativar = ativar;
+        this.mostrarDistancias = false;
+        this.mostrarDirecoes = false;
         this.layers = [];
         this.direcoes = [];
         this.pcx = null;
@@ -31,8 +32,12 @@ export default class Layer{
                             ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
                             ctx.font = "15px Arial";
                             ctx.fillStyle = "white";
-                            //ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
-                            ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
+                            if(this.mostrarDistancias){
+                                ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
+                            }
+                            if(this.mostrarDirecoes){
+                                ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
+                            }
                         }
                     break;
                     case 2:
@@ -43,8 +48,12 @@ export default class Layer{
                             ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
                             ctx.font = "15px Arial";
                             ctx.fillStyle = "white";
-                            //ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
-                            ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 -10);
+                            if(this.mostrarDistancias){
+                                ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
+                            }
+                            if(this.mostrarDirecoes){
+                                ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
+                            }
                         }
                     break;
                     default:
@@ -55,8 +64,12 @@ export default class Layer{
                             ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
                             ctx.font = "15px Arial";
                             ctx.fillStyle = "white";
-                            //ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
-                            ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
+                            if(this.mostrarDistancias){
+                                ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
+                            }
+                            if(this.mostrarDirecoes){
+                                ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
+                            }
                         }
                 }
                 if(this.mostrar){
@@ -66,6 +79,9 @@ export default class Layer{
         }
         if(this.cena.input.comandos.get("ATIVAR_LAYER")){
             this.ativarLayer();
+        }
+        if(this.cena.input.comandos.get("ALTERNAR_EXIBICAO")){
+            this.alterarModoExibicao();
         }
     }
 
@@ -84,10 +100,24 @@ export default class Layer{
     ativarLayer(){
         if(this.mostrar) {
             this.mostrar = false;
+            this.mostrarDistancias = false;
+            this.mostrarDirecoes = false;
         } else {
             this.mostrar = true;
+            this.mostrarDistancias = true;
         }
     }
+
+    alterarModoExibicao(){
+        if(this.mostrarDirecoes && this.mostrar) {
+            this.mostrarDirecoes = false;
+            this.mostrarDistancias = true;
+        } else if (this.mostrarDistancias && this.mostrar){
+            this.mostrarDistancias = false;
+            this.mostrarDirecoes = true;
+        }
+    }
+
 
     iniciaLayers(){
         for (let l = 0; l < this.LINHAS; l++) {
@@ -211,7 +241,6 @@ export default class Layer{
                 } else {
                     this.direcoes[l][c] = " ";
                 }
-                //this.direcoes[l][c] = temp[l][c];
             }
         }
     }

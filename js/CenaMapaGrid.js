@@ -75,19 +75,15 @@ export default class CenaMapaGrid extends Cena{
                 }
             }
             if(cena.input.comandos.get("MOVE_ESQUERDA")){
-                this.direcao = "esq";
                 this.vx = -150;
             } else if (cena.input.comandos.get("MOVE_DIREITA")){
-                this.direcao = "dir";
                 this.vx = +150;
             } else {
                 this.vx = 0;
             }
             if(cena.input.comandos.get("MOVE_CIMA")){
-                this.direcao = "cima";
                 this.vy = -150;
             } else if (cena.input.comandos.get("MOVE_BAIXO")){
-                this.direcao = "baixo";
                 this.vy = +150;
             } else {
                 this.vy = 0;
@@ -96,13 +92,13 @@ export default class CenaMapaGrid extends Cena{
                 console.log(this.distancias);
             }
             
-            iniciaDistanciasTiles(this);
-            atualizaDistanciasLinhaReta(this);
-            inundar(this, this.my, this.mx);
+            //iniciaDistanciasTiles(this);
+            //atualizaDistanciasLinhaReta(this);
+            //inundar(this, this.my, this.mx);
             //atualizaDistanciasManhattan(this);
-            cena.layer.iniciaLayers();
             //cena.layer.atualizaDistanciasManhattan(pc.mx, pc.my);
-            cena.layer.inundar(pc.my, pc.mx, pc.my, pc.mx);
+            cena.layer.iniciaLayers();
+            cena.layer.inundar(exit.my, exit.mx, exit.my, exit.mx);
             cena.layer.apontarDirecoes();
         }
 
