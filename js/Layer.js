@@ -236,7 +236,7 @@ export default class Layer{
                         this.direcoes[l][c] = "^";
                     }
                     else if((temp[l+1][c] <= temp[l-1][c]) && (temp[l+1][c] <= temp[l][c-1]) && (temp[l+1][c] <= temp[l][c+1])){
-                        this.direcoes[l][c] = "V";
+                        this.direcoes[l][c] = "v";
                     }
                 } else {
                     this.direcoes[l][c] = " ";

@@ -15,6 +15,7 @@ export default class Cena {
 
         this.mapa?.desenhar(this.ctx);
         this.layer?.desenhar(this.ctx);
+        this.path?.desenhar(this.ctx);
         this.desenharHud();
 
         if(this.assets.acabou()){
@@ -121,6 +122,11 @@ export default class Cena {
         this.layer.cena = this;
     }
 
+    configuraPath(path){
+        this.path = path;
+        this.path.cena = this;
+    }
+
     preparar(){
         this.sprites = [];
         this.aRemover = [];
@@ -129,6 +135,7 @@ export default class Cena {
         this.idAnim = null;
         this.mapa = null;
         this.layer = null;
+        this.path = null;
         this.rodando = true;
     }
     
