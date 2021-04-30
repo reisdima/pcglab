@@ -1,3 +1,5 @@
+import Path from "./Path.js";
+
 export default class Layer{
     constructor(linhas = 8, colunas = 12, tamanho = 32, cena = null){
         this.LINHAS = linhas;
@@ -14,63 +16,30 @@ export default class Layer{
         this.mostrar = false;
         this.mostrarDistancias = false;
         this.mostrarDirecoes = false;
+        this.mostrarCaminho = false;
         this.layers = [];
         this.direcoes = [];
         this.pcx = null;
         this.pcy = null;
+        this.caminho = new Path(this.LINHAS, this.COLUNAS, this.SIZE, this);
     }
 
     desenhar(ctx){
+        if(this.mostrar){
+            this.caminho.iniciaLayers();
+            this.caminho.desenhar(ctx);
+        }
         for (let l = 0; l < this.LINHAS; l++) {
             for (let c = 0; c < this.COLUNAS; c++) {
-                switch (this.tiles[l][c]){
-                    case 1:
-                        if(this.mostrar){
-                            /*ctx.fillStyle = "grey";
-                            ctx.lineWidth = 1;
-                            ctx.strokeStyle = "black";
-                            ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
-                            ctx.font = "15px Arial";
-                            ctx.fillStyle = "white";
-                            if(this.mostrarDistancias){
-                                ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
-                            }
-                            if(this.mostrarDirecoes){
-                                ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
-                            }
-                        }
-                    break;
-                    case 2:
-                        if(this.mostrar){
-                            /*ctx.fillStyle = "red";
-                            ctx.lineWidth = 2;
-                            ctx.strokeStyle = "orange"; 
-                            ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
-                            ctx.font = "15px Arial";
-                            ctx.fillStyle = "white";
-                            if(this.mostrarDistancias){
-                                ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
-                            }
-                            if(this.mostrarDirecoes){
-                                ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
-                            }
-                        }
-                    break;
-                    default:
-                        if(this.mostrar){
-                            /*ctx.fillStyle = "black";
-                            ctx.lineWidth = 1;
-                            ctx.strokeStyle = "grey";
-                            ctx.fillRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE);*/
-                            ctx.font = "15px Arial";
-                            ctx.fillStyle = "white";
-                            if(this.mostrarDistancias){
-                                ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
-                            }
-                            if(this.mostrarDirecoes){
-                                ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
-                            }
-                        }
+                if(this.mostrar){
+                    ctx.font = "15px Arial";
+                    ctx.fillStyle = "white";
+                    if(this.mostrarDistancias){
+                        ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
+                    }
+                    if(this.mostrarDirecoes){
+                        ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
+                    }
                 }
                 if(this.mostrar){
                     ctx.strokeRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE); 
@@ -82,6 +51,9 @@ export default class Layer{
         }
         if(this.cena.input.comandos.get("ALTERNAR_EXIBICAO")){
             this.alterarModoExibicao();
+        }
+        if(this.cena.input.comandos.get("MOSTRAR_CAMINHO")){
+            this.ativarCaminho();
         }
     }
 
@@ -115,6 +87,14 @@ export default class Layer{
         } else if (this.mostrarDistancias && this.mostrar){
             this.mostrarDistancias = false;
             this.mostrarDirecoes = true;
+        }
+    }
+
+    ativarCaminho(){
+        if(this.mostrarCaminho) {
+            this.mostrarCaminho = false;
+        } else {
+            this.mostrarCaminho = true;
         }
     }
 

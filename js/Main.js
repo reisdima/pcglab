@@ -50,6 +50,7 @@ input.configurarTeclado({
     m: "MENU",
     s: "VER_MATRIZ",
     a: "ATIVAR_LAYER",
+    n: "MOSTRAR_CAMINHO",
 
 });
 
