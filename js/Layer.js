@@ -21,12 +21,16 @@ export default class Layer{
         this.direcoes = [];
         this.pcx = null;
         this.pcy = null;
-        this.caminho = new Path(this.LINHAS, this.COLUNAS, this.SIZE, this);
+        this.caminho = new Path(this);
+        this.mxEntrada = null;
+        this.myEntrada = null;
+        this.mxSaida = null;
+        this.mySaida = null;
     }
 
     desenhar(ctx){
         if(this.mostrarCaminho){
-            this.caminho.iniciaLayers();
+            this.caminho.calculaCaminho();
             this.caminho.desenhar(ctx);
         }
         for (let l = 0; l < this.LINHAS; l++) {
@@ -38,7 +42,18 @@ export default class Layer{
                         ctx.fillText(this.layers[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
                     }
                     if(this.mostrarDirecoes){
-                        ctx.fillText(this.direcoes[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
+                        if(this.direcoes[l][c] === "O"){
+                            ctx.fillText("<", c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
+                        }
+                        if(this.direcoes[l][c] === "L"){
+                            ctx.fillText(">", c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
+                        }
+                        if(this.direcoes[l][c] === "N"){
+                            ctx.fillText("^", c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
+                        }
+                        if(this.direcoes[l][c] === "S"){
+                            ctx.fillText("v", c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
+                        }
                     }
                 }
                 if(this.mostrar){
@@ -99,7 +114,11 @@ export default class Layer{
     }
 
 
-    iniciaLayers(){
+    iniciaLayers(mxE, myE, mxS, myS){
+        this.mxEntrada = mxE;
+        this.myEntrada = myE;
+        this.mxSaida = mxS;
+        this.mySaida = myS;
         for (let l = 0; l < this.LINHAS; l++) {
             this.layers[l] = [];
             for (let c = 0; c < this.COLUNAS; c++) {
@@ -207,16 +226,16 @@ export default class Layer{
             for (let c = 0; c < this.COLUNAS; c++) {
                 if(temp[l][c] != 0 && temp[l][c] != Infinity){
                     if((temp[l][c-1] <= temp[l][c+1]) && (temp[l][c-1] <= temp[l+1][c]) && (temp[l][c-1] <= temp[l-1][c])){
-                        this.direcoes[l][c] = "<";
+                        this.direcoes[l][c] = "O";
                     }
                     else if((temp[l][c+1] <= temp[l][c-1]) && (temp[l][c+1] <= temp[l+1][c]) && (temp[l][c+1] <= temp[l-1][c])){
-                        this.direcoes[l][c] = ">";
+                        this.direcoes[l][c] = "L";
                     }
                     else if((temp[l-1][c] <= temp[l+1][c]) && (temp[l-1][c] <= temp[l][c-1]) && (temp[l-1][c] <= temp[l][c+1])){
-                        this.direcoes[l][c] = "^";
+                        this.direcoes[l][c] = "N";
                     }
                     else if((temp[l+1][c] <= temp[l-1][c]) && (temp[l+1][c] <= temp[l][c-1]) && (temp[l+1][c] <= temp[l][c+1])){
-                        this.direcoes[l][c] = "v";
+                        this.direcoes[l][c] = "S";
                     }
                 } else {
                     this.direcoes[l][c] = " ";

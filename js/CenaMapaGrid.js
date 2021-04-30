@@ -40,13 +40,10 @@ export default class CenaMapaGrid extends Cena{
         iniciaDistanciasTiles(pc);
 
         this.layer.atualizaDistanciasManhattan(pc.mx, pc.my);
-
         
         // Cria saída
         const exit = new Sprite({x: 510, y: randValue(65,310), w: 20, h: 20, tags:["exit"]});
         this.adicionar(exit);
-
-        //this.adicionar(new Sprite({x: 200, y: 200, w:20, h:20, color:"blue"})); // Sprite de teste
         
         // Função geradora de valores aleatórios
         function randValue(min, max) {
@@ -97,7 +94,7 @@ export default class CenaMapaGrid extends Cena{
             //inundar(this, this.my, this.mx);
             //atualizaDistanciasManhattan(this);
             //cena.layer.atualizaDistanciasManhattan(pc.mx, pc.my);
-            cena.layer.iniciaLayers();
+            cena.layer.iniciaLayers(pc.mx, pc.my, exit.mx, exit.my);
             cena.layer.inundar(exit.my, exit.mx, exit.my, exit.mx);
             cena.layer.apontarDirecoes();
         }
