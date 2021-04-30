@@ -16,19 +16,10 @@ export default class Path{
     desenhar(ctx){
         for (let l = 0; l < this.LINHAS; l++) {
             for (let c = 0; c < this.COLUNAS; c++) {
-                switch (this.tiles[l][c]){
-                    case 0:
-                        ctx.font = "15px Arial";
-                        ctx.fillStyle = "blue";
-                        ctx.fillText(this.tiles[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
-                    break;
-                    default:
-                        ctx.font = "15px Arial";
-                        ctx.fillStyle = "red";
-                        ctx.fillText(this.tiles[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2);
-                        
-                }
-                //ctx.strokeRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE); 
+                ctx.font = "15px Arial";
+                ctx.fillStyle = "white";
+                ctx.fillText(this.tiles[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
+                ctx.strokeRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE); 
             }
         }
     }
@@ -37,7 +28,7 @@ export default class Path{
         for (let l = 0; l < this.LINHAS; l++) {
             this.tiles[l] = [];
             for (let c = 0; c < this.COLUNAS; c++) {
-                this.tiles[l][c] = this.layer.tiles[l][c];
+                this.tiles[l][c] = this.layer.direcoes[l][c];
             }
         }
     }

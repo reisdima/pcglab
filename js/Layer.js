@@ -25,7 +25,7 @@ export default class Layer{
     }
 
     desenhar(ctx){
-        if(this.mostrar){
+        if(this.mostrarCaminho){
             this.caminho.iniciaLayers();
             this.caminho.desenhar(ctx);
         }
