@@ -89,6 +89,7 @@ export default class Layer{
             this.mostrar = false;
             this.mostrarDistancias = false;
             this.mostrarDirecoes = false;
+            this.mostrarCaminho = false;
         } else {
             this.mostrar = true;
             this.mostrarDistancias = true;
@@ -101,6 +102,9 @@ export default class Layer{
             this.mostrarDistancias = true;
         } else if (this.mostrarDistancias && this.mostrar){
             this.mostrarDistancias = false;
+            this.mostrarCaminho = true;
+        } else if (this.mostrarCaminho && this.mostrar){
+            this.mostrarCaminho = false;
             this.mostrarDirecoes = true;
         }
     }
