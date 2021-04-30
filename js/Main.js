@@ -14,6 +14,10 @@ assets.carregaImagem("parede", "assets/parede.png"); //64x64
 assets.carregaImagem("grama", "assets/grama.png"); //64x64
 assets.carregaImagem("rocha", "assets/rochaNegra.png"); //64x64
 assets.carregaImagem("moeda", "assets/moeda.png"); // 32x32
+assets.carregaImagem("setaL", "assets/setaL.png"); // 512x512
+assets.carregaImagem("setaO", "assets/setaO.png"); // 512x512
+assets.carregaImagem("setaN", "assets/setaN.png"); // 512x512
+assets.carregaImagem("setaS", "assets/setaS.png"); // 512x512
 
 /*assets.carregaImagem("skelly", "assets/skelly2.png"); // 32x50
 assets.carregaImagem("guerreiro", "assets/guerreiro.png"); // 30x54

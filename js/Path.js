@@ -17,9 +17,22 @@ export default class Path{
     desenhar(ctx){
         for (let l = 0; l < this.LINHAS; l++) {
             for (let c = 0; c < this.COLUNAS; c++) {
-                ctx.font = "15px Arial";
+                /*ctx.font = "15px Arial";
                 ctx.fillStyle = "blue";
-                ctx.fillText(this.caminho[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
+                ctx.fillText(this.caminho[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);*/
+                if(this.caminho[l][c] === "<"){
+                    ctx.drawImage(this.layer.cena.assets.img("setaO"), c*this.SIZE + 11, l*this.SIZE + 11, 25, 25);
+                }
+                if(this.caminho[l][c] === ">"){
+                    ctx.drawImage(this.layer.cena.assets.img("setaL"), c*this.SIZE + 11, l*this.SIZE + 11, 25, 25);
+                }
+                if(this.caminho[l][c] === "^"){
+                    ctx.drawImage(this.layer.cena.assets.img("setaN"), c*this.SIZE + 11, l*this.SIZE + 11, 25, 25);
+                }
+                if(this.caminho[l][c] === "v"){
+                    ctx.drawImage(this.layer.cena.assets.img("setaS"), c*this.SIZE + 11, l*this.SIZE + 11, 25, 25);
+                }
+
                 ctx.strokeRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE); 
             }
         }
