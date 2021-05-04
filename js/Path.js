@@ -38,7 +38,7 @@ export default class Path{
         }
     }
 
-    calculaCaminho(){
+    calculaCaminho(){ // percorre caminho
         for (let l = 0; l < this.LINHAS; l++) {
             this.tiles[l] = [];
             this.caminho[l] = [];
