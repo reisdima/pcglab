@@ -28,3 +28,4 @@ Uma versão online pode ser acessada [diretamente pelo navegador](https://ufjf-p
 ##  Áudios:
 - coin: http://soundbible.com/2081-Coin-Drop.html
 - teleporter - 01b: https://freesound.org/people/DWOBoyle/sounds/474179/
+
