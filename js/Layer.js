@@ -21,17 +21,15 @@ export default class Layer{
         this.direcoes = [];
         this.pcx = null;
         this.pcy = null;
-        this.caminho = new Path(this);
         this.mxEntrada = null;
         this.myEntrada = null;
         this.mxSaida = null;
         this.mySaida = null;
+        this.caminho = [];
     }
 
     desenhar(ctx){
         if(this.mostrarCaminho){
-            this.caminho.calculaCaminho();
-            this.caminho.desenhar(ctx);
         }
         for (let l = 0; l < this.LINHAS; l++) {
             for (let c = 0; c < this.COLUNAS; c++) {
@@ -54,6 +52,9 @@ export default class Layer{
                         if(this.direcoes[l][c] === "S"){
                             ctx.fillText("v", c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
                         }
+                    }
+                    if(this.mostrarCaminho){
+                        //ctx.fillText(this.caminho[l][c], c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 - 10);
                     }
                 }
                 if(this.mostrar){
@@ -246,5 +247,35 @@ export default class Layer{
                 }
             }
         }
+    }
+
+    getPath(mxE, myE){
+        let path = new Path(this.LINHAS, this.COLUNAS, this.SIZE, this.cena);
+
+        let mxAtual = mxE;
+        let myAtual = myE;
+
+        let init = this.layers[myAtual][mxAtual];
+
+        for (let i = 0; i < init; i++) {
+            if(this.direcoes[myAtual][mxAtual] === "O"){
+                path.addStep(myAtual,mxAtual);
+                mxAtual = mxAtual-1;  
+            } 
+            if(this.direcoes[myAtual][mxAtual] === "L"){
+                path.addStep(myAtual,mxAtual);
+                mxAtual = mxAtual+1;
+            } 
+            if(this.direcoes[myAtual][mxAtual] === "N"){
+                path.addStep(myAtual,mxAtual);
+                myAtual = myAtual-1;
+            } 
+            if(this.direcoes[myAtual][mxAtual] === "S"){
+                path.addStep(myAtual,mxAtual);
+                myAtual = myAtual+1;
+            } 
+        }
+
+        return path;
     }
 }
