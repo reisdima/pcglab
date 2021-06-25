@@ -38,3 +38,5 @@ export default class Path{
         this.steps[x][y] = 0;
     }
 }
+
+//module.exports = Path;
