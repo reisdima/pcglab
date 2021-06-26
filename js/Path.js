@@ -4,14 +4,10 @@ export default class Path{
         this.COLUNAS = colunas;
         this.SIZE = tamanho;
         this.cena = cena;
-        this.tiles = [];
-        this.caminho = [];
         this.steps = [];
         for (let l = 0; l < this.LINHAS; l++) {
-            this.tiles[l] = [];
             this.steps[l] = [];
             for (let c = 0; c < this.COLUNAS; c++) {
-                this.tiles[l][c] = 0;
                 this.steps[l][c] = 0;
             }
         }
@@ -38,5 +34,3 @@ export default class Path{
         this.steps[x][y] = 0;
     }
 }
-
-//module.exports = Path;
