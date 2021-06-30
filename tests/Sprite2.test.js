@@ -10,8 +10,8 @@ describe("Classe Sprite", () => {
 
     it("Possui tamanho válido", () => {
       const sprite = new Sprite();
-      expect(sprite.h).toBeGreaterThan(0);
-      expect(sprite.w).toBeGreaterThan(0);
+      expect(sprite.h).toBeGreaterThanOrEqual(0);
+      expect(sprite.w).toBeGreaterThanOrEqual(0);
     });
 
     it("Tem posição inicial", () => {
