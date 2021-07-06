@@ -12,16 +12,13 @@ describe("Classe Path", () => {
 
     it("Contém uma matriz", () => {
       const path = new Path();
-      expect(path.COLUNAS).toBeDefined();
-      expect(path.COLUNAS).toBeGreaterThan(0);
-      expect(path.LINHAS).toBeDefined();
-      expect(path.LINHAS).toBeGreaterThan(0);
+      expect(path.COLUNAS).toEqual(12);
+      expect(path.LINHAS).toEqual(8);
     });
 
     it("Possui um tamanho maior do que zero", () => {
       const path = new Path();
-      expect(path.SIZE).toBeDefined();
-      expect(path.SIZE).toBeGreaterThan(0);
+      expect(path.SIZE).toEqual(32);
     });
 
     it("Possui uma cena", () => {
