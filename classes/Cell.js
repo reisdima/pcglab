@@ -1,4 +1,4 @@
-function Cell(params = {}) {
+export default function Cell(params = {}) {
     let exemplo = { 
         tipo: 0, 
         room: -3, 

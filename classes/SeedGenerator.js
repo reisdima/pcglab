@@ -1,4 +1,4 @@
-function SeedGenerator(params = {}){
+export default function SeedGenerator(params = {}){
     var exemplo = {
         seed_1: 1,
         seed_2: 0,

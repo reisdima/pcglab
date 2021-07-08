@@ -1,4 +1,9 @@
-function Treasure(){
+import Sprite from "./Sprite.js";
+import seedGen from "./SeedGen.js";
+import assetsMng from "./AssetsMng.js";
+import debugMode from "./DebugMode.js";
+
+export default function Treasure(){
     Sprite.call(this, {s: 18, w: 17, h: 10, nomeImagem: "coin_gold"});     
     this.roomNumber = -1;
     this.animation = [];

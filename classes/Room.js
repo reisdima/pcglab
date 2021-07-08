@@ -1,4 +1,11 @@
-function Room(number){
+import Teleporter from "./Teleporter.js";
+import Cell from "./Cell.js";
+import FireZone from "./FireZone.js";
+import Treasure from "./Treasure.js";
+import Enemy from "./Enemy.js";
+import debugMode from "./DebugMode.js";
+
+export default function Room(number){
     this.blocks = [];
     this.number = number;
     this.teleporterInitial = new Teleporter(2);         // (Inicio)Transição de uma sala pra outra
@@ -299,7 +306,7 @@ Room.prototype.maxCamadaDistancias = function(){
     this.distancias.compostas.inimigo_Tesouro_Teleporte.max = this.getMaxDist(5);
   }
 
-Room.prototype.move = function(dt){
+Room.prototype.move = function(dt, player){
     if(debugMode > 0){
         for(let i = 0; i < this.fireZones.length; i++){
             this.fireZones[i].mover(dt);       

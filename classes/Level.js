@@ -1,5 +1,15 @@
-function Level(w, h, s) {
-  this.mapa = new Map(w,h,s);
+import Map from "./Map.js";
+import Room from "./Room.js";
+import Teleporter from "./Teleporter.js";
+import FireZone from "./FireZone.js";
+import Enemy from "./Enemy.js";
+import Treasure from "./Treasure.js";
+import Ordenacao from "./Ordenacao.js";
+import debugMode from "./DebugMode.js";
+
+//TODO Fix parametro
+export default function Level(w, h, s, {hud, seedGen, assetsMng}) {
+  this.mapa = new Map(w,h,s, assetsMng);
   this.rooms = [];
   this.tempoFase = 0;
   this.tempoTotal = 0;
@@ -11,6 +21,7 @@ function Level(w, h, s) {
   this.teleporteFinalLevel  = new Teleporter(1);        //(Final) mapa
   this.player = undefined;
   this.hud = hud;
+  this.seedGen = seedGen;
   this.filaDesenho = [];
 };
 
@@ -109,7 +120,7 @@ Level.prototype.copiaSalasComReferencia = function(rooms){
  * Utiliza o gerador de seed como referencia pra escolha numerica
  */
 Level.prototype.getRandomInt = function(min, max){
-  return seedGen.getRandomIntMethod_1(min, max); 
+  return this.seedGen.getRandomIntMethod_1(min, max); 
 }
 
 Level.prototype.caminhoColetaTesouros = function(){
@@ -648,7 +659,7 @@ Level.prototype.movimento = function(dt) {
     this.rooms[this.player.room - 1].atackEnemiesPlayer(this.player);      // Ataque somente na sala do player
   }
   for(let i = 0; i < this.rooms.length; i++){
-    this.rooms[i].move(dt);
+    this.rooms[i].move(dt, this.player);
   }
   this.removerInimigos();
   this.criarFilaDesenho();
@@ -737,7 +748,7 @@ Level.prototype.criarFilaDesenho = function(){
 }
 
 Level.prototype.desenhar = function(ctx) {
-  this.mapa.desenhar(ctx);
+  this.mapa.desenhar(ctx, this.player);
   for(let i = 0; i < this.filaDesenho.length; i++){
     this.filaDesenho[i].desenhar(ctx);
   }

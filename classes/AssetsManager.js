@@ -1,4 +1,4 @@
-function AssetsManager() {
+export default function AssetsManager() {
     this.aCarregar = 0;
     this.carregadas = 0;
     this.images = {};

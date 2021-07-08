@@ -1,4 +1,6 @@
-function Sprite(params = {s: 16}) {
+import debugMode from "./DebugMode.js";
+
+export default function Sprite(params = {s: 16}) {
 
   let exemplo = {
     //Atibutos da Fisica
@@ -305,7 +307,7 @@ Sprite.prototype.desenharBarraEnergiaHUD = function (ctx, player) {
   // Texto com o número no meio da barra
   ctx.font = "13px Arial Black";
   ctx.fillStyle = "yellow";
-  ctx.textAlign = alignMainMenu;
+  ctx.textAlign = "center"; //alignMainMenu;
   ctx.lineWidth = 2;
   ctx.strokeStyle = "black";
   ctx.strokeText(player.hp, this.x + this.w/2, this.y + this.h/2 + 4);
@@ -394,4 +396,4 @@ Sprite.prototype.atacar = function (alvo) {
   return true;
 };
 
-module.exports = Sprite;
+//module.exports = Sprite;

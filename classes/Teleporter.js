@@ -1,4 +1,7 @@
-function Teleporter(type){
+import Sprite from "./Sprite.js";
+import assetsMng from "./AssetsMng.js";
+
+export default function Teleporter(type){
   /**
    * Estabelece a relação de Herança entre Player e Sprite:
    *  -> Sprite é pai e player é filho

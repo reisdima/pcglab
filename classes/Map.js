@@ -1,8 +1,13 @@
-function Map(w, h, s) {
+import Cell from "./Cell.js";
+import MAPA_AREA from "./MAPA_AREA.js";
+import debugMode from "./DebugMode.js";
+
+export default function Map(w, h, s, assetsMng) {
   this.w = w;
   this.h = h;
   this.s = s;
   this.cell = [];
+  this.assetsMng = assetsMng;
   for (let l = 0; l < h; l++) {
     this.cell[l] = [];
     for (let c = 0; c < w; c++) {
@@ -218,21 +223,21 @@ Map.prototype.camadaDistCompostas = function(){
  ************************************************/
 
 
-Map.prototype.desenhar = function (ctx) {
+Map.prototype.desenhar = function (ctx, player) {
   ctx.lineWidth = 2;
   for (var l = Math.max(0, player.gy - MAPA_AREA); l < Math.min(this.h, player.gy + MAPA_AREA); l++) {
     for (var c = Math.max(0, player.gx - MAPA_AREA); c < Math.min(this.w, player.gx + MAPA_AREA); c++) {
       switch (this.cell[l][c].tipo) {
         case 0:   // Vazio     -- Chão
-          assetsMng.drawSize({ctx: ctx, key: "floor_sand", x: (c * this.s), 
+          this.assetsMng.drawSize({ctx: ctx, key: "floor_sand", x: (c * this.s), 
           y: (l * this.s), w: this.s, h: this.s});
           break;
         case 1:   // Bloqueado -- Muro
-          assetsMng.drawSize({ctx: ctx, key: "brick_gray", x: (c * this.s), 
+          this.assetsMng.drawSize({ctx: ctx, key: "brick_gray", x: (c * this.s), 
             y: (l * this.s), w: this.s, h: this.s});
           break;
         case 2:   // Caverna
-          assetsMng.drawClipSize({ctx: ctx, key: "rockBlock", sx: 0, sy: 0, w: 32, h: 32,
+          this.assetsMng.drawClipSize({ctx: ctx, key: "rockBlock", sx: 0, sy: 0, w: 32, h: 32,
             dx: (c * this.s), dy: (l * this.s), dw: this.s, dh: this.s});
           break;
         default:

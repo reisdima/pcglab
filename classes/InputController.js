@@ -1,4 +1,4 @@
-function InputController() {
+export default function InputController() {
     this.nomes = {};
     this.codigos = {};
     this.teclas = {};

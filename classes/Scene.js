@@ -1,4 +1,4 @@
-function Scene(params) {
+export default function Scene(params) {
     var exemplo ={
         sprites: [],
         toRemove: [],

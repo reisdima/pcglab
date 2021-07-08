@@ -1,4 +1,4 @@
-function ImageLibrary(){
+export default function ImageLibrary(){
   this.images = {};
   this.loaded = 0;
   this.size = 0;

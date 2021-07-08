@@ -6,24 +6,24 @@
   <link rel='icon' type='image/png' sizes='32x32' href='assets/images/favicon-32x32.png'>
   <link rel='icon' type='image/png' sizes='64x64' href='assets/images/favicon-64x64.png'>
   <title>Maze Runner - Aplicação de técnicas na geração procedural de conteúdo</title>
-  <script src="classes/Map.js"></script>
-  <script src="classes/Room.js"></script>
-  <script src="classes/Level.js"></script>
-  <script src="classes/Sprite.js"></script>
-  <script src="classes/Player.js"></script>
-  <script src="classes/Teleporter.js"></script>
-  <script src="classes/Treasure.js"></script>
-  <script src="classes/Enemy.js"></script>
-  <script src="classes/FireZone.js"></script>
-  <script src="classes/Ordenacao.js"></script>
-  <script src="classes/Cell.js"></script>
   <!--
+  <script src="classes/Map.js" type="module"></script>
+  <script src="classes/Room.js" type="module"></script>
+  <script src="classes/Level.js" type="module"></script>
+  <script src="classes/Sprite.js" type="module"></script>
+  <script src="classes/Player.js" type="module"></script>
+  <script src="classes/Teleporter.js" type="module"></script>
+  <script src="classes/Treasure.js" type="module"></script>
+  <script src="classes/Enemy.js" type="module"></script>
+  <script src="classes/FireZone.js" type="module"></script>
+  <script src="classes/Ordenacao.js" type="module"></script>
+  <script src="classes/Cell.js" type="module"></script>
     <script src="classes/ImageLibrary.js"></script>
     <script src="classes/AudioLibrary.js"></script>
+    <script src="classes/AssetsManager.js" type="module"></script>
+    <script src="classes/CellularAutomata.js" type="module"></script>
+    <script src="classes/SeedGenerator.js" type="module"></script>
   -->
-  <script src="classes/AssetsManager.js"></script>
-  <script src="classes/CellularAutomata.js"></script>
-  <script src="classes/SeedGenerator.js"></script>
   <link rel="stylesheet" href="css/default.css">
 </head>
 
@@ -32,7 +32,20 @@
     Seu browser não suporta canvas!
   </canvas>
 
-  <script>
+  <script type="module">
+    
+    import AssetsManager from "./classes/AssetsManager.js";
+    import SeedGenerator from "./classes/SeedGenerator.js";
+    import Sprite from "./classes/Sprite.js";
+    import Player from "./classes/Player.js";
+    import Level from "./classes/Level.js";
+    import Room from "./classes/Room.js";
+    import Map from "./classes/Map.js";
+    import Cell from "./classes/Cell.js";
+    import CellularAutomata from "./classes/CellularAutomata.js";
+    import assetsMng from "./classes/AssetsMng.js";
+
+
     var tela = document.getElementById("canvas");
     
     // Ocupa a janela toda
@@ -44,11 +57,13 @@
     tela.style.border = '2px solid #000';                       //Colocando borda no canvas
     var ctx = tela.getContext("2d");
     var fullscreen = false;
-    var anterior = dt = 0;
+    var anterior = 0;
+    var dt = 0;
     var estado = 1;
 
     // Controle das imagens e sons presentes no jogo
-    var assetsMng = new AssetsManager();
+    //var assetsMng = new AssetsManager();
+    //console.log(assetsMng);
 
     // Carregamento das imagens do jogo
     assetsMng.loadImage("brick_gray", "assets/images/brick_gray.png");
@@ -103,9 +118,9 @@
       }
     });  
 
-    var levelAtual = new Level(widthMap, heightMap, sizeMap);
+    var levelAtual = new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng});
     var levels = [];
-    levels.push(new Level(widthMap, heightMap, sizeMap));
+    levels.push(new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng}));
 
     /**
       METODO DE SUBMATRIZES
@@ -134,7 +149,7 @@
     */
     var geraFase = new CellularAutomata({
       HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5, 
-      totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1
+      totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1, seedGen
     });   //new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
     // 0 => floor
     // 2 => rock
@@ -716,7 +731,7 @@
     updateTamanhoElementos();
 
     function limparDados() {
-      levelAtual = new Level(widthMap, heightMap, sizeMap);
+      levelAtual = new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng});
       levelAtual.clonarLevel(levels[0]);
       levelAtual.posicionarPlayer(player);
       levelAtual.setTaxaDiminuicaoTempo(dt, barraTempo.interna);        // Atualiza o decaimento da barra

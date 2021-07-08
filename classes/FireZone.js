@@ -1,4 +1,9 @@
-function FireZone() {
+import Sprite from "./Sprite.js";
+import seedGen from "./SeedGen.js";
+import assetsMng from "./AssetsMng.js";
+import debugMode from "./DebugMode.js";
+
+export default function FireZone() {
     /**
      * Estabelece a relação de Herança entre Player e Sprite:
      *  -> Sprite é pai e player é filho

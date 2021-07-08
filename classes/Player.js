@@ -1,4 +1,8 @@
-function Player(params) {
+import Sprite from "./Sprite.js";
+import assetsMng from "./AssetsMng.js";
+import debugMode from "./DebugMode.js";
+
+export default function Player(params) {
   /**
    * Estabelece a relação de Herança entre Player e Sprite:
    *  -> Sprite é pai e player é filho
@@ -250,7 +254,7 @@ Player.prototype.tratarAnimacao = function(){
   this.speedAnimation = this.animation[this.atacando].animationPosition[this.sentidoMovimento].speedAnimation;
 }
 
-Player.prototype.animationController = function(){
+Player.prototype.animationController = function(dt){
 
   this.pose = this.pose + this.speedAnimation * dt;
   if(this.atacando === 0){
