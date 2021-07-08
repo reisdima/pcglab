@@ -5,23 +5,28 @@ export default class Sprite {
     y = 20,
     w = 45,
     h = 45,
-    color = "white",
     vx = 0,
     vy = 0,
     vida = 0,
+    color = "white",
     controlar = () => {},
     tags = [],
   } = {}) {
+      
+    // Atributos da física
     this.x = x;
     this.y = y;
     this.vx = vx;
     this.vy = vy;
     this.w = w;
     this.h = h;
-    this.color = color;
-    this.cena = null;
+
+    // Atributos de grade
     this.mx = 0; // x do tile (coluna)
     this.my = 0; // y do tile (linha)
+
+    this.color = color;
+    this.cena = null;
     this.vida = vida;
     this.hitbox = "false";
     this.controlar = controlar;
@@ -32,8 +37,6 @@ export default class Sprite {
     this.pose = 0;
     this.quadro = 0;
     this.POSES_MOEDA = [{ qmax: 6, pv: 9 }];
-    this.distancias = new Map(); // Isso vai virar um conjunto de layers
-    this.mapaDistancias = [];
   }
 
   desenhar(ctx) {
