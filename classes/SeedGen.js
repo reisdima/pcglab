@@ -1,6 +1,6 @@
 import SeedGenerator from "./SeedGenerator.js";
 
-var seedValueURL = location.search;
+let seedValueURL = location.search;
 
     if(seedValueURL.length != 0){                   //SEED PASSADA NA URL
       let aux = "?seed=";
@@ -12,6 +12,6 @@ var seedValueURL = location.search;
       let minValue = 500000;
       seedValueURL = (Math.floor(Math.random() * (maxValue - minValue)) + minValue);
     }
-var seedGen = new SeedGenerator({seed_1: seedValueURL , seed_2_string: "teste"});
+const seedGen = new SeedGenerator({seed_1: seedValueURL , seed_2_string: "teste"});
 
 export default seedGen;
