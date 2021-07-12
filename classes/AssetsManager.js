@@ -5,7 +5,7 @@ export default function AssetsManager() {
     this.audios = {};
     this.channels = [];
     this.MAX_CHANNELS = 20;
-    for(var i = 0; i< this.MAX_CHANNELS; i++){
+    for(let i = 0; i< this.MAX_CHANNELS; i++){
         this.channels[i] = {
             audio: new Audio(),
             fim: -1
@@ -17,10 +17,10 @@ AssetsManager.prototype.loadImage = function (key, url) {
     console.log(`Carregando imagem ${url}...`);
 
     this.aCarregar++;
-    var imagem = new Image();
+    const imagem = new Image();
     imagem.src = url;
     this.images[key] = imagem;
-    var that = this;
+    const that = this;
     imagem.addEventListener("load", function () {
         that.carregadas++;
         console.log(`Imagem ${that.carregadas}/${that.aCarregar} ${key}: ${url} carregada.`);
@@ -40,11 +40,11 @@ AssetsManager.prototype.progresso = function () {
 AssetsManager.prototype.loadAudio = function (key, url) {
     console.log(`Carregando audio ${key}: ${url}...`);
     //this.aCarregar++;
-    var audio = new Audio();
+    const audio = new Audio();
     audio.src = url;
     audio.load();
     this.audios[key] = audio;
-    var that = this;
+    const that = this;
     /*audio.addEventListener("canplay", function () {
         //that.carregadas++;
         console.log(`Audio ${that.carregadas}/${that.aCarregar} ${key}: ${url} carregado.`);
@@ -73,8 +73,8 @@ AssetsManager.prototype.play = function (key) {
 }
 
 AssetsManager.prototype.pause = function (key) {
-    for (var i = 0; i < this.channels.length; i++) {
-      var canal = this.channels[i];
+    for (let i = 0; i < this.channels.length; i++) {
+      const canal = this.channels[i];
       if(canal.audio.src == this.audios[key].src){
         canal.audio.pause();
         //console.log("Pausou: "+ canal.audio.currentTime);
@@ -84,8 +84,8 @@ AssetsManager.prototype.pause = function (key) {
   };
   
   AssetsManager.prototype.resume = function (key) {
-    for (var i = 0; i < this.channels.length; i++) {
-      var canal = this.channels[i];
+    for (let i = 0; i < this.channels.length; i++) {
+      const canal = this.channels[i];
       if(canal.audio.src == this.audios[key].src){
         canal.audio.play();
         //console.log("Voltou: "+ canal.audio.currentTime);
@@ -95,8 +95,8 @@ AssetsManager.prototype.pause = function (key) {
   };
   
   AssetsManager.prototype.isPaused = function (key) {         //retorna se o audio está pausado
-    for (var i = 0; i < this.channels.length; i++) {
-      var canal = this.channels[i];
+    for (let i = 0; i < this.channels.length; i++) {
+      const canal = this.channels[i];
       if(canal.audio.src == this.audios[key].src){
         if(canal.audio.paused){
           return true;
@@ -108,7 +108,7 @@ AssetsManager.prototype.pause = function (key) {
   };
   
   AssetsManager.prototype.stop = function (key) {            //parar de executar o áudio removendo do canal
-    for (var i = 0; i < this.channels.length; i++) {
+    for (let i = 0; i < this.channels.length; i++) {
       if(this.channels[i].audio.src == this.audios[key].src){
         this.channels[i].audio.pause();
         this.channels[i] = {
@@ -122,8 +122,8 @@ AssetsManager.prototype.pause = function (key) {
   };
   
   AssetsManager.prototype.isEnded = function (key) {       //Se o audio terminou de ser executado
-    for (var i = 0; i < this.channels.length; i++) {
-      var canal = this.channels[i];
+    for (let i = 0; i < this.channels.length; i++) {
+      const canal = this.channels[i];
       if(canal.audio.src == this.audios[key].src){
         if(canal.audio.ended){
           return true;
@@ -146,7 +146,7 @@ AssetsManager.prototype.pause = function (key) {
   };
   
   AssetsManager.prototype.currentTime = function (key) {      //tempo até onde o audio foi executado
-    for (var i = 0; i < this.channels.length; i++) {
+    for (let i = 0; i < this.channels.length; i++) {
       if(this.channels[i].audio.src == this.audios[key].src){
         return this.channels[i].audio.currentTime;
       }

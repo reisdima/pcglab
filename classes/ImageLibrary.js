@@ -5,10 +5,10 @@ export default function ImageLibrary(){
 }
 
 ImageLibrary.prototype.load = function (key,url) {
-  var img = new Image();
+  const img = new Image();
   this.images[key] = img;
   this.size++;
-  var that = this;
+  const that = this;
   img.addEventListener('load', function(){
     that.loaded++;
     console.log(key, "terminou de carregar:", that.loaded,that.size);
