@@ -1,5 +1,5 @@
 export default function SeedGenerator(params = {}){
-    var exemplo = {
+    let exemplo = {
         seed_1: 1,
         seed_2: 0,
         seed_2_string: "apple"
@@ -28,7 +28,7 @@ export default function SeedGenerator(params = {}){
 */
 
 SeedGenerator.prototype.getRandomMethod_1 = function(){
-    var x = Math.sin(this.seed_1++) * 10000;
+    let x = Math.sin(this.seed_1++) * 10000;
     return x - Math.floor(x);
 }
 
@@ -86,7 +86,7 @@ SeedGenerator.prototype.sfc32 = function(a, b, c, d) {
 
 SeedGenerator.prototype.mulberry32 = function(a) {
     return function() {
-        var t = a += 0x6D2B79F5;
+        let t = a += 0x6D2B79F5;
         t = Math.imul(t ^ t >>> 15, t | 1);
         t ^= t + Math.imul(t ^ t >>> 7, t | 61);
         return ((t ^ t >>> 14) >>> 0) / 4294967296;
