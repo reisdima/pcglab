@@ -70,8 +70,8 @@ Level.prototype.clonarLevel= function(level){
   this.mapa.w = level.mapa.w;
   this.mapa.h = level.mapa.h;
   this.mapa.s = level.mapa.s;
-  for (var l = 0; l < level.mapa.h; l++) {
-    for (var c = 0; c < level.mapa.w; c++) {
+  for (let l = 0; l < level.mapa.h; l++) {
+    for (let c = 0; c < level.mapa.w; c++) {
       this.mapa.cell[l][c].clone(level.mapa.cell[l][c]);
     }
   }
