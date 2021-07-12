@@ -46,7 +46,7 @@
     import assetsMng from "./classes/AssetsMng.js";
 
 
-    var tela = document.getElementById("canvas");
+    const tela = document.getElementById("canvas");
     
     // Ocupa a janela toda
     tela.width  = window.innerWidth;
@@ -55,11 +55,11 @@
     tela.heightOld = 350;
 
     tela.style.border = '2px solid #000';                       //Colocando borda no canvas
-    var ctx = tela.getContext("2d");
-    var fullscreen = false;
-    var anterior = 0;
-    var dt = 0;
-    var estado = 1;
+    const ctx = tela.getContext("2d");
+    let fullscreen = false;
+    let anterior = 0;
+    let dt = 0;
+    let estado = 1;
 
     // Controle das imagens e sons presentes no jogo
     //var assetsMng = new AssetsManager();
@@ -82,7 +82,7 @@
     assetsMng.loadAudio("teleporte", "assets/audios/Teleport.wav");
 
     // SeedGenerator ===> Utilizado para retornar ao mesmo mapa com apenas o código da seed
-    var seedValueURL = location.search;
+    let seedValueURL = location.search;
 
     if(seedValueURL.length != 0){                   //SEED PASSADA NA URL
       let aux = "?seed=";
@@ -94,20 +94,20 @@
       let minValue = 500000;
       seedValueURL = (Math.floor(Math.random() * (maxValue - minValue)) + minValue);
     }
-    var seedGen = new SeedGenerator({seed_1: seedValueURL , seed_2_string: "teste"});
+    const seedGen = new SeedGenerator({seed_1: seedValueURL , seed_2_string: "teste"});
 
     // Proporções do mapa
     
-    var widthMap = 120;   
-    var heightMap = 120;  
-    var sizeMap = 32;     
-    var MAPA_AREA = 14;  //20
-    var escala = 1.8;
-    var K = 1;
-    var debugModeBegin = 0;
-    var debugModeEnd = 10;
-    var debugMode = debugModeBegin;    // 0
-    var player = new Player({s: 27, w: 27, h: 11,
+    const widthMap = 120;   
+    const heightMap = 120;  
+    const sizeMap = 32;     
+    const MAPA_AREA = 14;  //20
+    let escala = 1.8;
+    const K = 1;
+    const debugModeBegin = 0;
+    const debugModeEnd = 10;
+    let debugMode = debugModeBegin;    // 0
+    const player = new Player({s: 27, w: 27, h: 11,
       hitBox: {
         x: 0,
         y: 0,
@@ -118,8 +118,8 @@
       }
     });  
 
-    var levelAtual = new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng});
-    var levels = [];
+    const levelAtual = new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng});
+    let levels = [];
     levels.push(new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng}));
 
     /**
@@ -147,7 +147,7 @@
     /**
       METODO DA MATRIZ TOTAL
     */
-    var geraFase = new CellularAutomata({
+    const geraFase = new CellularAutomata({
       HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5, 
       totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1, seedGen
     });   //new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
@@ -169,15 +169,15 @@
     });
     levels[0].setTempo(20);                // 20 segundos
 
-    var tempoGameOver = 2;
+    let tempoGameOver = 2;
 
     levelAtual.clonarLevel(levels[0]);
     player.map = levelAtual.mapa;
 
-    var teasuresCollected = 0;    
+    let teasuresCollected = 0;    
 
     // Tempo
-    var barraTempo = {
+    const barraTempo = {
       externa: new Sprite(),
       interna: new Sprite(),
       desenhar: function(ctx){
@@ -203,7 +203,7 @@
     barraTempo.init();
 
     // Energia === Player
-    var barraEnergia = {
+    const barraEnergia = {
       sprite: new Sprite(),
       desenhar: function(ctx){
         this.sprite.desenharBarraEnergiaHUD(ctx, player);
