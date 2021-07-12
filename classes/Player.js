@@ -381,14 +381,14 @@ Player.prototype.mover = function (dt) {
     {
       if(this.gx === 0){
         if(this.vx < 0){
-          var limite = (this.gx) * this.map.s;
-          var maxDx = limite - (this.x - this.w/2);
-          var Dx = this.vx * dt;
+          let limite = (this.gx) * this.map.s;
+          let maxDx = limite - (this.x - this.w/2);
+          let Dx = this.vx * dt;
           this.x += Math.max(Dx, maxDx);
         } else if( this.vx > 0 && this.map.cell[this.gy][this.gx + 1].tipo === 1){
-          var limite = (this.gx + 1) * this.map.s;
-          var maxDx = limite - (this.x + this.w/2);
-          var Dx = this.vx * dt;
+          let limite = (this.gx + 1) * this.map.s;
+          let maxDx = limite - (this.x + this.w/2);
+          let Dx = this.vx * dt;
           this.x += Math.min(Dx, maxDx);
         }else {
           this.x += this.vx * dt;
@@ -396,14 +396,14 @@ Player.prototype.mover = function (dt) {
       }
       else{
         if(this.vx < 0 && this.map.cell[this.gy][this.gx - 1].tipo === 1){
-          var limite = (this.gx) * this.map.s;
-          var maxDx = limite - (this.x - this.w/2);
-          var Dx = this.vx * dt;
+          let limite = (this.gx) * this.map.s;
+          let maxDx = limite - (this.x - this.w/2);
+          let Dx = this.vx * dt;
           this.x += Math.max(Dx, maxDx);
         } else if( this.vx > 0){
-          var limite = (this.gx + 1) * this.map.s;
-          var maxDx = limite - (this.x + this.w/2);
-          var Dx = this.vx * dt;
+          let limite = (this.gx + 1) * this.map.s;
+          let maxDx = limite - (this.x + this.w/2);
+          let Dx = this.vx * dt;
           this.x += Math.min(Dx, maxDx);
         }else {
           this.x += this.vx * dt;
@@ -412,14 +412,14 @@ Player.prototype.mover = function (dt) {
     }
     else{
       if(this.vx < 0 && this.map.cell[this.gy][this.gx - 1].tipo === 1){
-        var limite = (this.gx) * this.map.s;
-        var maxDx = limite - (this.x - this.w/2);
-        var Dx = this.vx * dt;
+        let limite = (this.gx) * this.map.s;
+        let maxDx = limite - (this.x - this.w/2);
+        let Dx = this.vx * dt;
         this.x += Math.max(Dx, maxDx);
       } else if( this.vx > 0 && this.map.cell[this.gy][this.gx + 1].tipo === 1){
-        var limite = (this.gx + 1) * this.map.s;
-        var maxDx = limite - (this.x + this.w/2);
-        var Dx = this.vx * dt;
+        let limite = (this.gx + 1) * this.map.s;
+        let maxDx = limite - (this.x + this.w/2);
+        let Dx = this.vx * dt;
         this.x += Math.min(Dx, maxDx);
       }else {
         this.x += this.vx * dt;
@@ -430,14 +430,14 @@ Player.prototype.mover = function (dt) {
     {
       if(this.gy === 0){
         if(this.vy < 0){
-          var limite = (this.gy) * this.map.s;
-          var maxDy = limite - (this.y - this.h/2);
-          var Dy = (this.vy) * dt;
+          let limite = (this.gy) * this.map.s;
+          let maxDy = limite - (this.y - this.h/2);
+          let Dy = (this.vy) * dt;
           this.y += Math.max(Dy, maxDy);
         } else if((this.vy) > 0 && this.map.cell[this.gy + 1][this.gx].tipo !== 0){
-          var limite = (this.gy + 1) * this.map.s;
-          var maxDy = limite - (this.y + this.h/2);
-          var Dy = (this.vy) * dt;
+          let limite = (this.gy + 1) * this.map.s;
+          let maxDy = limite - (this.y + this.h/2);
+          let Dy = (this.vy) * dt;
           this.y += Math.min(Dy, maxDy);
         }else {
           this.y += (this.vy) * dt;
@@ -445,14 +445,14 @@ Player.prototype.mover = function (dt) {
       }
       else{
         if((this.vy) < 0 && this.map.cell[this.gy - 1][this.gx].tipo !== 0){
-          var limite = (this.gy) * this.map.s;
-          var maxDy = limite - (this.y - this.h/2);
-          var Dy = (this.vy) * dt;
+          let limite = (this.gy) * this.map.s;
+          let maxDy = limite - (this.y - this.h/2);
+          let Dy = (this.vy) * dt;
           this.y += Math.max(Dy, maxDy);
         } else if((this.vy) > 0){
-          var limite = (this.gy + 1) * this.map.s;
-          var maxDy = limite - (this.y + this.h/2);
-          var Dy = (this.vy) * dt;
+          let limite = (this.gy + 1) * this.map.s;
+          let maxDy = limite - (this.y + this.h/2);
+          let Dy = (this.vy) * dt;
           this.y += Math.min(Dy, maxDy);
         }else {
           this.y += (this.vy) * dt;
@@ -461,14 +461,14 @@ Player.prototype.mover = function (dt) {
     }
     else{
       if((this.vy) < 0 && this.map.cell[this.gy - 1][this.gx].tipo !== 0){
-        var limite = (this.gy) * this.map.s;
-        var maxDy = limite - (this.y - this.h/2);
-        var Dy = (this.vy) * dt;
+        let limite = (this.gy) * this.map.s;
+        let maxDy = limite - (this.y - this.h/2);
+        let Dy = (this.vy) * dt;
         this.y += Math.max(Dy, maxDy);
       } else if((this.vy) > 0 && this.map.cell[this.gy + 1][this.gx].tipo !== 0){
-        var limite = (this.gy + 1) * this.map.s;
-        var maxDy = limite - (this.y + this.h/2);
-        var Dy = (this.vy) * dt;
+        let limite = (this.gy + 1) * this.map.s;
+        let maxDy = limite - (this.y + this.h/2);
+        let Dy = (this.vy) * dt;
         this.y += Math.min(Dy, maxDy);
       }else {
         this.y += (this.vy) * dt;
