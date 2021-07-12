@@ -101,7 +101,7 @@
     const widthMap = 120;   
     const heightMap = 120;  
     const sizeMap = 32;     
-    const MAPA_AREA = 14;  //20
+    let MAPA_AREA = 14;  //20
     let escala = 1.8;
     const K = 1;
     const debugModeBegin = 0;
@@ -118,110 +118,8 @@
       }
     });  
 
-    const levelAtual = new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng});
-    let levels = [];
-    levels.push(new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng}));
-
-    /**
-      METODO DE SUBMATRIZES
-    */
-    
-    /*
-    var geraFase = new CellularAutomata(Math.floor(heightMap / K), Math.floor(widthMap / K), 1, 0.5, 4, 0, 5, 1);//new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
-    // 0 => floor
-    // 5 => rock
-    // 1 => wall
-    for(var k = 0; k<K; k++){
-      geraFase.scenarioRandomWall();
-      geraFase.fullstep(2);
-      //geraFase.fullstep(6);
-      levels[0].setMatrixMap2(getelaraFase.map, Math.floor(k/3)*40, (k%3)*40);
-    }
-    geraFase.countRooms();
-    geraFase.filterRooms(15);
-    for(var k = 0; k<K; k++){
-      levels[0].setMatrixMap2(geraFase.map, Math.floor(k/3)*40, (k%3)*40);
-    }
-    */
-
-    /**
-      METODO DA MATRIZ TOTAL
-    */
-    const geraFase = new CellularAutomata({
-      HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5, 
-      totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1, seedGen
-    });   //new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
-    // 0 => floor
-    // 2 => rock
-    // 1 => wall
-
-    geraFase.scenarioRandomWall();
-    geraFase.fullstep(2);
-    geraFase.countRooms();
-    geraFase.filterRooms(25);
-
-    levels[0].setMatrixMap(geraFase.map);       // Copia a matriz de tipos dentro do gerador
-    levels[0].copiaSalas(geraFase.rooms);       // Copia os dados em que os blocos da sala são apenas as posições linha e coluna da matriz
-    levels[0].montarLevel({
-      dt: dt,
-      geraFase: geraFase,
-      player: player,
-    });
-    levels[0].setTempo(20);                // 20 segundos
-
-    let tempoGameOver = 2;
-
-    levelAtual.clonarLevel(levels[0]);
-    player.map = levelAtual.mapa;
-
-    let teasuresCollected = 0;    
-
-    // Tempo
-    const barraTempo = {
-      externa: new Sprite(),
-      interna: new Sprite(),
-      desenhar: function(ctx){
-        this.externa.desenharTempo(ctx);
-        this.interna.desenharTempo(ctx);
-      },
-      init: function(){
-        this.externa.w = 127;
-        this.externa.h = 15;
-        this.externa.colorBG = "black";
-        this.externa.colorBorder = "white";
-        this.externa.x = 95;
-        this.externa.y = 7;
-        this.interna.w = 127;
-        this.interna.h = 15;
-        this.interna.x = 96;
-        this.interna.y = 8;
-        this.interna.colorBG = "rgb(170, 120, 0)";
-        this.interna.borderSize = 0;
-      }
-    };
-
-    barraTempo.init();
-
-    // Energia === Player
-    const barraEnergia = {
-      sprite: new Sprite(),
-      desenhar: function(ctx){
-        this.sprite.desenharBarraEnergiaHUD(ctx, player);
-      },
-      init: function(){
-        this.sprite.w = 127;
-        this.sprite.h = 15;
-        this.sprite.colorBG = "black";
-        this.sprite.colorBorder = "white";
-        this.sprite.x = 95;
-        this.sprite.y = 7;
-      }
-    };
-
-    barraEnergia.init();
-
     // HUD
-    var hud = {
+    const hud = {
       tempo: { x: 0, y: 0, text: "Tempo: "},
       energia: { x: 0, y: 0, text: "Energia: "},
       vidas: { x: 0, y: 0, text: "Vidas: "},
@@ -493,11 +391,113 @@
     
     hud.init();
 
+    const levelAtual = new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng});
+    let levels = [];
+    levels.push(new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng}));
+
+    /**
+      METODO DE SUBMATRIZES
+    */
+    
+    /*
+    var geraFase = new CellularAutomata(Math.floor(heightMap / K), Math.floor(widthMap / K), 1, 0.5, 4, 0, 5, 1);//new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
+    // 0 => floor
+    // 5 => rock
+    // 1 => wall
+    for(var k = 0; k<K; k++){
+      geraFase.scenarioRandomWall();
+      geraFase.fullstep(2);
+      //geraFase.fullstep(6);
+      levels[0].setMatrixMap2(getelaraFase.map, Math.floor(k/3)*40, (k%3)*40);
+    }
+    geraFase.countRooms();
+    geraFase.filterRooms(15);
+    for(var k = 0; k<K; k++){
+      levels[0].setMatrixMap2(geraFase.map, Math.floor(k/3)*40, (k%3)*40);
+    }
+    */
+
+    /**
+      METODO DA MATRIZ TOTAL
+    */
+    const geraFase = new CellularAutomata({
+      HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5, 
+      totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1, seedGen
+    });   //new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
+    // 0 => floor
+    // 2 => rock
+    // 1 => wall
+
+    geraFase.scenarioRandomWall();
+    geraFase.fullstep(2);
+    geraFase.countRooms();
+    geraFase.filterRooms(25);
+
+    levels[0].setMatrixMap(geraFase.map);       // Copia a matriz de tipos dentro do gerador
+    levels[0].copiaSalas(geraFase.rooms);       // Copia os dados em que os blocos da sala são apenas as posições linha e coluna da matriz
+    levels[0].montarLevel({
+      dt: dt,
+      geraFase: geraFase,
+      player: player,
+    });
+    levels[0].setTempo(20);                // 20 segundos
+
+    let tempoGameOver = 2;
+
+    levelAtual.clonarLevel(levels[0]);
+    player.map = levelAtual.mapa;
+
+    let teasuresCollected = 0;    
+
+    // Tempo
+    const barraTempo = {
+      externa: new Sprite(),
+      interna: new Sprite(),
+      desenhar: function(ctx){
+        this.externa.desenharTempo(ctx);
+        this.interna.desenharTempo(ctx);
+      },
+      init: function(){
+        this.externa.w = 127;
+        this.externa.h = 15;
+        this.externa.colorBG = "black";
+        this.externa.colorBorder = "white";
+        this.externa.x = 95;
+        this.externa.y = 7;
+        this.interna.w = 127;
+        this.interna.h = 15;
+        this.interna.x = 96;
+        this.interna.y = 8;
+        this.interna.colorBG = "rgb(170, 120, 0)";
+        this.interna.borderSize = 0;
+      }
+    };
+
+    barraTempo.init();
+
+    // Energia === Player
+    const barraEnergia = {
+      sprite: new Sprite(),
+      desenhar: function(ctx){
+        this.sprite.desenharBarraEnergiaHUD(ctx, player);
+      },
+      init: function(){
+        this.sprite.w = 127;
+        this.sprite.h = 15;
+        this.sprite.colorBG = "black";
+        this.sprite.colorBorder = "white";
+        this.sprite.x = 95;
+        this.sprite.y = 7;
+      }
+    };
+
+    barraEnergia.init();
+
     // Main Menu campos
-    var fontMainMenu = "30px Arial Black";
-    var wordsColor = "white";
-    var alignMainMenu = "center";
-    var stateMainMenu = 0;
+    const fontMainMenu = "30px Arial Black";
+    const wordsColor = "white";
+    const alignMainMenu = "center";
+    let stateMainMenu = 0;
 
     /******************************************************************************
     *   ---------------------------- DEBUG MODE ------------------------------    *
