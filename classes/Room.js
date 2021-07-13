@@ -3,7 +3,8 @@ import Cell from "./Cell.js";
 import FireZone from "./FireZone.js";
 import Treasure from "./Treasure.js";
 import Enemy from "./Enemy.js";
-import debugMode from "./DebugMode.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
+
 
 export default function Room(number){
     this.blocks = [];
@@ -307,7 +308,7 @@ Room.prototype.maxCamadaDistancias = function(){
   }
 
 Room.prototype.move = function(dt, player){
-    if(debugMode > 0){
+    if(getDebugMode() > 0){
         for(let i = 0; i < this.fireZones.length; i++){
             this.fireZones[i].mover(dt);       
         } 

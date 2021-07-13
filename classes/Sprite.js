@@ -1,4 +1,5 @@
-import debugMode from "./DebugMode.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
+
 
 export default function Sprite(params = {s: 16}) {
 
@@ -69,7 +70,7 @@ Sprite.prototype.mover = function (dt) {
     this.x = this.gx*this.map.s + this.s;       //Andando por grade
     this.y = this.gy*this.map.s + this.s;
   */
-  if(debugMode === 0 || debugMode === 4){
+  if(getDebugMode() === 0 || getDebugMode() === 4){
     if(this.gx === 0 || this.gx === (this.map.w - 1))  //Trata casos extremos do mapa =>{gx <= 0, gx >= gxMapa}
     {
       if(this.gx === 0){
@@ -180,7 +181,7 @@ Sprite.prototype.mover2 = function(dt){
   this.gx = Math.floor(this.x/this.map.s);
   this.gy = Math.floor(this.y/this.map.s);
 
-  if(debugMode == 0 || debugMode == 4){
+  if(getDebugMode() == 0 || getDebugMode() == 4){
     this.adicionaRestricaoMovimento(dt);
   }
   else{

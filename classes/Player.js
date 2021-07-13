@@ -1,6 +1,7 @@
 import Sprite from "./Sprite.js";
 import assetsMng from "./AssetsMng.js";
-import debugMode from "./DebugMode.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
+
 
 export default function Player(params) {
   /**
@@ -316,12 +317,12 @@ Player.prototype.desenhar = function(ctx){
     dx: (- auxAnimation.sw/2), dy: (5 - auxAnimation.sh),  dw: auxAnimation.sw, dh: auxAnimation.sh
   });
   ctx.restore();
-  if(debugMode == 3){
+  if(getDebugMode() == 3){
     this.desenharCell(ctx);         //Debug mode Grid
     this.desenharCentro(ctx);
     this.desenharCentroHitBox(ctx);
   }
-  else if(debugMode == 4){
+  else if(getDebugMode() == 4){
     this.desenharCell(ctx);         //Debug mode Grid    
     this.desenharHurtBox(ctx);
     this.desenharCentro(ctx);
@@ -376,7 +377,7 @@ Player.prototype.mover = function (dt) {
   this.gx = Math.floor(this.x/this.map.s);
   this.gy = Math.floor(this.y/this.map.s);
 
-  if(debugMode === 0 || debugMode === 4){
+  if(getDebugMode() === 0 || getDebugMode() === 4){
     if(this.gx === 0 || this.gx === (this.map.w - 1))  // Trata casos extremos do mapa =>{gx <= 0, gx >= gxMapa}
     {
       if(this.gx === 0){

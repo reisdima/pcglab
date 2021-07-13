@@ -5,7 +5,8 @@ import FireZone from "./FireZone.js";
 import Enemy from "./Enemy.js";
 import Treasure from "./Treasure.js";
 import Ordenacao from "./Ordenacao.js";
-import debugMode from "./DebugMode.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
+
 
 //TODO Fix parametro
 export default function Level(w, h, s, {hud, seedGen, assetsMng}) {
@@ -754,7 +755,7 @@ Level.prototype.desenhar = function(ctx) {
   }
   this.mapa.desenharDebugMode(ctx);
 
-  if(debugMode > 3){
+  if(getDebugMode() > 3){
     for(let i = 0; i < this.rooms.length; i++){
       this.rooms[i].desenharCamadas({
         ctx: ctx, s: this.mapa.s
@@ -762,7 +763,7 @@ Level.prototype.desenhar = function(ctx) {
     }
   }
   else{
-    if(debugMode === 3){
+    if(getDebugMode() === 3){
       for(let i = 0; i < this.rooms.length; i++){
         this.rooms[i].drawTeleportersLine(ctx);
       }

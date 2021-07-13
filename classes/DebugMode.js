@@ -1,11 +1,10 @@
 let _debugMode = 0;
 
-function debugMode(){
+export function getDebugMode(){
     return _debugMode;
 }
 
 export function setDebugMode(valor){
     _debugMode = valor;
+    console.log(_debugMode);
 }
-
-export default debugMode;

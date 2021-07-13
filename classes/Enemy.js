@@ -1,7 +1,8 @@
 import Sprite from "./Sprite.js";
 import seedGen from "./SeedGen.js";
 import assetsMng from "./AssetsMng.js";
-import debugMode from "./DebugMode.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
+
 
 export default function Enemy() {
     Sprite.call(this, {s: 22, w: 22, h: 10, nomeImagem: "slime", sizeImagem: 22});            
@@ -122,10 +123,10 @@ Enemy.prototype.desenhar = function(ctx){
     });
     ctx.restore();
     this.desenharHP(ctx);
-    if(debugMode == 3){
+    if(getDebugMode() == 3){
         this.desenharCentro(ctx);
     }
-    else if(debugMode == 4){
+    else if(getDebugMode() == 4){
         this.desenharCaixaColisao(ctx);
         this.desenharCentro(ctx);
     }

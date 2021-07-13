@@ -1,6 +1,6 @@
 import Cell from "./Cell.js";
 import {getMapArea, setMapArea} from "./MAPA_AREA.js";
-import debugMode from "./DebugMode.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
 
 export default function Map(w, h, s, assetsMng) {
   this.w = w;
@@ -245,7 +245,7 @@ Map.prototype.desenhar = function (ctx, player) {
           break;
       }
 
-      /*if (debugMode >= 5 || (debugMode <= 2 && debugMode > 0)) {//if (debugMode === 3) {
+      /*if (getDebugMode() >= 5 || (getDebugMode() <= 2 && getDebugMode() > 0)) {//if (getDebugMode() === 3) {
         this.desenharCell(ctx, l, c);         //Debug mode Grid
       }*/
     }
@@ -253,7 +253,7 @@ Map.prototype.desenhar = function (ctx, player) {
 }
 
 Map.prototype.desenharDebugMode = function(ctx){
-  if (debugMode >= 5 || (debugMode <= 2 && debugMode > 0)) {
+  if (getDebugMode() >= 5 || (getDebugMode() <= 2 && getDebugMode() > 0)) {
     for (let l = Math.max(0, player.gy - getMapArea()); l < Math.min(this.h, player.gy + getMapArea()); l++) {
       for (let c = Math.max(0, player.gx - getMapArea()); c < Math.min(this.w, player.gx + getMapArea()); c++) {
           this.desenharCell(ctx, l, c);         //Debug mode Grid
@@ -277,7 +277,7 @@ Map.prototype.desenharCell = function (ctx, l, c) {
     ctx.lineWidth = 2;
     ctx.font = "10px Arial Black";
 
-    switch(debugMode){
+    switch(getDebugMode()){
       case 1:                   // Tipos
         this.escreveTexto(ctx, this.cell[l][c].tipo + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
         break;
@@ -292,7 +292,7 @@ Map.prototype.desenharCell = function (ctx, l, c) {
     ctx.lineWidth = 2;
     ctx.font = "10px Arial Black";
 
-    switch(debugMode){
+    switch(getDebugMode()){
       case 1:                   // Tipos
         this.escreveTexto(ctx, this.cell[l][c].tipo + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
         break;

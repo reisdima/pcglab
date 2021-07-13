@@ -1,7 +1,8 @@
 import Sprite from "./Sprite.js";
 import seedGen from "./SeedGen.js";
 import assetsMng from "./AssetsMng.js";
-import debugMode from "./DebugMode.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
+
 
 export default function Treasure(){
     Sprite.call(this, {s: 18, w: 17, h: 10, nomeImagem: "coin_gold"});     
@@ -53,10 +54,10 @@ Treasure.prototype.desenhar = function(ctx){
     dy: -this.matrizImagem.heightImagem/2 - this.matrizImagem.heightImagem/2 + 3
   });
   ctx.restore();
-  if(debugMode === 3){
+  if(getDebugMode() === 3){
     this.desenharCentro(ctx);
   }
-  else if(debugMode === 4){
+  else if(getDebugMode() === 4){
     this.desenharCaixaColisao(ctx);
     this.desenharCentro(ctx);
   }

@@ -45,6 +45,7 @@
     import CellularAutomata from "./classes/CellularAutomata.js";
     import assetsMng from "./classes/AssetsMng.js";
     import {setMapArea, getMapArea} from "./classes/MAPA_AREA.js";
+    import {setDebugMode, getDebugMode} from "./classes/DebugMode.js";
 
 
     const tela = document.getElementById("canvas");
@@ -107,7 +108,7 @@
     const K = 1;
     const debugModeBegin = 0;
     const debugModeEnd = 10;
-    let debugMode = debugModeBegin;    // 0
+    setDebugMode(debugModeBegin);    // 0
     const player = new Player({s: 27, w: 27, h: 11,
       hitBox: {
         x: 0,
@@ -638,7 +639,7 @@
 
     // A cada 1 segundo ele executa uma diminuição na barra de tempo
     function controleTempo(){
-      if(debugMode == 0){
+      if(getDebugMode() == 0){
         //if(!player.imune){
           barraTempo.interna.w = barraTempo.interna.w - levelAtual.taxaDiminuicaoTempo;  
           levelAtual.updateTempo();
@@ -669,8 +670,8 @@
       
       
 
-      if(debugMode >= 1){       
-        let typeMode = hud.debugText[debugMode - 1];
+      if(getDebugMode() >= 1){       
+        let typeMode = hud.debugText[getDebugMode() - 1];
 
         // Desenha menu debaixo
         ctx.font = "13px Arial Black"; 
@@ -856,16 +857,16 @@
          *  Debug Mode
          */
         case 80:      //Pressionar a letra P
-          debugMode = debugMode + 1;
-          if(debugMode > debugModeEnd){
-            debugMode = debugModeBegin;  //Padrão do jogo
+          setDebugMode(getDebugMode() + 1);
+          if(getDebugMode() > debugModeEnd){
+            setDebugMode(debugModeBegin);  //Padrão do jogo
             escala = 1.8;
             setMapArea(14);
           }
           break;
         case 187:
         case 107:      //+
-          if(debugMode >= 1){
+          if(getDebugMode() >= 1){
             escala = escala + 0.025;
             if(escala >= 0.85)
               setMapArea(20);
@@ -883,7 +884,7 @@
           break;
         case 189:
         case 109:      //-
-          if(debugMode >= 1){
+          if(getDebugMode() >= 1){
             escala = escala - 0.025;
             if(escala >= 0.85)
               setMapArea(20);
