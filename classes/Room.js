@@ -360,7 +360,7 @@ Room.prototype.desenharCamadas = function(params = {}){
     params.ctx.lineWidth = 2;
     params.ctx.font = "10px Arial Black";
 
-    switch(debugMode){
+    switch(getDebugMode()){
         case 5:                   // Teleportes
             for(let i = 0; i < this.blocks.length; i++){
                 //this.escreveTexto(params.ctx, this.blocks[i].distTeleportes + "", this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);

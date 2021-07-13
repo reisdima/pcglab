@@ -1,6 +1,7 @@
 import Cell from "./Cell.js";
 import {getMapArea, setMapArea} from "./MAPA_AREA.js";
 import {setDebugMode, getDebugMode} from "./DebugMode.js";
+import { getPlayer } from "./Player.js";
 
 export default function Map(w, h, s, assetsMng) {
   this.w = w;
@@ -253,6 +254,7 @@ Map.prototype.desenhar = function (ctx, player) {
 }
 
 Map.prototype.desenharDebugMode = function(ctx){
+  const player = getPlayer();
   if (getDebugMode() >= 5 || (getDebugMode() <= 2 && getDebugMode() > 0)) {
     for (let l = Math.max(0, player.gy - getMapArea()); l < Math.min(this.h, player.gy + getMapArea()); l++) {
       for (let c = Math.max(0, player.gx - getMapArea()); c < Math.min(this.w, player.gx + getMapArea()); c++) {

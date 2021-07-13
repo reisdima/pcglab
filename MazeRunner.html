@@ -37,7 +37,7 @@
     import AssetsManager from "./classes/AssetsManager.js";
     import SeedGenerator from "./classes/SeedGenerator.js";
     import Sprite from "./classes/Sprite.js";
-    import Player from "./classes/Player.js";
+    import Player, {setPlayer, getPlayer} from "./classes/Player.js";
     import Level from "./classes/Level.js";
     import Room from "./classes/Room.js";
     import Map from "./classes/Map.js";
@@ -119,6 +119,7 @@
         hDefault: 11
       }
     });  
+    setPlayer(player);
 
     // HUD
     const hud = {
@@ -150,8 +151,8 @@
               { // Todos
                 for(let i = 0; i < this.tesouros.length; i++){
                   let vetorUnitario = {
-                    x: this.tesouros[i].x - player.x,
-                    y: this.tesouros[i].y - player.y,
+                    x: this.tesouros[i].x - getPlayer().x,
+                    y: this.tesouros[i].y - getPlayer().y,
                     modulo: 0
                   };
                   vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
@@ -172,8 +173,8 @@
                 for(let i = 0; i < this.inimigos.length; i++){
                   // Ligação entre os teleportes
                   let vetorUnitario = {
-                    x: this.inimigos[i].x - player.x,
-                    y: this.inimigos[i].y - player.y,
+                    x: this.inimigos[i].x - getPlayer().x,
+                    y: this.inimigos[i].y - getPlayer().y,
                     modulo: 0
                   };
                   vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
@@ -192,8 +193,8 @@
                 }
 
                 let vetorUnitario = {
-                  x: this.teleporteInitial.x - player.x,
-                  y: this.teleporteInitial.y - player.y,
+                  x: this.teleporteInitial.x - getPlayer().x,
+                  y: this.teleporteInitial.y - getPlayer().y,
                   modulo: 0
                 };
                 vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
@@ -211,8 +212,8 @@
                 ctx.restore();
 
                 vetorUnitario = {
-                  x: this.teleporteFinal.x - player.x,
-                  y: this.teleporteFinal.y - player.y,
+                  x: this.teleporteFinal.x - getPlayer().x,
+                  y: this.teleporteFinal.y - getPlayer().y,
                   modulo: 0
                 };
                 vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
@@ -233,8 +234,8 @@
             case 1:
               {   //Teleportes
                 let vetorUnitario = {
-                  x: this.teleporteInitial.x - player.x,
-                  y: this.teleporteInitial.y - player.y,
+                  x: this.teleporteInitial.x - getPlayer().x,
+                  y: this.teleporteInitial.y - getPlayer().y,
                   modulo: 0
                 };
                 vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
@@ -252,8 +253,8 @@
                 ctx.restore();
 
                 vetorUnitario = {
-                  x: this.teleporteFinal.x - player.x,
-                  y: this.teleporteFinal.y - player.y,
+                  x: this.teleporteFinal.x - getPlayer().x,
+                  y: this.teleporteFinal.y - getPlayer().y,
                   modulo: 0
                 };
                 vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
@@ -276,8 +277,8 @@
                 for(let i = 0; i < this.inimigos.length; i++){
                   // Ligação entre os teleportes
                   let vetorUnitario = {
-                    x: this.inimigos[i].x - player.x,
-                    y: this.inimigos[i].y - player.y,
+                    x: this.inimigos[i].x - getPlayer().x,
+                    y: this.inimigos[i].y - getPlayer().y,
                     modulo: 0
                   };
                   vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
@@ -300,8 +301,8 @@
               {
                 for(let i = 0; i < this.tesouros.length; i++){
                   let vetorUnitario = {
-                    x: this.tesouros[i].x - player.x,
-                    y: this.tesouros[i].y - player.y,
+                    x: this.tesouros[i].x - getPlayer().x,
+                    y: this.tesouros[i].y - getPlayer().y,
                     modulo: 0
                   };
                   vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
@@ -440,14 +441,14 @@
     levels[0].montarLevel({
       dt: dt,
       geraFase: geraFase,
-      player: player,
+      player: getPlayer(),
     });
     levels[0].setTempo(20);                // 20 segundos
 
     let tempoGameOver = 2;
 
     levelAtual.clonarLevel(levels[0]);
-    player.map = levelAtual.mapa;
+    getPlayer().map = levelAtual.mapa;
 
     let teasuresCollected = 0;    
 
@@ -481,7 +482,7 @@
     const barraEnergia = {
       sprite: new Sprite(),
       desenhar: function(ctx){
-        this.sprite.desenharBarraEnergiaHUD(ctx, player);
+        this.sprite.desenharBarraEnergiaHUD(ctx, getPlayer());
       },
       init: function(){
         this.sprite.w = 127;
@@ -548,11 +549,11 @@
             controleTempo();
             ctx.save();
             ctx.scale(escala, escala);
-            ctx.translate(-player.x + tela.width/4 , - player.y + tela.height/4);            
+            ctx.translate(-getPlayer().x + tela.width/4 , - getPlayer().y + tela.height/4);            
             levelAtual.desenhar(ctx);
             ctx.restore();
             desenharHUD(ctx);
-            if(!player.vivo){
+            if(!getPlayer().vivo){
               estado = 5;
             }
             break;
@@ -614,15 +615,15 @@
             barraTempo.interna.w = 127;
             /*treasuresCount = 0;
             teasuresCollected = 0;*/
-            player.levelNumber = player.levelNumber + 1;
+            getPlayer().levelNumber = getPlayer().levelNumber + 1;
             loadLevel(0);       // Load new level
             break;
           case 5:     // Recarregar fase
             barraTempo.interna.w = 127;
             /*treasuresCount = 0;
             teasuresCollected = 0;*/
-            player.vidas--;
-            if(player.vidas < 1){       // Game over
+            getPlayer().vidas--;
+            if(getPlayer().vidas < 1){       // Game over
               estado = 2;
               tempoGameOver = 2;
             }
@@ -640,7 +641,7 @@
     // A cada 1 segundo ele executa uma diminuição na barra de tempo
     function controleTempo(){
       if(getDebugMode() == 0){
-        //if(!player.imune){
+        //if(!getPlayer().imune){
           barraTempo.interna.w = barraTempo.interna.w - levelAtual.taxaDiminuicaoTempo;  
           levelAtual.updateTempo();
           if(barraTempo.interna.w <= 0){
@@ -664,9 +665,9 @@
       ctx.strokeStyle = "black";
       escreveTexto(ctx, hud.tempo.text, hud.tempo.x, hud.tempo.y);
       escreveTexto(ctx, hud.energia.text, hud.energia.x, hud.energia.y);
-      escreveTexto(ctx, hud.vidas.text + player.vidas, hud.vidas.x, hud.vidas.y);
-      escreveTexto(ctx, hud.tesouros.text + player.tesourosColetados, hud.tesouros.x, hud.tesouros.y);
-      escreveTexto(ctx, hud.level.text + player.levelNumber, hud.level.x, hud.level.y);
+      escreveTexto(ctx, hud.vidas.text + getPlayer().vidas, hud.vidas.x, hud.vidas.y);
+      escreveTexto(ctx, hud.tesouros.text + getPlayer().tesourosColetados, hud.tesouros.x, hud.tesouros.y);
+      escreveTexto(ctx, hud.level.text + getPlayer().levelNumber, hud.level.x, hud.level.y);
       
       
 
@@ -689,7 +690,7 @@
         escreveTexto(ctx, "Teleporte Inicial Level: [" + (levelAtual.teleporteInicioLevel.gy) + "][" + (levelAtual.teleporteInicioLevel.gx) + "]", converteTelaCheia(tela.widthOld/2, tela.widthOld, tela.width), converteTelaCheia(321, tela.heightOld, tela.height));
         escreveTexto(ctx, "Teleporte Final Level: [" + (levelAtual.teleporteFinalLevel.gy) + "][" + (levelAtual.teleporteFinalLevel.gx) + "]", converteTelaCheia(tela.widthOld/2, tela.widthOld, tela.width), converteTelaCheia(343, tela.heightOld, tela.height));
         escreveTexto(ctx, "Escala mapa: " + escala.toFixed(4), converteTelaCheia(500, tela.widthOld, tela.width), converteTelaCheia(321, tela.heightOld, tela.height));
-        escreveTexto(ctx, "Grade Player: [" + (player.gy) + "][" + (player.gx) + "]", converteTelaCheia(500, tela.widthOld, tela.width), converteTelaCheia(332, tela.heightOld, tela.height));
+        escreveTexto(ctx, "Grade Player: [" + (getPlayer().gy) + "][" + (getPlayer().gx) + "]", converteTelaCheia(500, tela.widthOld, tela.width), converteTelaCheia(332, tela.heightOld, tela.height));
         escreveTexto(ctx, "Seed: " + seedValueURL, converteTelaCheia(500, tela.widthOld, tela.width), converteTelaCheia(343, tela.heightOld, tela.height));
       }
     }
@@ -735,9 +736,9 @@
     function limparDados() {
       levelAtual = new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng});
       levelAtual.clonarLevel(levels[0]);
-      levelAtual.posicionarPlayer(player);
+      levelAtual.posicionarPlayer(getPlayer());
       levelAtual.setTaxaDiminuicaoTempo(dt, barraTempo.interna);        // Atualiza o decaimento da barra
-      player.restart();
+      getPlayer().restart();
       hud.bussola.update();
     }
 
@@ -749,25 +750,25 @@
     function loadLevel(option) {
       switch(option){
         case 0:   //Load New Level
-          if (player.levelNumber > levels.length) {
+          if (getPlayer().levelNumber > levels.length) {
             limparDados();
             estado = 1;
           }
           else {
-            levelAtual.clonarLevel(levels[player.levelNumber - 1]);
+            levelAtual.clonarLevel(levels[getPlayer().levelNumber - 1]);
             levelAtual.posicionarPlayer(player);
             levelAtual.setTaxaDiminuicaoTempo(dt, barraTempo.interna);        // Atualiza o decaimento da barra
-            player.restart();
+            getPlayer().restart();
             hud.bussola.update();
-            player.vidas = 3;
+            getPlayer().vidas = 3;
             estado = 0;
           }
           break;
         case 1:   //Reload
-          levelAtual.clonarLevel(levels[player.levelNumber - 1]);
-          levelAtual.posicionarPlayer(player);
+          levelAtual.clonarLevel(levels[getPlayer().levelNumber - 1]);
+          levelAtual.posicionarPlayer(getPlayer());
           levelAtual.setTaxaDiminuicaoTempo(dt, barraTempo.interna);        // Atualiza o decaimento da barra
-          player.restart();
+          getPlayer().restart();
           hud.bussola.update();
           estado = 0;
           break;
@@ -821,25 +822,25 @@
           }
           break;
         case 37:       // Left Arrow
-          player.teclas.left = true;
+          getPlayer().setTeclas("left", true);
           break;
         case 39:      // Right Arrow
-          player.teclas.right = true;
+          getPlayer().setTeclas("right", true);
           break;
         case 38:            // Up Arrow
-          player.teclas.up = true;
+          getPlayer().setTeclas("up", true);
           break;
         case 40:            // Down Arrow
-          player.teclas.down = true;
+          getPlayer().setTeclas("down", true);
           break;
         case 32:  //Espaco  -- Ativa teleporte
-          player.teclas.space = true;          
+          getPlayer().setTeclas("space", true);          
           break;
         case 17:            // Left CTRL -- Ataque
-          player.teclas.ctrl = true;
+          getPlayer().setTeclas("ctrl", true);
           break;
         case 16:            // Left SHIFT -- Correr
-          player.teclas.shift = true;
+          getPlayer().setTeclas("shift", true);
           break;
         case 77:            // M
           hud.bussola.mapMode = hud.bussola.mapMode + 1;
@@ -961,28 +962,28 @@
      */
     addEventListener("keyup", function (e) {
       e.preventDefault();                         //Evento padrao do navegador
-      if (player != null) {
+      if (getPlayer() != null) {
         switch (e.keyCode) {
           case 37:
-            player.teclas.left = false;
+            getPlayer().setTeclas("left", false);
             break;
           case 39:
-            player.teclas.right = false;
+            getPlayer().setTeclas("right", false);
             break;
           case 38:
-            player.teclas.up = false;
+            getPlayer().setTeclas("up", false);
             break;
           case 40:
-            player.teclas.down = false;
+            getPlayer().setTeclas("down", false);
             break;
           case 17:  //Left CTRL
-            player.teclas.ctrl = false;
+            getPlayer().setTeclas("ctrl", false);
             break
           case 32:  //Espaco  -- Ativa teleporte
-            player.teclas.space = false;          
+            getPlayer().setTeclas("space", false);          
             break;
           case 16: //Left SHIFT -- Correr
-            player.teclas.shift = false;
+            getPlayer().setTeclas("shift", false);
             break;
           default:
             break;

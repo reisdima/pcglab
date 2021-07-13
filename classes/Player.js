@@ -2,6 +2,15 @@ import Sprite from "./Sprite.js";
 import assetsMng from "./AssetsMng.js";
 import {setDebugMode, getDebugMode} from "./DebugMode.js";
 
+let _player = null;
+
+export function setPlayer(newPlayer){
+  _player = newPlayer;
+}
+
+export function getPlayer() {
+  return _player;
+}
 
 export default function Player(params) {
   /**
@@ -79,6 +88,7 @@ Player.prototype.setRoom = function(){
 }
 
 Player.prototype.moverCompleto = function(dt){
+
   this.cooldownTeleporte = this.cooldownTeleporte - dt;         // Cooldown de teleporte pra não teleportar direto
   this.cooldownImune = this.cooldownImune - dt;         
   this.tratarAnimacao();
@@ -87,7 +97,7 @@ Player.prototype.moverCompleto = function(dt){
     this.mover(dt);
   }
   this.moverTiros(dt);
-  this.animationController();
+  this.animationController(dt);
   this.removerTiros();
   if(this.hp <= 0){
     this.vivo = false;
@@ -189,7 +199,7 @@ Player.prototype.criarAnimacoes = function(){
 
 Player.prototype.controlePorTeclas = function(){
   // Teclas direcionais
-  if(this.teclas.up){this.vy = - this.playerVel; this.sentidoMovimento = 0;}
+  if(this.teclas.up){this.vy = - this.playerVel; this.sentidoMovimento = 0; }
   if(this.teclas.right){this.vx = this.playerVel; this.sentidoMovimento = 3;}
   if(this.teclas.down){this.vy = this.playerVel; this.sentidoMovimento = 2;}
   if(this.teclas.left){this.vx = - this.playerVel; this.sentidoMovimento = 1;}
@@ -519,4 +529,8 @@ Player.prototype.atacarModoPlayer = function(alvo){
 
 Player.prototype.getRoom = function(){
   return this.map.cell[this.gy][this.gx].room;
+}
+
+Player.prototype.setTeclas = function(key, value){
+  this.teclas[key] = value;
 }

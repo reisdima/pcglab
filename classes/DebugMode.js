@@ -6,5 +6,4 @@ export function getDebugMode(){
 
 export function setDebugMode(valor){
     _debugMode = valor;
-    console.log(_debugMode);
 }
