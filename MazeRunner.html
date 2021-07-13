@@ -44,7 +44,7 @@
     import Cell from "./classes/Cell.js";
     import CellularAutomata from "./classes/CellularAutomata.js";
     import assetsMng from "./classes/AssetsMng.js";
-    import MAPA_AREA from "./classes/MAPA_AREA.js";
+    import {setMapArea, getMapArea} from "./classes/MAPA_AREA.js";
 
 
     const tela = document.getElementById("canvas");
@@ -102,7 +102,7 @@
     const widthMap = 120;   
     const heightMap = 120;  
     const sizeMap = 32;     
-    //let MAPA_AREA = 14;  //20
+    //setMapArea(14);  //20
     let escala = 1.8;
     const K = 1;
     const debugModeBegin = 0;
@@ -860,7 +860,7 @@
           if(debugMode > debugModeEnd){
             debugMode = debugModeBegin;  //Padrão do jogo
             escala = 1.8;
-            MAPA_AREA = 14;
+            setMapArea(14);
           }
           break;
         case 187:
@@ -868,14 +868,14 @@
           if(debugMode >= 1){
             escala = escala + 0.025;
             if(escala >= 0.85)
-              MAPA_AREA = 20;
+              setMapArea(20);
             else{
               if(escala > 0.3){
-                MAPA_AREA = 100;
+                setMapArea(100);
               }
               else{
                 if(escala >=  0.0){
-                  MAPA_AREA = 160;
+                  setMapArea(160);
                 }
               }
             }
@@ -886,14 +886,14 @@
           if(debugMode >= 1){
             escala = escala - 0.025;
             if(escala >= 0.85)
-              MAPA_AREA = 20;
+              setMapArea(20);
             else{
               if(escala > 0.3){
-                MAPA_AREA = 80;
+                setMapArea(80);
               }
               else{
                 if(escala >=  0.0){
-                  MAPA_AREA = 160;
+                  setMapArea(160);
                 }
               }
             }

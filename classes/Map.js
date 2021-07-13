@@ -1,5 +1,5 @@
 import Cell from "./Cell.js";
-import MAPA_AREA from "./MAPA_AREA.js";
+import {getMapArea, setMapArea} from "./MAPA_AREA.js";
 import debugMode from "./DebugMode.js";
 
 export default function Map(w, h, s, assetsMng) {
@@ -225,8 +225,8 @@ Map.prototype.camadaDistCompostas = function(){
 
 Map.prototype.desenhar = function (ctx, player) {
   ctx.lineWidth = 2;
-  for (let l = Math.max(0, player.gy - MAPA_AREA); l < Math.min(this.h, player.gy + MAPA_AREA); l++) {
-    for (let c = Math.max(0, player.gx - MAPA_AREA); c < Math.min(this.w, player.gx + MAPA_AREA); c++) {
+  for (let l = Math.max(0, player.gy - getMapArea()); l < Math.min(this.h, player.gy + getMapArea()); l++) {
+    for (let c = Math.max(0, player.gx - getMapArea()); c < Math.min(this.w, player.gx + getMapArea()); c++) {
       switch (this.cell[l][c].tipo) {
         case 0:   // Vazio     -- Chão
           this.assetsMng.drawSize({ctx: ctx, key: "floor_sand", x: (c * this.s), 
@@ -254,8 +254,8 @@ Map.prototype.desenhar = function (ctx, player) {
 
 Map.prototype.desenharDebugMode = function(ctx){
   if (debugMode >= 5 || (debugMode <= 2 && debugMode > 0)) {
-    for (let l = Math.max(0, player.gy - MAPA_AREA); l < Math.min(this.h, player.gy + MAPA_AREA); l++) {
-      for (let c = Math.max(0, player.gx - MAPA_AREA); c < Math.min(this.w, player.gx + MAPA_AREA); c++) {
+    for (let l = Math.max(0, player.gy - getMapArea()); l < Math.min(this.h, player.gy + getMapArea()); l++) {
+      for (let c = Math.max(0, player.gx - getMapArea()); c < Math.min(this.w, player.gx + getMapArea()); c++) {
           this.desenharCell(ctx, l, c);         //Debug mode Grid
       }
     }
