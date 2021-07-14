@@ -491,7 +491,7 @@
           levelAtual.posicionarPlayer(getPlayer());
           levelAtual.setTaxaDiminuicaoTempo(dt, barraTempo.interna);        // Atualiza o decaimento da barra
           getPlayer().restart();
-          hud.bussola.update();
+          hud.bussola.update(levelAtual);
           estado = 0;
           break;
       }
