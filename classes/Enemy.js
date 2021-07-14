@@ -1,5 +1,10 @@
+import Sprite from "./Sprite.js";
+import seedGen from "./SeedGen.js";
+import assetsMng from "./AssetsMng.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
 
-function Enemy() {
+
+export default function Enemy() {
     Sprite.call(this, {s: 22, w: 22, h: 10, nomeImagem: "slime", sizeImagem: 22});            
     this.alvo = null;
     this.roomNumber = -1;
@@ -38,7 +43,7 @@ Enemy.prototype.movimento = function (dt) {
     }  
 }
 
-Enemy.prototype.controleInvencibilidade = function(){
+Enemy.prototype.controleInvencibilidade = function(dt){
     this.cooldownImune = this.cooldownImune - dt;
     if(this.cooldownImune < 0){
         this.imune = false;
@@ -117,17 +122,17 @@ Enemy.prototype.desenhar = function(ctx){
         dy: -this.matrizImagem.heightImagem/2 - 8/*- this.matrizImagem.heightImagem/2*/
     });
     ctx.restore();
-    this.desenharHP();
-    if(debugMode == 3){
+    this.desenharHP(ctx);
+    if(getDebugMode() == 3){
         this.desenharCentro(ctx);
     }
-    else if(debugMode == 4){
+    else if(getDebugMode() == 4){
         this.desenharCaixaColisao(ctx);
         this.desenharCentro(ctx);
     }
 } 
 
-Enemy.prototype.desenharHP = function(){
+Enemy.prototype.desenharHP = function(ctx){
     ctx.fillStyle = "black";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;

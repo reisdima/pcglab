@@ -1,4 +1,6 @@
-function CellularAutomata(params = {}){
+import Room from "./Room.js";
+
+export default function CellularAutomata(params = {}){
     let estruturaPadrao = {
         HS: 0,
         WS: 0,
@@ -10,7 +12,8 @@ function CellularAutomata(params = {}){
         wallIndex: 2,
         map: null, 
         map2: null, 
-        rooms: []
+        rooms: [],
+        seedGen: null
     }
 
     Object.assign(this, estruturaPadrao, params);
@@ -168,7 +171,7 @@ CellularAutomata.prototype.filterRooms = function(sizeRoomsMinimal = 10){
 }*/
 
 CellularAutomata.prototype.getRandomInt = function(min, max){
-    return seedGen.getRandomIntMethod_1(min, max);    
+    return this.seedGen.getRandomIntMethod_1(min, max);    
 }
 
 /*CellularAutomata.prototype.setTeleporters = function(){
@@ -511,7 +514,7 @@ CellularAutomata.prototype.scenarioRandomWall = function (){
     }
     let rockInMap = (this.r * this.HS * this.WS);
     for(let i = 0; i < rockInMap; i++){
-      let matrixIndexRandom = Math.floor(seedGen.getRandomMethod_1() * matrix.length);//Math.random() * matrix.length);
+      let matrixIndexRandom = Math.floor(this.seedGen.getRandomMethod_1() * matrix.length);//Math.random() * matrix.length);
       this.map[matrix[matrixIndexRandom][0]][matrix[matrixIndexRandom][1]] = this.rockIndex;
       this.map2[matrix[matrixIndexRandom][0]][matrix[matrixIndexRandom][1]] = this.rockIndex;
       matrix.splice(matrixIndexRandom, 1);

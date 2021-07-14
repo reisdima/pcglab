@@ -1,4 +1,4 @@
-function Ordenacao(){
+export default function Ordenacao(){
 
 }
 

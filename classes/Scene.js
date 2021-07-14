@@ -1,5 +1,5 @@
-function Scene(params) {
-    var exemplo ={
+export default function Scene(params) {
+    let exemplo ={
         sprites: [],
         toRemove: [],
         ctx: null,
@@ -20,19 +20,19 @@ Scene.prototype.adicionar = function(sprite){
 };
 
 Scene.prototype.desenhar = function(){
-    for(var i = 0; i<this.sprites.length; i++){
+    for(let i = 0; i<this.sprites.length; i++){
         this.sprites[i].desenhar(this.ctx);
     }  
 };
 
 Scene.prototype.mover = function(dt){
-    for(var i = 0; i<this.sprites.length; i++){
+    for(let i = 0; i<this.sprites.length; i++){
         this.sprites[i].mover(dt);
     }  
 };
 
 Scene.prototype.comportar = function(){
-    for(var i = 0; i<this.sprites.length; i++){
+    for(let i = 0; i<this.sprites.length; i++){
         if(this.sprites[i].comportar){
             this.sprites[i].comportar();
         }
@@ -45,11 +45,11 @@ Scene.prototype.limpar = function(){
 }
 
 Scene.prototype.checaColisao = function(){
-    for(var i = 0; i<this.sprites.length; i++){
+    for(let i = 0; i<this.sprites.length; i++){
         if(this.sprites[i].morto){
             this.toRemove.push(this.sprites[i]);
         }
-        for(var j = i+1; j<this.sprites.length; j++){
+        for(let j = i+1; j<this.sprites.length; j++){
             if(this.sprites[i].colidiuCom(this.sprites[j])){
                 if(this.sprites[i].props.tipo === "pc"
                 && this.sprites[j].props.tipo ==="npc"){
@@ -71,8 +71,8 @@ Scene.prototype.checaColisao = function(){
 };
 
 Scene.prototype.removeSprites = function () {
-    for (var i = 0; i < this.toRemove.length; i++) {
-        var idx = this.sprites.indexOf(this.toRemove[i]);
+    for (let i = 0; i < this.toRemove.length; i++) {
+        let idx = this.sprites.indexOf(this.toRemove[i]);
         if(idx>=0){
             this.sprites.splice(idx,1);
         }
