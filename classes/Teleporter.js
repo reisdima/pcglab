@@ -1,5 +1,8 @@
 import Sprite from "./Sprite.js";
 import assetsMng from "./AssetsMng.js";
+import {setHud, getHud} from "./Hud.js";
+
+const hud = getHud();
 
 export default function Teleporter(type){
   /**
@@ -66,7 +69,7 @@ Teleporter.prototype.copyConnection = function(teleporter, rooms){
   }
 }
 
-Teleporter.prototype.teleportar = function(player){
+Teleporter.prototype.teleportar = function(player, levelAtual){
   if(this.proximoTeleporte != undefined){
     assetsMng.play("teleporte");
     player.x = this.proximoTeleporte.x;
@@ -74,7 +77,7 @@ Teleporter.prototype.teleportar = function(player){
     player.gx = this.proximoTeleporte.gx;
     player.gy = this.proximoTeleporte.gy;
     player.room = this.proximoTeleporte.roomNumber;
-    hud.bussola.update();
+    hud.bussola.update(levelAtual);
   }
   else{
     console.log("proximoTeleporte eh undefined !!!");

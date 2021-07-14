@@ -651,7 +651,7 @@ Level.prototype.posicionarInimigos = function(params){
 
 Level.prototype.movimento = function(dt) {
   this.player.moverCompleto(dt);
-  this.colisaoTeleportes(this.player);
+  this.colisaoTeleportes(this.player, this);
   this.colisaoFireZones(this.player);
   //this.colisaoInimigos(this.player);
   this.colisaoTesouros(this.player);
@@ -793,11 +793,11 @@ Level.prototype.colisaoTeleportes = function(player){
   if(player.teclas.space){
     if(player.cooldownTeleporte < 0){
       if(auxRoom.teleporterInitial.colidiuCom2(player)){
-        auxRoom.teleporterInitial.teleportar(player);
+        auxRoom.teleporterInitial.teleportar(player, this);
         //this.hud.bussola.update();
       }
       else if(auxRoom.teleporterFinal.colidiuCom2(player)){
-        auxRoom.teleporterFinal.teleportar(player);
+        auxRoom.teleporterFinal.teleportar(player, this);
         //this.hud.bussola.update();
       }
       player.cooldownTeleporte = 1;
