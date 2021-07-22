@@ -7,7 +7,10 @@ export default function Cell(params = {}) {
         distInimigos: 999, 
         distTesouros: 999, 
         linha: 0, 
-        coluna: 0
+        coluna: 0,
+        direcao: ">",
+        distInundacao: -1,
+        vizinhos: []
     };
  
     Object.assign(this, exemplo, params);   // Sobrescreve os atributos de params e exemplo na classe

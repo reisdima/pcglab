@@ -769,6 +769,11 @@ Level.prototype.desenhar = function(ctx) {
       }
     }
   }
+  if(getDebugMode() === 11){
+    for(let i = 0; i < this.rooms.length; i++){
+      this.rooms[i].init();
+    }
+  }
 };
 
 Level.prototype.removerInimigos = function(){

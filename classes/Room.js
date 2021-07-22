@@ -352,7 +352,6 @@ Room.prototype.draw = function(ctx){
     for(let i = 0; i < this.enemies.length; i++){
         this.enemies[i].desenhar(ctx);
     }  
-
 }
 
 Room.prototype.desenharCamadas = function(params = {}){
@@ -491,7 +490,7 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.restore();
                 params.ctx.fillStyle = "yellow";
                 params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, ("a"), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
+                this.escreveTexto(params.ctx, (this.blocks[i].distInundacao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
             }
             break;
         }
@@ -705,4 +704,64 @@ Room.prototype.copyEnemies = function(room){
 
 Room.prototype.apontarDirecoes = function(){
     console.log("this.blocks");
+}
+
+Room.prototype.inundaRecursivo = function(val, l, c){
+    for (let i = 0; i < this.blocks.length; i++) {
+        this.defineVizinhos(this.blocks[i]);
+        this.blocks[i].distInundacao = this.blocks[i].vizinhos.length;
+    }
+    /*for (let i = 0; i < this.blocks.length; i++) {
+        if(this.blocks[i].distTeleportes === 0){
+            this.blocks[i].distInundacao = this.blocks[i].linha + " " + this.blocks[i].coluna;
+        }
+    }*/
+    /*if(val === 0){
+        let linhaSaida, colunaSaida;
+        for (let i = 0; i < this.blocks.length; i++) {
+            if(this.blocks[i].linha === this.teleporterFinal.gy && this.blocks[i].coluna === this.teleporterFinal.gx){
+                linhaSaida = this.blocks[i].linha;
+                colunaSaida = this.blocks[i].coluna;
+                this.blocks[i].distInundacao = val;
+                this.inundaRecursivo(val+1, linhaSaida, colunaSaida);
+            }
+        }
+    }
+    else{
+        for (let i = 0; i < this.blocks.length; i++) {
+            if(this.blocks[i].distInundacao === -1){
+                if((this.blocks[i].linha-1 === l-1 && this.blocks[i].coluna === c) ||
+                   (this.blocks[i].linha+1 === l+1 && this.blocks[i].coluna === c) ||
+                   (this.blocks[i].linha-1 === l && this.blocks[i].coluna === c-1) ||
+                   (this.blocks[i].linha-1 === l && this.blocks[i].coluna === c+1)){
+                       this.blocks[i].distInundacao = val;
+                   }
+            }
+        }
+    }*/
+}
+
+Room.prototype.defineVizinhos = function(bloco){
+    bloco.vizinhos = [];
+    for (let i = 0; i < this.blocks.length; i++) {
+        if(this.blocks[i].linha === bloco.linha-1 && this.blocks[i].coluna === bloco.coluna){
+            bloco.vizinhos.push(this.blocks[i]);
+        }
+        if(this.blocks[i].linha === bloco.linha && this.blocks[i].coluna === bloco.coluna-1){
+            bloco.vizinhos.push(this.blocks[i]);
+        }
+        if(this.blocks[i].linha === bloco.linha+1 && this.blocks[i].coluna === bloco.coluna){
+            bloco.vizinhos.push(this.blocks[i]);
+        }
+        if(this.blocks[i].linha === bloco.linha && this.blocks[i].coluna === bloco.coluna+1){
+            bloco.vizinhos.push(this.blocks[i]);
+        }
+    }
+}
+
+Room.prototype.init = function(){
+    for (let i = 0; i < this.blocks.length; i++) {
+        this.defineVizinhos(this.blocks[i]);
+        this.blocks[i].distInundacao = this.blocks[i].vizinhos.length;
+    }
 }
