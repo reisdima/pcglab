@@ -335,6 +335,8 @@ const hud = {
     this.debugText.push("Mode 8 - Distancia - Tesouros"); // Dados das celulas -- DistTesouros
     this.debugText.push("Mode 9 - Dist - Inimigos + Teleportes"); // Dados das celulas -- DistTesouros
     this.debugText.push("Mode 10 - Dist - Inimigos + Telep.. + Fire.."); // Dados das celulas -- DistInimigosTeleporte
+    this.debugText.push("Mode 11 - Caminho até a saída do Room"); // Dados das celulas -- DistInimigosTeleporte
+    this.debugText.push("Mode 12 - Caminho tesouros"); // Dados das celulas -- DistInimigosTeleporte
     this.updateElementos(tela);
     this.bussola.init();
   },
