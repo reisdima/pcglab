@@ -4,7 +4,7 @@ import FireZone from "./FireZone.js";
 import Treasure from "./Treasure.js";
 import Enemy from "./Enemy.js";
 import {setDebugMode, getDebugMode} from "./DebugMode.js";
-
+import Path from "./Path.js";
 
 export default function Room(number){
     this.blocks = [];
@@ -16,6 +16,7 @@ export default function Room(number){
     this.fireZones = [];                                // Area para a recarga do tempo
     this.treasures = [];                                // Lista de tesouros
     this.enemies = [];                                  // Lista de inimigos
+    this.path = new Path();                             // Path básico
 
     // Distancias
     this.distancias = {
@@ -479,6 +480,36 @@ Room.prototype.desenharCamadas = function(params = {}){
             }
             break;
         }
+        case 11:                   // Path básico
+        {
+            for(let i = 0; i < this.blocks.length; i++){
+                params.ctx.save();
+                params.ctx.fillStyle = "White";
+                params.ctx.linewidth = 1;
+                params.ctx.globalAlpha = 0.1;
+                params.ctx.fillRect(this.blocks[i].coluna * params.s, this.blocks[i].linha * params.s, params.s, params.s);
+                params.ctx.restore();
+                params.ctx.fillStyle = "yellow";
+                params.ctx.strokeStyle = "black";
+                this.escreveTexto(params.ctx, ("a"), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
+            }
+            break;
+        }
+        case 12:                   // Path completo
+        {
+            for(let i = 0; i < this.blocks.length; i++){
+                params.ctx.save();
+                params.ctx.fillStyle = "White";
+                params.ctx.linewidth = 1;
+                params.ctx.globalAlpha = 0.1;
+                params.ctx.fillRect(this.blocks[i].coluna * params.s, this.blocks[i].linha * params.s, params.s, params.s);
+                params.ctx.restore();
+                params.ctx.fillStyle = "yellow";
+                params.ctx.strokeStyle = "black";
+                this.escreveTexto(params.ctx, ("b"), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
+            }
+            break;
+        }
     }
 }
 
@@ -670,4 +701,8 @@ Room.prototype.copyEnemies = function(room){
         newEnemy.copy(aux);
         this.enemies.push(newEnemy);
     }
+}
+
+Room.prototype.apontarDirecoes = function(){
+    console.log("this.blocks");
 }
