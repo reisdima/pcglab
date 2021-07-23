@@ -10,6 +10,7 @@ export default function Cell(params = {}) {
         coluna: 0,
         direcao: ">",
         distInundacao: -1,
+        indexRoom: -1,
         vizinhos: []
     };
  

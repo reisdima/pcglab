@@ -8,6 +8,7 @@ import Path from "./Path.js";
 
 export default function Room(number){
     this.blocks = [];
+    this.saida = -1;                                    // Index do bloco de teleporte de saída do room
     this.number = number;
     this.teleporterInitial = new Teleporter(2);         // (Inicio)Transição de uma sala pra outra
     this.teleporterFinal = new Teleporter(3);           // (Chegada)Transição de uma sala pra outra
@@ -505,7 +506,7 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.restore();
                 params.ctx.fillStyle = "yellow";
                 params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, ("b"), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
+                this.escreveTexto(params.ctx, (this.blocks[i].distInundacao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
             }
             break;
         }
@@ -702,66 +703,68 @@ Room.prototype.copyEnemies = function(room){
     }
 }
 
+//TODO
 Room.prototype.apontarDirecoes = function(){
     console.log("this.blocks");
 }
 
-Room.prototype.inundaRecursivo = function(val, l, c){
-    for (let i = 0; i < this.blocks.length; i++) {
-        this.defineVizinhos(this.blocks[i]);
-        this.blocks[i].distInundacao = this.blocks[i].vizinhos.length;
-    }
-    /*for (let i = 0; i < this.blocks.length; i++) {
-        if(this.blocks[i].distTeleportes === 0){
-            this.blocks[i].distInundacao = this.blocks[i].linha + " " + this.blocks[i].coluna;
+Room.prototype.inundaRecursivo = function(origem, val){
+    if(this.blocks[origem].distInundacao === -1){
+        this.blocks[origem].distInundacao = val;
+        val++;
+        for (let i = 0; i < this.blocks[origem].vizinhos.length; i++) {
+            this.inundaRecursivo(this.blocks[origem].vizinhos[i],val);
         }
-    }*/
-    /*if(val === 0){
-        let linhaSaida, colunaSaida;
-        for (let i = 0; i < this.blocks.length; i++) {
-            if(this.blocks[i].linha === this.teleporterFinal.gy && this.blocks[i].coluna === this.teleporterFinal.gx){
-                linhaSaida = this.blocks[i].linha;
-                colunaSaida = this.blocks[i].coluna;
-                this.blocks[i].distInundacao = val;
-                this.inundaRecursivo(val+1, linhaSaida, colunaSaida);
+    } else {
+        if(val < this.blocks[origem].distInundacao){
+            this.blocks[origem].distInundacao = val;
+            val++;
+            for (let i = 0; i < this.blocks[origem].vizinhos.length; i++) {
+                this.inundaRecursivo(this.blocks[origem].vizinhos[i],val);
             }
         }
     }
-    else{
-        for (let i = 0; i < this.blocks.length; i++) {
-            if(this.blocks[i].distInundacao === -1){
-                if((this.blocks[i].linha-1 === l-1 && this.blocks[i].coluna === c) ||
-                   (this.blocks[i].linha+1 === l+1 && this.blocks[i].coluna === c) ||
-                   (this.blocks[i].linha-1 === l && this.blocks[i].coluna === c-1) ||
-                   (this.blocks[i].linha-1 === l && this.blocks[i].coluna === c+1)){
-                       this.blocks[i].distInundacao = val;
-                   }
-            }
-        }
-    }*/
 }
 
 Room.prototype.defineVizinhos = function(bloco){
     bloco.vizinhos = [];
     for (let i = 0; i < this.blocks.length; i++) {
         if(this.blocks[i].linha === bloco.linha-1 && this.blocks[i].coluna === bloco.coluna){
-            bloco.vizinhos.push(this.blocks[i]);
+            bloco.vizinhos.push(i);
         }
         if(this.blocks[i].linha === bloco.linha && this.blocks[i].coluna === bloco.coluna-1){
-            bloco.vizinhos.push(this.blocks[i]);
+            bloco.vizinhos.push(i);
         }
         if(this.blocks[i].linha === bloco.linha+1 && this.blocks[i].coluna === bloco.coluna){
-            bloco.vizinhos.push(this.blocks[i]);
+            bloco.vizinhos.push(i);
         }
         if(this.blocks[i].linha === bloco.linha && this.blocks[i].coluna === bloco.coluna+1){
-            bloco.vizinhos.push(this.blocks[i]);
+            bloco.vizinhos.push(i);
         }
     }
 }
 
 Room.prototype.init = function(){
     for (let i = 0; i < this.blocks.length; i++) {
+        this.defineIndexBlocos();
         this.defineVizinhos(this.blocks[i]);
-        this.blocks[i].distInundacao = this.blocks[i].vizinhos.length;
+        this.achaSaida();
+        //this.blocks[i].distInundacao = this.blocks[i].distInundacao;//this.blocks[i].indexRoom;//this.saida;//this.blocks[i].vizinhos.length;
+    }
+    this.inundaRecursivo(this.saida,0);
+}
+
+Room.prototype.achaSaida = function(){
+    for (let i = 0; i < this.blocks.length; i++) {
+        if(this.blocks[i].linha === this.teleporterFinal.gy && this.blocks[i].coluna === this.teleporterFinal.gx){
+            this.saida = i;
+            break;
+        }
+    }
+}
+
+Room.prototype.defineIndexBlocos = function(){
+    for (let i = 0; i < this.blocks.length; i++) {
+        this.blocks[i].indexRoom = i;
     }
 }

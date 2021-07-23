@@ -98,7 +98,6 @@ Level.prototype.copiaSalas = function(rooms){
      this.rooms.push(new Room(0));
      this.rooms[this.rooms.length - 1].copyByLevelGeneration(rooms[i], this.mapa);
   }
-
 }
 
 Level.prototype.copiaSalasComReferencia = function(rooms){
@@ -770,9 +769,7 @@ Level.prototype.desenhar = function(ctx) {
     }
   }
   if(getDebugMode() === 11){
-    for(let i = 0; i < this.rooms.length; i++){
-      this.rooms[i].init();
-    }
+    this.iniciaRooms();
   }
 };
 
@@ -843,5 +840,11 @@ Level.prototype.colisaoTesouros = function(player){
   let auxRoom = this.rooms[player.room - 1];          // Checar somente a sala onde o player se encontra
   if(auxRoom.collisionTreasures(player)){      
     console.log("Colidiu com tesouros");
+  }
+}
+
+Level.prototype.iniciaRooms = function(){
+  for(let i = 0; i < this.rooms.length; i++){
+    this.rooms[i].init();
   }
 }
