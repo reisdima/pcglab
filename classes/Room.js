@@ -506,7 +506,7 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.restore();
                 params.ctx.fillStyle = "yellow";
                 params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, (this.blocks[i].distInundacao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
+                this.escreveTexto(params.ctx, (this.blocks[i].direcao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
             }
             break;
         }
@@ -705,7 +705,31 @@ Room.prototype.copyEnemies = function(room){
 
 //TODO
 Room.prototype.apontarDirecoes = function(){
-    console.log("this.blocks");
+    for (let i = 0; i < this.blocks.length; i++) {
+        if(this.blocks[i].distInundacao === 0) {
+            this.blocks[i].direcao = "X";
+        } else {
+            let menor;
+            for (let j = 0; j < this.blocks[i].vizinhos.length; j++) {
+                let indexVizinho = this.blocks[i].vizinhos[j];
+                if(this.blocks[indexVizinho].distInundacao < this.blocks[i].distInundacao){
+                    menor = indexVizinho;
+                }
+            }
+            if(this.blocks[menor].linha === this.blocks[i].linha-1 && this.blocks[menor].coluna === this.blocks[i].coluna){
+                this.blocks[i].direcao = "^";
+            } 
+            if (this.blocks[menor].linha === this.blocks[i].linha+1 && this.blocks[menor].coluna === this.blocks[i].coluna){
+                this.blocks[i].direcao = "V";
+            }
+            if (this.blocks[menor].coluna === this.blocks[i].coluna-1 && this.blocks[menor].linha === this.blocks[i].linha){
+                this.blocks[i].direcao = "<";
+            }
+            if (this.blocks[menor].coluna === this.blocks[i].coluna+1 && this.blocks[menor].linha === this.blocks[i].linha){
+                this.blocks[i].direcao = ">";
+            }
+        }
+    }
 }
 
 Room.prototype.inundaRecursivo = function(origem, val){
@@ -752,6 +776,7 @@ Room.prototype.init = function(){
         //this.blocks[i].distInundacao = this.blocks[i].distInundacao;//this.blocks[i].indexRoom;//this.saida;//this.blocks[i].vizinhos.length;
     }
     this.inundaRecursivo(this.saida,0);
+    this.apontarDirecoes();
 }
 
 Room.prototype.achaSaida = function(){
