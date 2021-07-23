@@ -1,35 +1,28 @@
 export default class Path{
-  constructor(linhas = 8, colunas = 12, tamanho = 32){
-      this.LINHAS = linhas;
-      this.COLUNAS = colunas;
-      this.SIZE = tamanho;
+  constructor(){
       this.steps = [];
-      for (let l = 0; l < this.LINHAS; l++) {
-          this.steps[l] = [];
-          for (let c = 0; c < this.COLUNAS; c++) {
-              this.steps[l][c] = 0;
-          }
-      }
   }
 
-  desenhar(ctx){
-      for (let l = 0; l < this.LINHAS; l++) {
-          for (let c = 0; c < this.COLUNAS; c++) {
-              ctx.font = "15px Arial";
-              ctx.fillStyle = "blue";
-              if(this.steps[l][c] === 1){
-                  ctx.fillText(" O ", c*this.SIZE + this.SIZE/2, l*this.SIZE + this.SIZE/2 + 10);
-              }
-              ctx.strokeRect(c*this.SIZE, l*this.SIZE, this.SIZE, this.SIZE); 
-          }
-      }
+  desenhar(ctx,s){
+    for(let i = 0; i < this.steps.length; i++){
+        ctx.save();
+        ctx.fillStyle = "White";
+        ctx.linewidth = 1;
+        ctx.globalAlpha = 0.1;
+        ctx.fillRect(this.steps[i].coluna * s, this.steps[i].linha * s, s, s);
+        ctx.restore();
+        ctx.fillStyle = "blue";
+        ctx.strokeStyle = "black";
+        this.escreveTexto(ctx, ("O"), this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2);
+    }
   }
 
-  addStep(x,y){
-      this.steps[x][y] = 1;
-  }
+    escreveTexto(ctx, texto, x, y) {
+        ctx.strokeText(texto, x, y);
+        ctx.fillText(texto, x, y);
+    }
 
-  removeStep(x,y){
-      this.steps[x][y] = 0;
+  addStep(bloco){
+      this.steps.push(bloco);
   }
 }

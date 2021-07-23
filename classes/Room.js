@@ -508,6 +508,7 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.strokeStyle = "black";
                 this.escreveTexto(params.ctx, (this.blocks[i].direcao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
             }
+            //this.path.desenhar(params.ctx,params.s);
             break;
         }
     }
@@ -774,6 +775,7 @@ Room.prototype.init = function(){
         this.defineVizinhos(this.blocks[i]);
         this.achaSaida();
         //this.blocks[i].distInundacao = this.blocks[i].distInundacao;//this.blocks[i].indexRoom;//this.saida;//this.blocks[i].vizinhos.length;
+        //this.path.addStep(this.blocks[i]);
     }
     this.inundaRecursivo(this.saida,0);
     this.apontarDirecoes();
