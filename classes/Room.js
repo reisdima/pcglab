@@ -483,15 +483,16 @@ Room.prototype.desenharCamadas = function(params = {}){
         case 11:                   // Path básico
         {
             for(let i = 0; i < this.blocks.length; i++){
-                params.ctx.save();
+                /*params.ctx.save();
                 params.ctx.fillStyle = "White";
                 params.ctx.linewidth = 1;
-                params.ctx.globalAlpha = 0.1;
+                params.ctx.globalAlpha = 0.0;
                 params.ctx.fillRect(this.blocks[i].coluna * params.s, this.blocks[i].linha * params.s, params.s, params.s);
                 params.ctx.restore();
                 params.ctx.fillStyle = "yellow";
                 params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, (this.blocks[i].distInundacao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
+                this.escreveTexto(params.ctx, (this.blocks[i].distInundacao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);*/
+                this.path.desenhar(params.ctx, params.s);
             }
             break;
         }
@@ -501,7 +502,7 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.save();
                 params.ctx.fillStyle = "White";
                 params.ctx.linewidth = 1;
-                params.ctx.globalAlpha = 0.1;
+                params.ctx.globalAlpha = 0.0;
                 params.ctx.fillRect(this.blocks[i].coluna * params.s, this.blocks[i].linha * params.s, params.s, params.s);
                 params.ctx.restore();
                 params.ctx.fillStyle = "yellow";
@@ -704,7 +705,6 @@ Room.prototype.copyEnemies = function(room){
     }
 }
 
-//TODO
 Room.prototype.apontarDirecoes = function(){
     for (let i = 0; i < this.blocks.length; i++) {
         if(this.blocks[i].distInundacao === 0) {
@@ -756,16 +756,16 @@ Room.prototype.defineVizinhos = function(bloco){
     for (let i = 0; i < this.blocks.length; i++) {
         if(this.blocks[i].linha === bloco.linha-1 && this.blocks[i].coluna === bloco.coluna){
             bloco.vizinhos.push(i);
-        }
+        } 
         if(this.blocks[i].linha === bloco.linha && this.blocks[i].coluna === bloco.coluna-1){
             bloco.vizinhos.push(i);
-        }
+        } 
         if(this.blocks[i].linha === bloco.linha+1 && this.blocks[i].coluna === bloco.coluna){
             bloco.vizinhos.push(i);
-        }
+        } 
         if(this.blocks[i].linha === bloco.linha && this.blocks[i].coluna === bloco.coluna+1){
             bloco.vizinhos.push(i);
-        }
+        } 
     }
 }
 
@@ -793,5 +793,56 @@ Room.prototype.achaSaida = function(){
 Room.prototype.defineIndexBlocos = function(){
     for (let i = 0; i < this.blocks.length; i++) {
         this.blocks[i].indexRoom = i;
+    }
+}
+
+Room.prototype.getPathGPS = function(gx, gy){
+    this.path.steps = [];
+    let indexAtual;
+    let indexPlayer = -1; // Index -1 indica que o player não está nessa room
+    for (let i = 0; i < this.blocks.length; i++) {
+        if(this.blocks[i].linha === gy && this.blocks[i].coluna === gx){
+            indexPlayer = i;
+            indexAtual = i;
+        }
+    }
+
+    if(indexPlayer !== -1){
+        //console.log(indexPlayer);
+        this.path.addStep(this.blocks[indexPlayer]);
+        for (let i = 0; i < this.blocks[indexPlayer].distInundacao; i++) {
+            if(this.blocks[indexAtual].direcao === "^"){
+                for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha-1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna){
+                        this.path.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        indexAtual = this.blocks[indexAtual].vizinhos[j];
+                    }
+                }
+            }
+            else if(this.blocks[indexAtual].direcao === "V"){
+                for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha+1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna){
+                        this.path.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        indexAtual = this.blocks[indexAtual].vizinhos[j];
+                    }
+                }
+            }
+            else if(this.blocks[indexAtual].direcao === "<"){
+                for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna-1){
+                        this.path.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        indexAtual = this.blocks[indexAtual].vizinhos[j];
+                    }
+                }
+            }
+            else if(this.blocks[indexAtual].direcao === ">"){
+                for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna+1){
+                        this.path.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        indexAtual = this.blocks[indexAtual].vizinhos[j];
+                    }
+                }
+            }
+        }
     }
 }

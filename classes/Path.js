@@ -8,7 +8,7 @@ export default class Path{
         ctx.save();
         ctx.fillStyle = "White";
         ctx.linewidth = 1;
-        ctx.globalAlpha = 0.1;
+        ctx.globalAlpha = 0.0;
         ctx.fillRect(this.steps[i].coluna * s, this.steps[i].linha * s, s, s);
         ctx.restore();
         ctx.fillStyle = "blue";
