@@ -482,9 +482,9 @@ Room.prototype.desenharCamadas = function(params = {}){
             }
             break;
         }
-        case 11:                   // Path básico
+        case 11:                   // Path GPS
         {
-            for(let i = 0; i < this.blocks.length; i++){
+            /*for(let i = 0; i < this.blocks.length; i++){
                 /*params.ctx.save();
                 params.ctx.fillStyle = "White";
                 params.ctx.linewidth = 1;
@@ -493,15 +493,15 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.restore();
                 params.ctx.fillStyle = "yellow";
                 params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, (this.blocks[i].distInundacao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);*/
-                this.pathGPS.desenhar(params.ctx, params.s);
-            }
+                this.escreveTexto(params.ctx, (this.blocks[i].distInundacao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
+            }*/
+            this.pathGPS.desenhar(params.ctx, params.s);
             break;
         }
-        case 12:                   // Path completo
+        case 12:                   // Path Teleporte - Teleporte
         {
-            for(let i = 0; i < this.blocks.length; i++){
-                /*params.ctx.save();
+            /*for(let i = 0; i < this.blocks.length; i++){
+                params.ctx.save();
                 params.ctx.fillStyle = "White";
                 params.ctx.linewidth = 1;
                 params.ctx.globalAlpha = 0.0;
@@ -509,10 +509,9 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.restore();
                 params.ctx.fillStyle = "yellow";
                 params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, (this.blocks[i].direcao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);*/
-                this.pathRoom.desenhar(params.ctx, params.s);
-            }
-            //this.pathGPS.desenhar(params.ctx,params.s);
+                this.escreveTexto(params.ctx, (this.blocks[i].direcao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
+            }*/
+            this.pathRoom.desenhar(params.ctx, params.s);
             break;
         }
     }

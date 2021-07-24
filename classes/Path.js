@@ -13,7 +13,7 @@ export default class Path{
         ctx.restore();
         ctx.fillStyle = "red";
         ctx.strokeStyle = "black";
-        this.escreveTexto(ctx, ("."), this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2);
+        this.escreveTexto(ctx, (i), this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2);
     }
   }
 
