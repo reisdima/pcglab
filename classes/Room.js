@@ -9,6 +9,7 @@ import Path from "./Path.js";
 export default function Room(number){
     this.blocks = [];
     this.saida = -1;                                    // Index do bloco de teleporte de saída do room
+    this.entrada = -1;                                  // Index do bloco de teleporte de entrada do room
     this.number = number;
     this.teleporterInitial = new Teleporter(2);         // (Inicio)Transição de uma sala pra outra
     this.teleporterFinal = new Teleporter(3);           // (Chegada)Transição de uma sala pra outra
@@ -17,7 +18,8 @@ export default function Room(number){
     this.fireZones = [];                                // Area para a recarga do tempo
     this.treasures = [];                                // Lista de tesouros
     this.enemies = [];                                  // Lista de inimigos
-    this.path = new Path();                             // Path básico
+    this.pathGPS = new Path();                          // Path GPS até a saída
+    this.pathRoom = new Path();                         // Path Teleporte - Teleporte
 
     // Distancias
     this.distancias = {
@@ -492,14 +494,14 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.fillStyle = "yellow";
                 params.ctx.strokeStyle = "black";
                 this.escreveTexto(params.ctx, (this.blocks[i].distInundacao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);*/
-                this.path.desenhar(params.ctx, params.s);
+                this.pathGPS.desenhar(params.ctx, params.s);
             }
             break;
         }
         case 12:                   // Path completo
         {
             for(let i = 0; i < this.blocks.length; i++){
-                params.ctx.save();
+                /*params.ctx.save();
                 params.ctx.fillStyle = "White";
                 params.ctx.linewidth = 1;
                 params.ctx.globalAlpha = 0.0;
@@ -507,9 +509,10 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.restore();
                 params.ctx.fillStyle = "yellow";
                 params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, (this.blocks[i].direcao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
+                this.escreveTexto(params.ctx, (this.blocks[i].direcao), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);*/
+                this.pathRoom.desenhar(params.ctx, params.s);
             }
-            //this.path.desenhar(params.ctx,params.s);
+            //this.pathGPS.desenhar(params.ctx,params.s);
             break;
         }
     }
@@ -774,8 +777,7 @@ Room.prototype.init = function(){
         this.defineIndexBlocos();
         this.defineVizinhos(this.blocks[i]);
         this.achaSaida();
-        //this.blocks[i].distInundacao = this.blocks[i].distInundacao;//this.blocks[i].indexRoom;//this.saida;//this.blocks[i].vizinhos.length;
-        //this.path.addStep(this.blocks[i]);
+        this.achaEntrada();
     }
     this.inundaRecursivo(this.saida,0);
     this.apontarDirecoes();
@@ -790,6 +792,15 @@ Room.prototype.achaSaida = function(){
     }
 }
 
+Room.prototype.achaEntrada = function(){
+    for (let i = 0; i < this.blocks.length; i++) {
+        if(this.blocks[i].linha === this.teleporterInitial.gy && this.blocks[i].coluna === this.teleporterInitial.gx){
+            this.entrada = i;
+            break;
+        }
+    }
+}
+
 Room.prototype.defineIndexBlocos = function(){
     for (let i = 0; i < this.blocks.length; i++) {
         this.blocks[i].indexRoom = i;
@@ -797,7 +808,7 @@ Room.prototype.defineIndexBlocos = function(){
 }
 
 Room.prototype.getPathGPS = function(gx, gy){
-    this.path.steps = [];
+    this.pathGPS.steps = [];
     let indexAtual;
     let indexPlayer = -1; // Index -1 indica que o player não está nessa room
     for (let i = 0; i < this.blocks.length; i++) {
@@ -808,13 +819,12 @@ Room.prototype.getPathGPS = function(gx, gy){
     }
 
     if(indexPlayer !== -1){
-        //console.log(indexPlayer);
-        this.path.addStep(this.blocks[indexPlayer]);
+        this.pathGPS.addStep(this.blocks[indexPlayer]);
         for (let i = 0; i < this.blocks[indexPlayer].distInundacao; i++) {
             if(this.blocks[indexAtual].direcao === "^"){
                 for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
                     if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha-1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna){
-                        this.path.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        this.pathGPS.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
                         indexAtual = this.blocks[indexAtual].vizinhos[j];
                     }
                 }
@@ -822,7 +832,7 @@ Room.prototype.getPathGPS = function(gx, gy){
             else if(this.blocks[indexAtual].direcao === "V"){
                 for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
                     if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha+1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna){
-                        this.path.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        this.pathGPS.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
                         indexAtual = this.blocks[indexAtual].vizinhos[j];
                     }
                 }
@@ -830,7 +840,7 @@ Room.prototype.getPathGPS = function(gx, gy){
             else if(this.blocks[indexAtual].direcao === "<"){
                 for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
                     if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna-1){
-                        this.path.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        this.pathGPS.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
                         indexAtual = this.blocks[indexAtual].vizinhos[j];
                     }
                 }
@@ -838,11 +848,62 @@ Room.prototype.getPathGPS = function(gx, gy){
             else if(this.blocks[indexAtual].direcao === ">"){
                 for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
                     if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna+1){
-                        this.path.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        this.pathGPS.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
                         indexAtual = this.blocks[indexAtual].vizinhos[j];
                     }
                 }
             }
         }
     }
+}
+
+Room.prototype.getPathRoom = function(gx, gy){
+    this.pathRoom.steps = [];
+    let indexAtual = this.entrada;
+    
+    let indexPlayer = -1; // Index -1 indica que o player não está nessa room
+    for (let i = 0; i < this.blocks.length; i++) {
+        if(this.blocks[i].linha === gy && this.blocks[i].coluna === gx){
+            indexPlayer = i;
+        }
+    }
+    
+    if(indexPlayer !== -1){
+        this.pathRoom.addStep(this.blocks[indexAtual]);
+        for (let i = 0; i < this.blocks[this.entrada].distInundacao; i++) {
+            if(this.blocks[indexAtual].direcao === "^"){
+                for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha-1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna){
+                        this.pathRoom.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        indexAtual = this.blocks[indexAtual].vizinhos[j];
+                    }
+                }
+            }
+            else if(this.blocks[indexAtual].direcao === "V"){
+                for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha+1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna){
+                        this.pathRoom.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        indexAtual = this.blocks[indexAtual].vizinhos[j];
+                    }
+                }
+            }
+            else if(this.blocks[indexAtual].direcao === "<"){
+                for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna-1){
+                        this.pathRoom.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        indexAtual = this.blocks[indexAtual].vizinhos[j];
+                    }
+                }
+            }
+            else if(this.blocks[indexAtual].direcao === ">"){
+                for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna+1){
+                        this.pathRoom.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                        indexAtual = this.blocks[indexAtual].vizinhos[j];
+                    }
+                }
+            }
+        }
+    }
+
 }

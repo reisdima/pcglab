@@ -772,6 +772,12 @@ Level.prototype.desenhar = function(ctx) {
     this.iniciaRooms();
     for(let i = 0; i < this.rooms.length; i++){
       this.rooms[i].getPathGPS(this.player.gx, this.player.gy);
+      this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
+    }
+  }
+  if(getDebugMode() === 12){
+    for(let i = 0; i < this.rooms.length; i++){
+      this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
     }
   }
 };
