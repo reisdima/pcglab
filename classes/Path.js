@@ -11,9 +11,9 @@ export default class Path{
         ctx.globalAlpha = 0.0;
         ctx.fillRect(this.steps[i].coluna * s, this.steps[i].linha * s, s, s);
         ctx.restore();
-        ctx.fillStyle = "blue";
+        ctx.fillStyle = "red";
         ctx.strokeStyle = "black";
-        this.escreveTexto(ctx, ("O"), this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2);
+        this.escreveTexto(ctx, ("."), this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2);
     }
   }
 

@@ -768,8 +768,10 @@ Level.prototype.desenhar = function(ctx) {
       }
     }
   }
-  if(getDebugMode() === 11){
+  if(getDebugMode() === 4){
     this.iniciaRooms();
+  }
+  if(getDebugMode() === 11){
     for(let i = 0; i < this.rooms.length; i++){
       this.rooms[i].getPathGPS(this.player.gx, this.player.gy);
       this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
