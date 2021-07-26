@@ -11,7 +11,7 @@ export default function CellularAutomata(params = {}){
         rockIndex: 1,
         wallIndex: 2,
         map: null, 
-        map2: null, 
+        map2: null,
         rooms: [],
         seedGen: null
     }
@@ -40,7 +40,7 @@ CellularAutomata.prototype.fullstep = function(steps = 2){
     while(this.gameOfWallRulesAutomataFinalStepCleanWalls() !== 0){ //Limpa as paredes espaçadas
         this.toggleMaps();
     }
-    
+
     //this.gameOfWallRulesAutomataFinalStepCleanWalls();
     //this.toggleMaps();
     this.gameOfWallRulesAutomataPutWalls();
@@ -167,17 +167,17 @@ CellularAutomata.prototype.filterRooms = function(sizeRoomsMinimal = 10){
 /*CellularAutomata.prototype.getRandomInt = function(min, max){
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;    
+    return Math.floor(Math.random() * (max - min)) + min;
 }*/
 
 CellularAutomata.prototype.getRandomInt = function(min, max){
-    return this.seedGen.getRandomIntMethod_1(min, max);    
+    return this.seedGen.getRandomIntMethod_1(min, max);
 }
 
 /*CellularAutomata.prototype.setTeleporters = function(){
     let indAvaliableRoom;
     let indFinishRoom;
-    let roomsAvaliable = [];            //Rooms avaliable to choose initial teleporter 
+    let roomsAvaliable = [];            //Rooms avaliable to choose initial teleporter
     let roomsClosed = [];               //Rooms that the initial teleporter is connected
     let blocksSorted = [-1,-1];
     let sortPosition;
@@ -209,7 +209,7 @@ CellularAutomata.prototype.getRandomInt = function(min, max){
         indFinishRoom = this.getRandomInt(0 , (roomsAvaliable.length - 1));
     }
     let currentRoom = this.rooms[roomsAvaliable[indFinishRoom] - 1].number;
-    
+
     this.rooms[roomsAvaliable[indAvaliableRoom] - 1].teleporterInitial.setFinish(this.rooms[roomsAvaliable[indFinishRoom] - 1].number, this.rooms[roomsAvaliable[indFinishRoom] - 1].teleporterFinal.startGX, this.rooms[roomsAvaliable[indFinishRoom] - 1].teleporterFinal.startGY);
 
     this.rooms[roomsAvaliable[indFinishRoom] - 1].teleporterFinal.setFinish(this.rooms[roomsAvaliable[indAvaliableRoom] - 1].number, this.rooms[roomsAvaliable[indAvaliableRoom] - 1].teleporterInitial.startGX, this.rooms[roomsAvaliable[indAvaliableRoom] - 1].teleporterInitial.startGY);
@@ -245,7 +245,7 @@ CellularAutomata.prototype.getRandomInt = function(min, max){
         currentRoom = roomsAvaliable[indFinishRoom];//this.rooms[roomsAvaliable[indFinishRoom] - 1].number;
 
         this.rooms[roomsAvaliable[indAvaliableRoom] - 1].teleporterInitial.setFinish(this.rooms[roomsAvaliable[indFinishRoom] - 1].number, this.rooms[roomsAvaliable[indFinishRoom] - 1].teleporterFinal.startGX, this.rooms[roomsAvaliable[indFinishRoom] - 1].teleporterFinal.startGY);
-        
+
         this.rooms[roomsAvaliable[indFinishRoom] - 1].teleporterFinal.setFinish(this.rooms[roomsAvaliable[indAvaliableRoom] - 1].number, this.rooms[roomsAvaliable[indAvaliableRoom] - 1].teleporterInitial.startGX, this.rooms[roomsAvaliable[indAvaliableRoom] - 1].teleporterInitial.startGY);
 
         roomsClosed.push(this.rooms[roomsAvaliable[indAvaliableRoom] - 1].number);
@@ -272,14 +272,14 @@ CellularAutomata.prototype.getRandomInt = function(min, max){
     }
 }*/
 
-CellularAutomata.prototype.visitCells = function(auxMatrix, mapx, y, x, tp, d = 1, indexArea){   //visita as celulas visinhas de maneira recursiva e atribui o código da sala correspondente 
+CellularAutomata.prototype.visitCells = function(auxMatrix, mapx, y, x, tp, d = 1, indexArea){   //visita as celulas visinhas de maneira recursiva e atribui o código da sala correspondente
     /*********************************************
-     * 
+     *
      * Algoritmo Flood fill:
      * https://en.wikipedia.org/wiki/Flood_fill
-     * 
+     *
     ***********************************************/
-    
+
     if(auxMatrix[y][x] === indexArea){  //Célula com a "cor" ou "indice da sala" correspondente ao indexArea
         return;
     }
@@ -356,7 +356,7 @@ CellularAutomata.prototype.gameOfWallRulesAutomata = function (){
     for (let l = 0; l < this.map2.length; l++) {
         for (let c = 0; c < this.map2[0].length; c++) {
             this.map2[l][c] = this.map[l][c];
-            if(this.countAdjacentsMoore(this.map, l, c, this.rockIndex, this.Moore) >= this.totalRock){ 
+            if(this.countAdjacentsMoore(this.map, l, c, this.rockIndex, this.Moore) >= this.totalRock){
                 this.map2[l][c] = this.rockIndex;
             }else{
                 this.map2[l][c] = this.floorIndex;
@@ -385,7 +385,7 @@ CellularAutomata.prototype.gameOfWallRulesAutomataPutWalls = function (){
                     break;
                 case this.rockIndex: //Rock
                     if((l > 0 && l < this.map2.length - 1) && (c > 0 && c < this.map2[0].length - 1)){ //Certifica que walls nas laterais não serão removidos
-                        if (this.countAdjacentsMoore(this.map, l, c, this.floorIndex, 1) >= 1) {  //Celulas rock com 1 vizinho chão ou mais 
+                        if (this.countAdjacentsMoore(this.map, l, c, this.floorIndex, 1) >= 1) {  //Celulas rock com 1 vizinho chão ou mais
                             this.map2[l][c] = this.wallIndex;
                         }
                     }
@@ -481,7 +481,7 @@ CellularAutomata.prototype.gameOfWallRulesAutomataRemoveWalls = function (){
                 case this.rockIndex: //Rock
                     break;
                 case this.wallIndex: //Wall
-                    if (this.countAdjacentsMoore(this.map, l, c, this.rockIndex, 1) >= 3 && this.countAdjacentsMoore(this.map, l, c, this.floorIndex, 1) ===  0) {  //Celulas rock com 1 vizinho chão ou mais 
+                    if (this.countAdjacentsMoore(this.map, l, c, this.rockIndex, 1) >= 3 && this.countAdjacentsMoore(this.map, l, c, this.floorIndex, 1) ===  0) {  //Celulas rock com 1 vizinho chão ou mais
                         this.map2[l][c] = this.rockIndex;
                     }
                     break;
@@ -520,4 +520,3 @@ CellularAutomata.prototype.scenarioRandomWall = function (){
       matrix.splice(matrixIndexRandom, 1);
     }
 }
-
