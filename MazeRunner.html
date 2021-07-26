@@ -6,6 +6,11 @@
   <link rel='icon' type='image/png' sizes='32x32' href='assets/images/favicon-32x32.png'>
   <link rel='icon' type='image/png' sizes='64x64' href='assets/images/favicon-64x64.png'>
   <title>Maze Runner - Aplicação de técnicas na geração procedural de conteúdo</title>
+
+  <script src="wfc/Tcc/Scripts/wfc.js"></script>
+  <script src="wfc/Tcc/Scripts/ferramentaWfc.js"></script>
+  <script src="wfc/Tcc/Scripts/uniao.js"></script>
+
   <!--
   <script src="classes/Map.js" type="module"></script>
   <script src="classes/Room.js" type="module"></script>
@@ -28,12 +33,12 @@
 </head>
 
 <body>
-  <canvas id="canvas" width="600px" height="350px"> 
+  <canvas id="canvas" width="600px" height="350px">
     Seu browser não suporta canvas!
   </canvas>
 
   <script type="module">
-    
+
     import AssetsManager from "./classes/AssetsManager.js";
     import SeedGenerator from "./classes/SeedGenerator.js";
     import Sprite from "./classes/Sprite.js";
@@ -51,7 +56,7 @@
 
 
     const tela = document.getElementById("canvas");
-    
+
     // Ocupa a janela toda
     tela.width  = window.innerWidth;
     tela.height = window.innerHeight;
@@ -72,15 +77,15 @@
     // Carregamento das imagens do jogo
     assetsMng.loadImage("brick_gray", "assets/images/brick_gray.png");
     assetsMng.loadImage("brick_dark_Tp_0", "assets/images/brick_dark0.png");
-    assetsMng.loadImage("coin_copper", "assets/images/coin_copper.png");    
-    assetsMng.loadImage("coin_gold", "assets/images/coin_gold.png");    
-    assetsMng.loadImage("coin_silver", "assets/images/coin_silver.png");    
-    assetsMng.loadImage("flames", "assets/images/flames.png");    
+    assetsMng.loadImage("coin_copper", "assets/images/coin_copper.png");
+    assetsMng.loadImage("coin_gold", "assets/images/coin_gold.png");
+    assetsMng.loadImage("coin_silver", "assets/images/coin_silver.png");
+    assetsMng.loadImage("flames", "assets/images/flames.png");
     assetsMng.loadImage("floor_sand", "assets/images/floor_sand_stone0.png");
     assetsMng.loadImage("grass_full", "assets/images/grass_full.png");
-    assetsMng.loadImage("player", "assets/images/player-sprite.png");    
+    assetsMng.loadImage("player", "assets/images/player-sprite.png");
     assetsMng.loadImage("rockBlock", "assets/images/rock.png");
-    assetsMng.loadImage("slime", "assets/images/slime.png");    
+    assetsMng.loadImage("slime", "assets/images/slime.png");
 
     // Carregamento dos audios presentes no jogo
     assetsMng.loadAudio("teleporte", "assets/audios/Teleport.wav");
@@ -101,10 +106,10 @@
     const seedGen = new SeedGenerator({seed_1: seedValueURL , seed_2_string: "teste"});
 
     // Proporções do mapa
-    
-    const widthMap = 120;   
-    const heightMap = 120;  
-    const sizeMap = 32;     
+
+    const widthMap = 120;
+    const heightMap = 120;
+    const sizeMap = 32;
     //setMapArea(14);  //20
     let escala = 1.8;
     const K = 1;
@@ -120,10 +125,10 @@
         wDefault: 27,
         hDefault: 11
       }
-    });  
+    });
     setPlayer(player);
 
-    const hud = getHud(); 
+    const hud = getHud();
     hud.init(tela);
 
     const levelAtual = new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng});
@@ -133,7 +138,7 @@
     /**
       METODO DE SUBMATRIZES
     */
-    
+
     /*
     var geraFase = new CellularAutomata(Math.floor(heightMap / K), Math.floor(widthMap / K), 1, 0.5, 4, 0, 5, 1);//new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
     // 0 => floor
@@ -156,7 +161,7 @@
       METODO DA MATRIZ TOTAL
     */
     const geraFase = new CellularAutomata({
-      HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5, 
+      HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5,
       totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1, seedGen
     });   //new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
     // 0 => floor
@@ -165,6 +170,8 @@
 
     geraFase.scenarioRandomWall();
     geraFase.fullstep(2);
+    geraFase.map = arrayform;
+    geraFase.filterRooms();
     geraFase.countRooms();
     geraFase.filterRooms(25);
 
@@ -182,7 +189,7 @@
     levelAtual.clonarLevel(levels[0]);
     getPlayer().map = levelAtual.mapa;
 
-    let teasuresCollected = 0;    
+    let teasuresCollected = 0;
 
     // Tempo
     const barraTempo = {
@@ -281,7 +288,7 @@
             controleTempo();
             ctx.save();
             ctx.scale(escala, escala);
-            ctx.translate(-getPlayer().x + tela.width/4 , - getPlayer().y + tela.height/4);            
+            ctx.translate(-getPlayer().x + tela.width/4 , - getPlayer().y + tela.height/4);
             levelAtual.desenhar(ctx);
             ctx.restore();
             desenharHUD(ctx);
@@ -374,7 +381,7 @@
     function controleTempo(){
       if(getDebugMode() == 0){
         //if(!getPlayer().imune){
-          barraTempo.interna.w = barraTempo.interna.w - levelAtual.taxaDiminuicaoTempo;  
+          barraTempo.interna.w = barraTempo.interna.w - levelAtual.taxaDiminuicaoTempo;
           levelAtual.updateTempo();
           if(barraTempo.interna.w <= 0){
             barraTempo.interna.w = 0;
@@ -400,14 +407,14 @@
       escreveTexto(ctx, hud.vidas.text + getPlayer().vidas, hud.vidas.x, hud.vidas.y);
       escreveTexto(ctx, hud.tesouros.text + getPlayer().tesourosColetados, hud.tesouros.x, hud.tesouros.y);
       escreveTexto(ctx, hud.level.text + getPlayer().levelNumber, hud.level.x, hud.level.y);
-      
-      
 
-      if(getDebugMode() >= 1){       
+
+
+      if(getDebugMode() >= 1){
         let typeMode = hud.debugText[getDebugMode() - 1];
 
         // Desenha menu debaixo
-        ctx.font = "13px Arial Black"; 
+        ctx.font = "13px Arial Black";
         ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
         ctx.strokeStyle = "rgba(238, 255, 0, 0.5)";
         ctx.fillRect(converteTelaCheia(5, tela.widthOld, tela.width), converteTelaCheia(310, tela.heightOld, tela.height), converteTelaCheia(585, tela.widthOld, tela.width), converteTelaCheia(37, tela.heightOld, tela.height));
@@ -556,7 +563,7 @@
           getPlayer().setTeclas("down", true);
           break;
         case 32:  //Espaco  -- Ativa teleporte
-          getPlayer().setTeclas("space", true);          
+          getPlayer().setTeclas("space", true);
           break;
         case 17:            // Left CTRL -- Ataque
           getPlayer().setTeclas("ctrl", true);
@@ -575,7 +582,7 @@
           limparDados();
           estado = 1;
           break;
-        
+
         /**
          *  Debug Mode
          */
@@ -627,7 +634,7 @@
     }
 
     /**
-     * Mapeamento de teclas pressionadas 
+     * Mapeamento de teclas pressionadas
      */
 
     addEventListener("keydown", function (e) {
@@ -680,7 +687,7 @@
     });
 
     /**
-     * Mapeamento de teclas SOLTAS 
+     * Mapeamento de teclas SOLTAS
      */
     addEventListener("keyup", function (e) {
       e.preventDefault();                         //Evento padrao do navegador
@@ -702,7 +709,7 @@
             getPlayer().setTeclas("ctrl", false);
             break
           case 32:  //Espaco  -- Ativa teleporte
-            getPlayer().setTeclas("space", false);          
+            getPlayer().setTeclas("space", false);
             break;
           case 16: //Left SHIFT -- Correr
             getPlayer().setTeclas("shift", false);
