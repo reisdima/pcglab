@@ -24,6 +24,7 @@ export default function Level(w, h, s, {hud, seedGen, assetsMng}) {
   this.hud = hud;
   this.seedGen = seedGen;
   this.filaDesenho = [];
+  this.roomIniciado = false;
 };
 
 /**
@@ -768,18 +769,25 @@ Level.prototype.desenhar = function(ctx) {
       }
     }
   }
-  if(getDebugMode() === 4){
-    this.iniciaRooms();
+  if(getDebugMode() === 1){
+    if(!this.roomIniciado){
+      this.iniciaRooms();
+      this.roomIniciado = true;
+    }
   }
   if(getDebugMode() === 11){
     for(let i = 0; i < this.rooms.length; i++){
       this.rooms[i].getPathGPS(this.player.gx, this.player.gy);
-      this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
     }
   }
   if(getDebugMode() === 12){
     for(let i = 0; i < this.rooms.length; i++){
       this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
+    }
+  }
+  if(getDebugMode() === 13){
+    for(let i = 0; i < this.rooms.length; i++){
+      this.rooms[i].getPathTesouros(this.player.gx, this.player.gy);
     }
   }
 };
