@@ -859,11 +859,17 @@ Level.prototype.colisaoTesouros = function(player){
   let auxRoom = this.rooms[player.room - 1];          // Checar somente a sala onde o player se encontra
   if(auxRoom.collisionTreasures(player)){      
     console.log("Colidiu com tesouros");
+    /*let salaInicial = this.rooms[this.teleporteInicioLevel.getCell().room - 1];
+    let indiceSala = salaInicial.room - 1;
+    auxRoom = this.rooms[indiceSala];
+    let celula = this.mapa.getCell(this.player.gy, this.player.gx);
+    this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 3);*/
   }
 }
 
 Level.prototype.iniciaRooms = function(){
   for(let i = 0; i < this.rooms.length; i++){
     this.rooms[i].init();
+    this.rooms[i].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
   }
 }
