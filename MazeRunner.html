@@ -48,6 +48,7 @@
     import Map from "./classes/Map.js";
     import Cell from "./classes/Cell.js";
     import CellularAutomata from "./classes/CellularAutomata.js";
+    import GeracaoWFC from "./classes/GeracaoWFC.js";
     import assetsMng from "./classes/AssetsMng.js";
     import {setMapArea, getMapArea} from "./classes/MAPA_AREA.js";
     import {setDebugMode, getDebugMode} from "./classes/DebugMode.js";
@@ -160,34 +161,46 @@
     /**
       METODO DA MATRIZ TOTAL
     */
-    const geraFase = new CellularAutomata({
-      HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5,
-      totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1, seedGen
-    });   //new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
+    var geraFase
     // 0 => floor
     // 2 => rock
     // 1 => wall
 
-    geraFase.scenarioRandomWall();
-    geraFase.fullstep(2);
-    geraFase.map = arrayform;
-    geraFase.filterRooms();
-    geraFase.countRooms();
-    geraFase.filterRooms(25);
+    function gerarComMetodo(qual = 1){
+      if(qual == 1 ){
+        geraFase = new CellularAutomata({
+          HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5,
+          totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1, seedGen
+        });   //new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
+        geraFase.scenarioRandomWall();
+        geraFase.fullstep(2);
+        geraFase.countRooms();
+        geraFase.filterRooms(25);
+      }else{
+        geraFase = new GeracaoWFC({
+          HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5,
+          totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1, seedGen
+        });
+        geraFase.start(generateWFC(Object.keys(tilesets)[opcaoWFC]));
+        geraFase.toggleMaps();
+        geraFase.countRooms();
+      }
+      levels[0].setMatrixMap(geraFase.map);       // Copia a matriz de tipos dentro do gerador
+      levels[0].copiaSalas(geraFase.rooms);       // Copia os dados em que os blocos da sala são apenas as posições linha e coluna da matriz
+      levels[0].montarLevel({
+        dt: dt,
+        geraFase: geraFase,
+        player: getPlayer(),
+      });
+      levels[0].setTempo(20); // 20 segundos
 
-    levels[0].setMatrixMap(geraFase.map);       // Copia a matriz de tipos dentro do gerador
-    levels[0].copiaSalas(geraFase.rooms);       // Copia os dados em que os blocos da sala são apenas as posições linha e coluna da matriz
-    levels[0].montarLevel({
-      dt: dt,
-      geraFase: geraFase,
-      player: getPlayer(),
-    });
-    levels[0].setTempo(20);                // 20 segundos
+      levelAtual.clonarLevel(levels[0]);
+      getPlayer().map = levelAtual.mapa;
+
+    }
+
 
     let tempoGameOver = 2;
-
-    levelAtual.clonarLevel(levels[0]);
-    getPlayer().map = levelAtual.mapa;
 
     let teasuresCollected = 0;
 
@@ -240,6 +253,7 @@
     const wordsColor = "white";
     const alignMainMenu = "center";
     let stateMainMenu = 0;
+    let opcaoWFC = 0;
 
     /******************************************************************************
     *   ---------------------------- DEBUG MODE ------------------------------    *
@@ -313,19 +327,19 @@
             ctx.font = fontMainMenu;
             if (stateMainMenu == 0) {
               ctx.fillStyle = "yellow";
-              ctx.strokeText("New Game", tela.width / 2, tela.height / 2 - 60);
-              ctx.fillText("New Game", tela.width / 2, tela.height / 2 - 60);
+              ctx.strokeText("New Game Celular", tela.width / 2, tela.height / 2 - 60);
+              ctx.fillText("New Game Celular", tela.width / 2, tela.height / 2 - 60);
               ctx.fillStyle = wordsColor;
-              ctx.strokeText("Quit", tela.width / 2, tela.height / 2 - 10);
-              ctx.fillText("Quit", tela.width / 2, tela.height / 2 - 10);
+              ctx.strokeText("New Game WFC", tela.width / 2, tela.height / 2 - 10);
+              ctx.fillText("New Game WFC", tela.width / 2, tela.height / 2 - 10);
             }
             else {
               ctx.fillStyle = wordsColor;
-              ctx.strokeText("New Game", tela.width / 2, tela.height / 2 - 60);
-              ctx.fillText("New Game", tela.width / 2, tela.height / 2 - 60);
+              ctx.strokeText("New Game Celular", tela.width / 2, tela.height / 2 - 60);
+              ctx.fillText("New Game Celular", tela.width / 2, tela.height / 2 - 60);
               ctx.fillStyle = "yellow";
-              ctx.strokeText("Quit", tela.width / 2, tela.height / 2 - 10);
-              ctx.fillText("Quit", tela.width / 2, tela.height / 2 - 10);
+              ctx.strokeText("New Game WFC", tela.width / 2, tela.height / 2 - 10);
+              ctx.fillText("New Game WFC", tela.width / 2, tela.height / 2 - 10);
             }
             break;
           case 2:     // Game Over
@@ -370,6 +384,30 @@
               loadLevel(1);   // Reload Level
             }
             break;
+
+            case 6:
+              limparTela();
+              ctx.fillStyle = wordsColor;
+              ctx.textAlign = alignMainMenu;
+              ctx.lineWidth = 2;
+              ctx.strokeStyle = "black";
+              ctx.font = "40px Arial Black";
+              ctx.strokeText("Escolha seu wfc", tela.width/2, tela.height/3 - 50);
+              ctx.fillText("Escolha seu wfc", tela.width/2, tela.height/3 - 50);
+              ctx.font = "15px Arial Black";
+              ctx.font = fontMainMenu;
+              ctx.fillStyle = "yellow";
+              if(opcaoWFC>=Object.keys(tilesets).length){
+                opcaoWFC = Object.keys(tilesets).length-1;
+              }else if(opcaoWFC<0){
+                opcaoWFC = 0;
+              }
+              var wfxText = Object.keys(tilesets)[opcaoWFC];
+
+
+              ctx.strokeText("<  "+wfxText+"  >", tela.width / 2, tela.height / 2 - 10);
+              ctx.fillText("<  "+wfxText+"  >", tela.width / 2, tela.height / 2 - 10);
+
           default:
         }
       }
@@ -656,13 +694,21 @@
           break;
           case 13:    //Enter
           case 32:    //Space bar
-            if (estado != 2) {
+            if(estado == 6){
+              gerarComMetodo(2);
+              loadLevel(0);
+              estado = 0;
+              return;
+            }
+
+            if (estado == 1) {
               if (stateMainMenu == 0) {
+                gerarComMetodo(1);
                 loadLevel(0);               //Carregamento de level
                 estado = 0;
               }
               else {
-                estado = 3;
+                estado = 6;
               }
             }
             break;
@@ -681,6 +727,18 @@
             limparDados();
             estado = 1;
             break;
+
+          case 37:       // Left Arrow
+            if (estado == 6) {
+              opcaoWFC--;
+            }
+            break;
+          case 39:      // Right Arrow
+            if (estado == 6) {
+              opcaoWFC++;
+            }
+            break;
+
           default:
         }
       }
