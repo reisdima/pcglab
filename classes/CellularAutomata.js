@@ -10,7 +10,7 @@ export default function CellularAutomata(params = {}){
         floorIndex: 0,
         rockIndex: 1,
         wallIndex: 2,
-        map: null, 
+        map: null,
         map2: null,
         rooms: [],
         seedGen: null
@@ -35,6 +35,7 @@ CellularAutomata.prototype.fullstep = function(steps = 2){
         this.toggleMaps();
         steps--;
     }
+    
     this.gameOfWallRulesAutomataPutWalls();
     this.toggleMaps();
     while(this.gameOfWallRulesAutomataFinalStepCleanWalls() !== 0){ //Limpa as paredes espaçadas
@@ -68,7 +69,6 @@ CellularAutomata.prototype.countRooms = function(){
             }
         }
     }
-
     for(let i = 0; i < this.HS; i++){
         for(let j = 0; j < this.WS; j++){
             if(auxMatrix[i][j] === -1){

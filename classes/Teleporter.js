@@ -9,7 +9,7 @@ export default function Teleporter(type){
    * Estabelece a relação de Herança entre Player e Sprite:
    *  -> Sprite é pai e player é filho
    */
-  Sprite.call(this, {s: 32, w: 32, h: 32});     
+  Sprite.call(this, {s: 32, w: 32, h: 32});
 
   this.proximoTeleporte = undefined;
   this.type = type;
@@ -109,7 +109,7 @@ Teleporter.prototype.desenhar = function(ctx){
         ctx.translate(this.x, this.y);
         ctx.fillRect(-this.s/2, -this.s/2, this.s, this.s);
         ctx.strokeRect(-this.s/2, -this.s/2, this.s, this.s);
-        ctx.restore(); 
+        ctx.restore();
       }
       break;
     case 2:                           // Teleporte Inicial room
@@ -117,7 +117,7 @@ Teleporter.prototype.desenhar = function(ctx){
         ctx.strokeStyle = "darkblue";
         ctx.fillStyle = "blue";
         ctx.linewidth = 10;
-        ctx.save(); 
+        ctx.save();
         ctx.globalAlpha = 0.60;         //Transparência
         ctx.translate(this.x, this.y);
         ctx.fillRect(-this.s/2, -this.s/2, this.s, this.s);
@@ -126,7 +126,7 @@ Teleporter.prototype.desenhar = function(ctx){
       }
       break;
     case 3:                         // Teleporte final room
-      { 
+      {
         ctx.strokeStyle = "Yellow";
         ctx.fillStyle = "Orange";
         ctx.linewidth = 100;
@@ -141,5 +141,5 @@ Teleporter.prototype.desenhar = function(ctx){
     default:
       console.log("Sprite type is wrong!!!");
       break;
-  }                            
+  }
 }
