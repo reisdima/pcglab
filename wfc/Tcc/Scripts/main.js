@@ -1,72 +1,174 @@
 
 var tilesets = {
-labirinto: function(tool){
-  
-tool.addTile(`\
-@@@
-@@@
-@@@`,{weight:4})
+salas: function(tool){
 
 tool.addTile(`\
-@@@
-@d@
-@@@`)
+22222
+22222
+22222
+22222
+22222`,{weight:3})
 
 tool.addTile(`\
-...
-...
-...`)
+00000
+00000
+00000
+00000
+00000`,{weight:1})
 
 tool.addTile(`\
-..@
-..@
-..@`)
+00012
+00012
+00012
+00012
+00012`)
 
 tool.addTile(`\
-@@@
-..@
-..@`)
-  
-tool.addTile(`\
-@..
-...
-...`)
+22222
+11112
+00012
+00012
+00012`)
 
-tool.addColor("@", [244,164,96])
-tool.addColor(".", [139,69,19])
-tool.addColor("d", [0,255,0])
-  
+tool.addTile(`\
+21000
+21000
+11000
+00000
+00000`)
+
+tool.addColor("0", [244,164,96])
+tool.addColor("1", [0,0,0])
+tool.addColor("2", [139,69,19])
 },
 
 
-salas: function(tool){
-  
-tool.addTile(`\
-@@@
-@@@
-@@@`,{weight:5})
+labirinto: function(tool){
 
 tool.addTile(`\
-...
-...
-...`)
+22222
+22222
+22222
+22222
+22222`,{weight:3})
 
 tool.addTile(`\
-@@@
-...
-...`)
+21012
+21012
+21012
+21012
+21012`)
+
+tool.addTile(`\
+22222
+11111
+00000
+11111
+22222`)
+
+tool.addTile(`\
+21012
+11011
+00000
+11011
+21012`)
+
+tool.addTile(`\
+21012
+21011
+21000
+21111
+22222`)
+
+tool.addColor("0", [244,164,96])
+tool.addColor("1", [0,0,0])
+tool.addColor("2", [139,69,19])
+},
+
+
+corredores: function(tool){
+
+tool.addTile(`\
+22222
+22222
+22222
+22222
+22222`,{weight:3})
+
+tool.addTile(`\
+22222
+21112
+21012
+21012
+21012`)
+
+tool.addTile(`\
+22222
+21111
+21000
+21011
+21012`)
+
+tool.addColor("0", [244,164,96])
+tool.addColor("1", [0,0,0])
+tool.addColor("2", [139,69,19])
+},
+
+salasConectadas: function(tool){
+
+tool.addTile(`\
+22222
+22222
+22222
+22222
+22222`,{weight:3})
+
+tool.addTile(`\
+00000
+00000
+00000
+00000
+00000`,{weight:1})
+
+tool.addTile(`\
+00012
+00012
+00012
+00012
+00012`)
+
+tool.addTile(`\
+22222
+11112
+00012
+00012
+00012`)
+
+tool.addTile(`\
+21000
+21000
+11000
+00000
+00000`)
 
 
 tool.addTile(`\
-..@
-...
-...`)
+21012
+11012
+00012
+00012
+00012`)
 
+tool.addTile(`\
+21012
+21012
+21012
+21012
+21012`)
 
-
-tool.addColor("@", [255,255,255])
-tool.addColor(".", [0,0,0])
-  
+tool.addColor("0", [244,164,96])
+tool.addColor("1", [0,0,0])
+tool.addColor("2", [139,69,19])
 },
 
 }
@@ -80,15 +182,15 @@ var renderer;
 var root;
 
 function wfcDemo(tilesetName){
-  
+
   if (worker){
     worker.terminate();
   }
-  
+
   var tool = new ferramentaWfc();
-  
+
   tilesets[tilesetName](tool);
-  
+
   var viewport;
   var wave;
 
@@ -129,16 +231,16 @@ function wfcDemo(tilesetName){
   }
 
   console.log(tool.getTileFormulae())
-  
+
   worker =new Worker(URL.createObjectURL(new Blob(["var WFC="+WFC.toString()+';('+workerCode.toString()+')()'])));// new Worker('worker.js');
 
   worker.postMessage({
     op:'init',
     wfcInput:tool.generateWFCInput(),
     aspectRatio:window.innerHeight/window.innerWidth,
-    initialSize:8,
+    initialSize:10,
     increment:0,
-    multiply:1.5,
+    multiply:1.2,
   })
 
   worker.onmessage = function(e){
@@ -149,7 +251,7 @@ function wfcDemo(tilesetName){
   if (renderer){
     renderer.domElement.style.display="none";
   }
-  
+
   if (!canvas){
     canvas = document.createElement("canvas");
     canvas.width = window.innerWidth;
@@ -162,7 +264,7 @@ function wfcDemo(tilesetName){
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0,0,canvas.width,canvas.height);
   }
-  
+
   canvas.style.display="block";
 
   function main(){
@@ -178,7 +280,7 @@ function wfcDemo(tilesetName){
 
 var menubar = document.createElement("div");
 var title = document.createElement("span"); menubar.appendChild(title);
-title.innerHTML = "<b>NDWFC:</b> <i>Wave Function Collapse testing</i>"
+title.innerHTML = "<b>WFC:</b> <i>Wave Function Collapse testing</i>"
 title.style.display="inline-block";
 title.style.marginTop="4px";
 menubar.style.zIndex="1000"
@@ -220,5 +322,5 @@ selbox.appendChild(select);
 
 document.body.appendChild(menubar)
 
-select.value="labirinto"
-wfcDemo('labirinto');
+select.value="salas"
+wfcDemo('salas');
