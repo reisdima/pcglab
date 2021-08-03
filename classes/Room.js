@@ -502,7 +502,7 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.restore();
                 params.ctx.fillStyle = "yellow";
                 params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, (this.blocks[i].distInundacaoSaida), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
+                this.escreveTexto(params.ctx, (this.blocks[i].distInundacaoTemp), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
             }*/
             this.pathGPS.desenhar(params.ctx, params.s);
             break;
@@ -536,7 +536,7 @@ Room.prototype.desenharCamadas = function(params = {}){
         }
         case 13:                   // Path Teleporte - Tesouros - Teleporte
         {
-            for(let i = 0; i < this.blocks.length; i++){
+            /*for(let i = 0; i < this.blocks.length; i++){
                 params.ctx.save();
                 params.ctx.fillStyle = `hsl(${150 *  this.blocks[i].distTesouros/this.distancias.maxTesouros}, 100%, 50%)`;
                 params.ctx.linewidth = 1;
@@ -548,8 +548,8 @@ Room.prototype.desenharCamadas = function(params = {}){
                 //this.escreveTexto(params.ctx, (this.treasures.length), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
                 this.escreveTexto(params.ctx, this.blocks[i].distTesouros, 
                     this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2 + 10);
-            }
-            this.pathRoom.desenhar(params.ctx, params.s);
+            }*/
+            //this.pathRoom.desenhar(params.ctx, params.s);
             this.pathTesouros.desenhar(params.ctx, params.s, 0);
             break;
         }
@@ -564,7 +564,7 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.restore();
                 params.ctx.fillStyle = "yellow";
                 params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, (this.blocks[i].distTesouros), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2 + 10);
+                this.escreveTexto(params.ctx, (this.blocks[i].distInundacaoTemp), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2 + 10);
             }
         }
     }
@@ -991,32 +991,6 @@ Room.prototype.getPathRoom = function(gx, gy){
     }
 }
 
-Room.prototype.getPathTesouros = function(gx, gy){
-    let indexPlayer = -1; // Index -1 indica que o player não está nessa room
-    for (let i = 0; i < this.blocks.length; i++) {
-        if(this.blocks[i].linha === gy && this.blocks[i].coluna === gx){
-            indexPlayer = i;
-        }
-    }
-
-    if(indexPlayer !== -1){
-        if(this.treasures.length === 0){
-            this.pathTesouros = this.pathRoom;
-        }
-        else{
-            for (let i = 0; i < this.blocks.length; i++) {
-                if(this.blocks[i].distTesouros === 0){
-                    //this.blocks[i].direcaoSaida = "X";
-                    this.pathTesouros.addStep(this.blocks[i]);
-                }
-                if(this.blocks[i].distTeleportes === 0){
-                    this.pathTesouros.addStep(this.blocks[i]);
-                }
-            }
-        }
-    }
-}
-
 Room.prototype.inundar = function(origem, val){
     if(this.blocks[origem].distInundacaoTemp === -1){
         this.blocks[origem].distInundacaoTemp = val;
@@ -1044,7 +1018,7 @@ Room.prototype.resetaDistanciaInundacaoTemp = function(){
 Room.prototype.apontarDirecoesTemp = function(){
     for (let i = 0; i < this.blocks.length; i++) {
         if(this.blocks[i].distInundacaoTemp === 0) {
-            this.blocks[i].distTesouros = "X";
+            this.blocks[i].direcaoTesouros = "X";
         } else {
             let menor;
             for (let j = 0; j < this.blocks[i].vizinhos.length; j++) {
@@ -1054,16 +1028,16 @@ Room.prototype.apontarDirecoesTemp = function(){
                 }
             }
             if (this.blocks[menor].linha === this.blocks[i].linha-1 && this.blocks[menor].coluna === this.blocks[i].coluna){
-                this.blocks[i].distTesouros = "^";
+                this.blocks[i].direcaoTesouros = "^";
             } 
             if (this.blocks[menor].linha === this.blocks[i].linha+1 && this.blocks[menor].coluna === this.blocks[i].coluna){
-                this.blocks[i].distTesouros = "V";
+                this.blocks[i].direcaoTesouros = "V";
             }
             if (this.blocks[menor].coluna === this.blocks[i].coluna-1 && this.blocks[menor].linha === this.blocks[i].linha){
-                this.blocks[i].distTesouros = "<";
+                this.blocks[i].direcaoTesouros = "<";
             }
-            if (this.blocks[menor].coluna === this.blocks[i].coluna+1 && this.blocks[menor].linha === this.blocks[i].linha && this.blocks[i].distTesouros !== "O"){
-                this.blocks[i].distTesouros = ">";
+            if (this.blocks[menor].coluna === this.blocks[i].coluna+1 && this.blocks[menor].linha === this.blocks[i].linha && this.blocks[i].direcaoTesouros !== "O"){
+                this.blocks[i].direcaoTesouros = ">";
             }
         }
     }
@@ -1122,3 +1096,72 @@ Room.prototype.constroiRota = function(){
 
     console.log(this.rotaPercurso);
 }
+
+Room.prototype.getPathTesouros = function(gx, gy){
+    this.pathTesouros.steps = [];
+    let indexPlayer = -1; // Index -1 indica que o player não está nessa room
+    for (let i = 0; i < this.blocks.length; i++) {
+        if(this.blocks[i].linha === gy && this.blocks[i].coluna === gx){
+            indexPlayer = i;
+        }
+    }
+
+    if(indexPlayer !== -1){
+        let atual = this.rotaPercurso.length-1;
+        let proximo = this.rotaPercurso.length-2;
+        
+        for (let i = this.rotaPercurso.length-1; i > -1 ; i--) {
+            this.resetaDistanciaInundacaoTemp();
+            this.inundar(this.rotaPercurso[proximo],0);
+            this.apontarDirecoesTemp();
+            this.constroiPathDoisPontos(this.rotaPercurso[atual]);
+            atual--;
+            if(proximo !== 0) proximo--;
+        }
+        this.resetaDistanciaInundacaoTemp();
+        this.inundar(this.rotaPercurso[1],0);
+        this.apontarDirecoesTemp();
+        this.constroiPathDoisPontos(this.rotaPercurso[0]);
+    }
+}
+
+Room.prototype.constroiPathDoisPontos = function(inicio){
+    
+    let indexAtual = inicio;
+
+    this.pathTesouros.addStep(this.blocks[indexAtual]);
+    for (let i = 0; i < this.blocks[this.entrada].distInundacaoTemp; i++) {
+        if(this.blocks[indexAtual].direcaoTesouros === "^"){
+            for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha-1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna){
+                    this.pathTesouros.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                    indexAtual = this.blocks[indexAtual].vizinhos[j];
+                }
+            }
+        }
+        else if(this.blocks[indexAtual].direcaoTesouros === "V"){
+            for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha+1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna){
+                    this.pathTesouros.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                    indexAtual = this.blocks[indexAtual].vizinhos[j];
+                }
+            }
+        }
+        else if(this.blocks[indexAtual].direcaoTesouros === "<"){
+            for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna-1){
+                    this.pathTesouros.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                    indexAtual = this.blocks[indexAtual].vizinhos[j];
+                }
+            }
+        }
+        else if(this.blocks[indexAtual].direcaoTesouros === ">"){
+            for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
+                if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna+1){
+                    this.pathTesouros.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
+                    indexAtual = this.blocks[indexAtual].vizinhos[j];
+                }
+            }
+        }
+    }
+} 

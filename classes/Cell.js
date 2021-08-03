@@ -8,8 +8,11 @@ export default function Cell(params = {}) {
         distTesouros: 999, 
         linha: 0, 
         coluna: 0,
-        direcao: ">",
-        distInundacao: -1,
+        direcaoSaida: ">",
+        direcaoTesouros: "V",
+        notacaoTesouros: ".",
+        distInundacaoSaida: -1,
+        distInundacaoTemp: -1,
         indexRoom: -1,
         vizinhos: []
     };
