@@ -12,6 +12,7 @@ export default function Room(number){
     this.indexTesourosColetados = [];
     this.pontosInteresse = [];
     this.matrizDistancias = [];
+    this.rotaPercurso = [];
     this.achouEntrada = false;
     this.achouSaida = false;
     this.achouTesouros = false;
@@ -1086,7 +1087,38 @@ Room.prototype.calculaDistPontosInteresse = function(){
         for (let j = 0; j < this.pontosInteresse.length; j++) {
             console.log(i+" "+j+"--"+this.matrizDistancias[i][j])
         }
-    }
+    }*/
     //console.log(this.matrizDistancias)
-    console.log(this.pontosInteresse)*/
+    console.log(this.pontosInteresse)
+}
+
+Room.prototype.constroiRota = function(){
+    let index = 0;
+    let indexAux = 0;
+    let faltam = this.pontosInteresse.length;
+    let jaFoi = [];
+    this.rotaPercurso = [];
+    jaFoi.push(this.pontosInteresse[index]);
+    this.rotaPercurso.push(this.pontosInteresse[index]);
+    faltam--;
+
+    for (let k = 0; k < this.pontosInteresse.length-1; k++) {
+        let menor = Infinity;
+        for (let i = 0; i < this.pontosInteresse.length; i++) {
+            if((index !== i) && (this.matrizDistancias[index][i] < menor) && (jaFoi.indexOf(this.pontosInteresse[i]) === -1)){
+                if(faltam > 1 && i === this.pontosInteresse.length - 1){
+                    console.log("A saída foi achada e ignorada");
+                } else {
+                    menor = this.matrizDistancias[index][i];
+                    indexAux = i;
+                }
+            }
+        }
+        index = indexAux;
+        jaFoi.push(this.pontosInteresse[index]);
+        this.rotaPercurso.push(this.pontosInteresse[index]);
+        faltam--;
+    }
+
+    console.log(this.rotaPercurso);
 }

@@ -871,5 +871,8 @@ Level.prototype.iniciaRooms = function(){
   for(let i = 0; i < this.rooms.length; i++){
     this.rooms[i].init();
     this.rooms[i].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
+    this.rooms[i].constroiRota();
   }
+  //this.rooms[10].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
+  //this.rooms[10].constroiRota();
 }
