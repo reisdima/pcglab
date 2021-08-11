@@ -532,6 +532,7 @@ Room.prototype.desenharCamadas = function(params = {}){
                 this.escreveTexto(params.ctx, (this.blocks[i].distInundacaoSaida), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2 + 10);
             }*/
             this.pathRoom.desenhar(params.ctx, params.s);
+            //this.pathTesouros.desenhar(params.ctx, params.s,0);
             break;
         }
         case 13:                   // Path Teleporte - Tesouros - Teleporte
@@ -844,15 +845,6 @@ Room.prototype.init = function(){
     }
     this.inundaRecursivo(this.saida, 0);
     this.apontarDirecoes();
-
-    if(this.indexTesouros.length != 0){
-        //this.inundar(this.indexTesouros[0], 0);
-        //this.apontarDirecoesTemp();
-    } else {
-        //this.inundar(6, 0);
-        //this.apontarDirecoesTemp();
-    }
-    //this.resetaDistanciaInundacaoTemp();
 }
 
 Room.prototype.achaSaida = function(){
@@ -957,7 +949,7 @@ Room.prototype.getPathRoom = function(gx, gy){
         for (let i = 0; i < this.blocks[this.entrada].distInundacaoSaida; i++) {
             if(this.blocks[indexAtual].direcaoSaida === "^"){
                 for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
-                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha-1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna && this.blocks[this.blocks[indexAtual].vizinhos[j]].distInundacaoSaida < this.blocks[indexAtual].distInundacaoSaida){
+                    if((this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha-1) && (this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna) && (this.blocks[this.blocks[indexAtual].vizinhos[j]].distInundacaoSaida < this.blocks[indexAtual].distInundacaoSaida)){
                         this.pathRoom.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
                         indexAtual = this.blocks[indexAtual].vizinhos[j];
                     }
@@ -965,7 +957,7 @@ Room.prototype.getPathRoom = function(gx, gy){
             }
             else if(this.blocks[indexAtual].direcaoSaida === "V"){
                 for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
-                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha+1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna && this.blocks[this.blocks[indexAtual].vizinhos[j]].distInundacaoSaida < this.blocks[indexAtual].distInundacaoSaida){
+                    if((this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha+1) && (this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna) && (this.blocks[this.blocks[indexAtual].vizinhos[j]].distInundacaoSaida < this.blocks[indexAtual].distInundacaoSaida)){
                         this.pathRoom.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
                         indexAtual = this.blocks[indexAtual].vizinhos[j];
                     }
@@ -973,7 +965,7 @@ Room.prototype.getPathRoom = function(gx, gy){
             }
             else if(this.blocks[indexAtual].direcaoSaida === "<"){
                 for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
-                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna-1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].distInundacaoSaida < this.blocks[indexAtual].distInundacaoSaida){
+                    if((this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha) && (this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna-1) && (this.blocks[this.blocks[indexAtual].vizinhos[j]].distInundacaoSaida < this.blocks[indexAtual].distInundacaoSaida)){
                         this.pathRoom.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
                         indexAtual = this.blocks[indexAtual].vizinhos[j];
                     }
@@ -981,7 +973,7 @@ Room.prototype.getPathRoom = function(gx, gy){
             }
             else if(this.blocks[indexAtual].direcaoSaida === ">"){
                 for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {
-                    if(this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha && this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna+1 && this.blocks[this.blocks[indexAtual].vizinhos[j]].distInundacaoSaida < this.blocks[indexAtual].distInundacaoSaida){
+                    if((this.blocks[this.blocks[indexAtual].vizinhos[j]].linha === this.blocks[indexAtual].linha) && (this.blocks[this.blocks[indexAtual].vizinhos[j]].coluna === this.blocks[indexAtual].coluna+1) && (this.blocks[this.blocks[indexAtual].vizinhos[j]].distInundacaoSaida < this.blocks[indexAtual].distInundacaoSaida)){
                         this.pathRoom.addStep(this.blocks[this.blocks[indexAtual].vizinhos[j]]);
                         indexAtual = this.blocks[indexAtual].vizinhos[j];
                     }
@@ -1057,11 +1049,6 @@ Room.prototype.calculaDistPontosInteresse = function(){
             }
         }
     }
-    /*for (let i = 0; i < this.pontosInteresse.length; i++) {
-        for (let j = 0; j < this.pontosInteresse.length; j++) {
-            console.log(i+" "+j+"--"+this.matrizDistancias[i][j])
-        }
-    }*/
     //console.log(this.matrizDistancias)
     //console.log(this.pontosInteresse)
 }
@@ -1128,7 +1115,9 @@ Room.prototype.constroiPathDoisPontos = function(inicio){
     
     let indexAtual = inicio;
 
-    this.pathTesouros.addStep(this.blocks[indexAtual]);
+    if(this.blocks[indexAtual].distTeleportes === 0){
+        this.pathTesouros.addStep(this.blocks[indexAtual]);
+    }
     for (let i = 0; i < this.blocks[this.entrada].distInundacaoTemp; i++) {
         if(this.blocks[indexAtual].direcaoTesouros === "^"){
             for (let j = 0; j < this.blocks[indexAtual].vizinhos.length; j++) {

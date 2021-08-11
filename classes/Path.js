@@ -1,6 +1,7 @@
 export default class Path{
   constructor(){
       this.steps = [];
+      this.a = false;
   }
 
   desenhar(ctx,s,idTipo){
@@ -10,12 +11,16 @@ export default class Path{
           ctx.save();
           ctx.fillStyle = "blue";
           ctx.linewidth = 1;
-          ctx.globalAlpha = 0.1;
+          ctx.globalAlpha = 0.2;
           ctx.fillRect(this.steps[i].coluna * s, this.steps[i].linha * s, s, s);
           ctx.restore();
           ctx.fillStyle = "blue";
           ctx.strokeStyle = "black";
-          this.escreveTexto(ctx, (this.steps[i].notacaoTesouros)/*(i)*/, this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2);
+          this.escreveTexto(ctx, (this.steps[i].notacaoTesouros), this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2);
+          if(!this.a){
+            console.log(this.steps.length);
+            this.a = true;
+          }
         }
         break;
       }
@@ -30,6 +35,10 @@ export default class Path{
           ctx.fillStyle = "red";
           ctx.strokeStyle = "black";
           this.escreveTexto(ctx, (this.steps[i].direcaoSaida)/*(i)*/, this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2);
+          if(!this.a){
+            console.log(this.steps.length);
+            this.a = true;
+          }
         }
         break;
       }
