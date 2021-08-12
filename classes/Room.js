@@ -5,6 +5,7 @@ import Treasure from "./Treasure.js";
 import Enemy from "./Enemy.js";
 import {setDebugMode, getDebugMode} from "./DebugMode.js";
 import Path from "./Path.js";
+import {converteTelaCheia, escreveTexto} from "./Utils.js";
 
 export default function Room(number){
     this.blocks = [];
@@ -29,6 +30,7 @@ export default function Room(number){
     this.pathGPS = new Path();                          // Path GPS até a saída
     this.pathRoom = new Path();                         // Path Teleporte - Teleporte
     this.pathTesouros = new Path();                     // Path passando por todos os tesouros
+    this.pathPlayer = new Path();
 
     // Distancias
     this.distancias = {
@@ -556,7 +558,10 @@ Room.prototype.desenharCamadas = function(params = {}){
         }
         case 14:
         {
-            for(let i = 0; i < this.blocks.length; i++){
+            //this.desenharGrafico(params);
+            this.pathPlayer.desenhar(params.ctx, params.s, 1);
+
+            /*for(let i = 0; i < this.blocks.length; i++){
                 params.ctx.save();
                 params.ctx.fillStyle = "White";
                 params.ctx.linewidth = 1;
@@ -566,7 +571,7 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.fillStyle = "yellow";
                 params.ctx.strokeStyle = "black";
                 this.escreveTexto(params.ctx, (this.blocks[i].distInundacaoTemp), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2 + 10);
-            }
+            }*/
         }
     }
 }
@@ -1153,3 +1158,34 @@ Room.prototype.constroiPathDoisPontos = function(inicio){
         }
     }
 } 
+
+Room.prototype.getPathPlayer = function(gx, gy){
+    //this.pathPlayer.steps = [];
+    let indexAtual;
+    let indexPlayer = -1; // Index -1 indica que o player não está nessa room
+    for (let i = 0; i < this.blocks.length; i++) {
+        if(this.blocks[i].linha === gy && this.blocks[i].coluna === gx){
+            indexPlayer = i;
+            indexAtual = i;
+        }
+    }
+    if(indexPlayer !== -1){
+        if(this.blocks[indexPlayer] !== this.pathPlayer.steps[this.pathPlayer.steps.length-1]){
+            this.pathPlayer.addStep(this.blocks[indexPlayer]);
+        }
+    }
+}
+
+Room.prototype.desenharGrafico = function(params) {
+
+    let telaWidthOld = 600;
+    let telaHeightOld = 350;
+    let graficoX = converteTelaCheia(telaWidthOld, window.innerWidth, 100);
+    let graficoY = converteTelaCheia(telaHeightOld, window.innerHeight, 250);
+
+    params.ctx.save();
+    params.ctx.fillStyle = "red";
+    params.ctx.fillRect(graficoX, graficoY, 100, 60);
+    params.ctx.font = "30px Courier";
+    params.ctx.restore();
+}

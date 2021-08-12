@@ -790,6 +790,11 @@ Level.prototype.desenhar = function(ctx) {
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy);
     }
   }
+  if(getDebugMode() === 14){
+    for(let i = 0; i < this.rooms.length; i++){
+      this.rooms[i].getPathPlayer(this.player.gx, this.player.gy);
+    }
+  }
 };
 
 Level.prototype.removerInimigos = function(){
