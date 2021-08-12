@@ -572,6 +572,14 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.strokeStyle = "black";
                 this.escreveTexto(params.ctx, (this.blocks[i].distInundacaoTemp), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2 + 10);
             }*/
+            break;
+        }
+        case 15:
+        {
+            this.pathRoom.desenhar(params.ctx, params.s);
+            this.pathTesouros.desenhar(params.ctx, params.s, 0);
+            this.pathPlayer.desenhar(params.ctx, params.s, 1);
+            break;
         }
     }
 }

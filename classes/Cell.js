@@ -11,6 +11,7 @@ export default function Cell(params = {}) {
         direcaoSaida: ">",
         direcaoTesouros: "V",
         notacaoTesouros: ".",
+        notacaoPlayer: ".   .",
         distInundacaoSaida: -1,
         distInundacaoTemp: -1,
         indexRoom: -1,

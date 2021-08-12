@@ -338,7 +338,8 @@ const hud = {
     this.debugText.push("Mode 11 - GPS até a saída do Room");
     this.debugText.push("Mode 12 - Caminho Teleporte - Teleporte");
     this.debugText.push("Mode 13 - Caminho Tesouros");
-    this.debugText.push("Mode 14 - Teste");
+    this.debugText.push("Mode 14 - Caminho do Player");
+    this.debugText.push("Mode 15 - Sobreposição de caminhos");
     this.updateElementos(tela);
     this.bussola.init();
   },
