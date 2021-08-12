@@ -569,6 +569,14 @@
             setMapArea(14);
           }
           break;
+        case 79:  // Pressionar tecla O - Voltar no menu do Debug
+          setDebugMode(getDebugMode() - 1);
+          if(getDebugMode() < debugModeBegin){
+            setDebugMode(debugModeBegin);  //Padrão do jogo
+            escala = 1.8;
+            setMapArea(14);
+          }
+          break;
         case 187:
         case 107:      //+
           if(getDebugMode() >= 1){
