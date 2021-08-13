@@ -533,7 +533,7 @@ Room.prototype.desenharCamadas = function(params = {}){
                 params.ctx.strokeStyle = "black";
                 this.escreveTexto(params.ctx, (this.blocks[i].distInundacaoSaida), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2 + 10);
             }*/
-            this.pathRoom.desenhar(params.ctx, params.s);
+            //this.pathRoom.desenhar(params.ctx, params.s);
             //this.pathTesouros.desenhar(params.ctx, params.s,0);
             break;
         }
@@ -553,13 +553,13 @@ Room.prototype.desenharCamadas = function(params = {}){
                     this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2 + 10);
             }*/
             //this.pathRoom.desenhar(params.ctx, params.s);
-            this.pathTesouros.desenhar(params.ctx, params.s, 0);
+            //this.pathTesouros.desenhar(params.ctx, params.s, 0);
             break;
         }
         case 14:
         {
             //this.desenharGrafico(params);
-            this.pathPlayer.desenhar(params.ctx, params.s, 1);
+            //this.pathPlayer.desenhar(params.ctx, params.s, 1);
 
             /*for(let i = 0; i < this.blocks.length; i++){
                 params.ctx.save();
@@ -576,9 +576,9 @@ Room.prototype.desenharCamadas = function(params = {}){
         }
         case 15:
         {
-            this.pathRoom.desenhar(params.ctx, params.s);
-            this.pathTesouros.desenhar(params.ctx, params.s, 0);
-            this.pathPlayer.desenhar(params.ctx, params.s, 1);
+            //this.pathRoom.desenhar(params.ctx, params.s);
+            //this.pathTesouros.desenhar(params.ctx, params.s, 0);
+            //this.pathPlayer.desenhar(params.ctx, params.s, 1);
             break;
         }
     }
@@ -957,7 +957,7 @@ Room.prototype.getPathRoom = function(gx, gy){
         }
     }
     
-    if(indexPlayer !== -1){
+    //if(indexPlayer !== -1){
         this.pathRoom.addStep(this.blocks[indexAtual]);
         for (let i = 0; i < this.blocks[this.entrada].distInundacaoSaida; i++) {
             if(this.blocks[indexAtual].direcaoSaida === "^"){
@@ -993,7 +993,7 @@ Room.prototype.getPathRoom = function(gx, gy){
                 }
             }
         }
-    }
+    //}
 }
 
 Room.prototype.inundar = function(origem, val){
@@ -1106,7 +1106,7 @@ Room.prototype.getPathTesouros = function(gx, gy){
         }
     }
 
-    if(indexPlayer !== -1){
+    //if(indexPlayer !== -1){
         let atual = 0;
         let proximo = 1;
         
@@ -1121,7 +1121,7 @@ Room.prototype.getPathTesouros = function(gx, gy){
                 proximo--;
             } 
         }
-    }
+    //}
 }
 
 Room.prototype.constroiPathDoisPontos = function(inicio){

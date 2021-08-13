@@ -25,6 +25,9 @@ export default function Level(w, h, s, {hud, seedGen, assetsMng}) {
   this.seedGen = seedGen;
   this.filaDesenho = [];
   this.roomIniciado = false;
+  this.caminhoSaida = false;
+  this.caminhoTesouros = false;
+  this.caminhoPlayer = false;
 };
 
 /**
@@ -773,6 +776,11 @@ Level.prototype.desenhar = function(ctx) {
     if(!this.roomIniciado){
       this.iniciaRooms();
       this.roomIniciado = true;
+      for(let i = 0; i < this.rooms.length; i++){
+        this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
+        this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
+        this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
+      }
     }
   }
   if(getDebugMode() === 11){
@@ -781,18 +789,37 @@ Level.prototype.desenhar = function(ctx) {
     }
   }
   if(getDebugMode() === 12){
-    for(let i = 0; i < this.rooms.length; i++){
+    /*for(let i = 0; i < this.rooms.length; i++){
       this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
+    }*/
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
     }
   }
   if(getDebugMode() === 13){
-    for(let i = 0; i < this.rooms.length; i++){
+    /*for(let i = 0; i < this.rooms.length; i++){
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy);
+    }*/
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
     }
   }
   if(getDebugMode() === 14){
-    for(let i = 0; i < this.rooms.length; i++){
-      this.rooms[i].getPathPlayer(this.player.gx, this.player.gy);
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].getPathPlayer(this.player.gx, this.player.gy);
+      this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
+    }
+  }
+  if(getDebugMode() === 15){
+    let playerPresente = this.ondeEstaOPlayer();
+    //console.log(playerPresente);
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
+      this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
+      this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
     }
   }
 };
@@ -880,4 +907,16 @@ Level.prototype.iniciaRooms = function(){
   }
   //this.rooms[10].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
   //this.rooms[10].constroiRota();
+}
+
+Level.prototype.ondeEstaOPlayer = function(){ // Retorna o índice do room onde o player está, ou -1 caso não esteja em nenhum.
+  for (let i = 0; i < this.rooms.length; i++) {
+    for (let j = 0; j < this.rooms[i].blocks.length; j++) {
+        if(this.rooms[i].blocks[j].linha === this.player.gy && this.rooms[i].blocks[j].coluna === this.player.gx){
+            return i;
+        }
+    }
+  }
+
+  return -1;
 }
