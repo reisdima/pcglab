@@ -18,7 +18,7 @@ export default class Path{
           ctx.strokeStyle = "black";
           this.escreveTexto(ctx, (this.steps[i].notacaoTesouros), this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2 + 5);
           if(!this.a){
-            console.log(this.steps.length);
+            console.log("Tesouros: " + this.steps.length);
             this.a = true;
           }
         }
@@ -54,7 +54,7 @@ export default class Path{
           ctx.strokeStyle = "black";
           this.escreveTexto(ctx, (this.steps[i].direcaoSaida)/*(i)*/, this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2);
           if(!this.a){
-            console.log(this.steps.length);
+            console.log("Básico: " + this.steps.length);
             this.a = true;
           }
         }

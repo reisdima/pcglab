@@ -576,9 +576,72 @@ Room.prototype.desenharCamadas = function(params = {}){
         }
         case 15:
         {
-            //this.pathRoom.desenhar(params.ctx, params.s);
-            //this.pathTesouros.desenhar(params.ctx, params.s, 0);
-            //this.pathPlayer.desenhar(params.ctx, params.s, 1);
+
+            let escalaX = 43; // Futuramente vai assumir a lenght dos caminhos
+            let escalaY = 17; // Futuramente vai assumir a maior distância encontrada nos mapas de influência
+
+            // Desenho do quadro do gráfico - Arrumar posicionamento
+            params.ctx.save();
+            params.ctx.fillStyle = "rgba(10, 10, 10, 0.6)";
+            params.ctx.strokeStyle = "rgba(105, 105, 105, 0.4)";
+            params.ctx.globalAlpha = 0.4;
+            params.ctx.fillRect(10, 10, 400, 240);
+            params.ctx.strokeRect(10, 10, 400, 240);
+            params.ctx.font = "30px Courier";
+            params.ctx.restore();
+
+            // Desenho dos eixos do gráfico
+            params.ctx.strokeStyle = "white";
+            params.ctx.lineWidth = 1;
+            params.ctx.beginPath();
+                // Eixo X - 390 pixels
+            params.ctx.moveTo(15, 245);
+            params.ctx.lineTo(405, 245);
+                // Eixo Y - 230 pixels
+            params.ctx.moveTo(15, 15);
+            params.ctx.lineTo(15, 245);
+
+            // Marcações X
+            let espacamentoX = 390/ escalaX; //Math.trunc(390 / escalaX);
+            let atualX = 15;
+            for (let i = 0; i < escalaX; i++) {
+                params.ctx.moveTo(atualX + espacamentoX, 243);
+                params.ctx.lineTo(atualX + espacamentoX, 247);
+                atualX = atualX + espacamentoX;
+            }
+            
+            // Marcações Y
+            let espacamentoY = 230 / escalaY; //Math.trunc(230 / escalaY);
+            let atualY = 245;
+            for (let i = 0; i < escalaY; i++) {
+                params.ctx.moveTo(13, atualY - espacamentoY);
+                params.ctx.lineTo(17, atualY - espacamentoY);
+                atualY = atualY - espacamentoY;
+            }
+
+
+            // Fecha desenho do gráfico
+            params.ctx.closePath();
+            params.ctx.stroke();
+
+            /*params.ctx.beginPath();
+            params.ctx.strokeStyle = "red";
+            params.ctx.moveTo(50.47, 100.55);
+            params.ctx.lineTo(342.71, 245);
+            params.ctx.closePath();
+            params.ctx.stroke();*/
+
+            /*params.ctx.save();
+            params.ctx.strokeStyle = "yellow"; 
+            params.ctx.lineWidth = 1;
+            params.ctx.beginPath();
+            params.ctx.moveTo(0, 0);
+            params.ctx.lineTo(100, 400);
+            params.ctx.moveTo(100, 400);
+            params.ctx.lineTo(200, 80);
+            params.ctx.closePath();
+            params.ctx.stroke();
+            params.ctx.restore();*/
             break;
         }
     }
