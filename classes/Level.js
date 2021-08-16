@@ -820,7 +820,21 @@ Level.prototype.desenhar = function(ctx) {
       this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
       this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
       this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
-      this.rooms[playerPresente].desenharGrafico(ctx, this.player.x, this.player.y)
+    }
+  }
+  if(getDebugMode() === 16){
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
+      this.rooms[playerPresente].desenharGraficoRoom(ctx, this.player.x, this.player.y);
+    }
+  }
+
+  if(getDebugMode() === 17){
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
+      this.rooms[playerPresente].desenharGraficoTesouros(ctx, this.player.x, this.player.y);
     }
   }
 };

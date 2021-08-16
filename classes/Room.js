@@ -589,97 +589,7 @@ Room.prototype.desenharCamadas = function (params = {}) {
     }
     case 11: {
       // Path GPS
-      /*for(let i = 0; i < this.blocks.length; i++){
-                /*params.ctx.save();
-                params.ctx.fillStyle = "White";
-                params.ctx.linewidth = 1;
-                params.ctx.globalAlpha = 0.0;
-                params.ctx.fillRect(this.blocks[i].coluna * params.s, this.blocks[i].linha * params.s, params.s, params.s);
-                params.ctx.restore();
-                params.ctx.fillStyle = "yellow";
-                params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, (this.blocks[i].distInundacaoTemp), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
-            }*/
       this.pathGPS.desenhar(params.ctx, params.s);
-      break;
-    }
-    case 12: {
-      // Path Teleporte - Teleporte
-      /*for(let i = 0; i < this.blocks.length; i++){
-                params.ctx.save();
-                params.ctx.fillStyle = "White";
-                params.ctx.linewidth = 1;
-                params.ctx.globalAlpha = 0.0;
-                params.ctx.fillRect(this.blocks[i].coluna * params.s, this.blocks[i].linha * params.s, params.s, params.s);
-                params.ctx.restore();
-                params.ctx.fillStyle = "yellow";
-                params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, (this.blocks[i].direcaoSaida), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
-            }
-            for(let i = 0; i < this.blocks.length; i++){
-                params.ctx.save();
-                params.ctx.fillStyle = "White";
-                params.ctx.linewidth = 1;
-                params.ctx.globalAlpha = 0.0;
-                params.ctx.fillRect(this.blocks[i].coluna * params.s, this.blocks[i].linha * params.s, params.s, params.s);
-                params.ctx.restore();
-                params.ctx.fillStyle = "yellow";
-                params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, (this.blocks[i].distInundacaoSaida), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2 + 10);
-            }*/
-      //this.pathRoom.desenhar(params.ctx, params.s);
-      //this.pathTesouros.desenhar(params.ctx, params.s,0);
-      break;
-    }
-    case 13: {
-      // Path Teleporte - Tesouros - Teleporte
-      /*for(let i = 0; i < this.blocks.length; i++){
-                params.ctx.save();
-                params.ctx.fillStyle = `hsl(${150 *  this.blocks[i].distTesouros/this.distancias.maxTesouros}, 100%, 50%)`;
-                params.ctx.linewidth = 1;
-                params.ctx.globalAlpha = 0.3;
-                params.ctx.fillRect(this.blocks[i].coluna * params.s, this.blocks[i].linha * params.s, params.s, params.s);
-                params.ctx.restore();
-                params.ctx.fillStyle = "yellow";
-                params.ctx.strokeStyle = "black";
-                //this.escreveTexto(params.ctx, (this.treasures.length), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
-                this.escreveTexto(params.ctx, this.blocks[i].distTesouros, 
-                    this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2 + 10);
-            }*/
-      //this.pathRoom.desenhar(params.ctx, params.s);
-      //this.pathTesouros.desenhar(params.ctx, params.s, 0);
-      break;
-    }
-    case 14: {
-      //this.desenharGrafico(params);
-      //this.pathPlayer.desenhar(params.ctx, params.s, 1);
-
-      /*for(let i = 0; i < this.blocks.length; i++){
-                params.ctx.save();
-                params.ctx.fillStyle = "White";
-                params.ctx.linewidth = 1;
-                params.ctx.globalAlpha = 0.0;
-                params.ctx.fillRect(this.blocks[i].coluna * params.s, this.blocks[i].linha * params.s, params.s, params.s);
-                params.ctx.restore();
-                params.ctx.fillStyle = "yellow";
-                params.ctx.strokeStyle = "black";
-                this.escreveTexto(params.ctx, (this.blocks[i].distInundacaoTemp), this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2 + 10);
-            }*/
-      break;
-    }
-    case 15: {
-      //this.desenharGrafico(params);
-      /*params.ctx.save();
-            params.ctx.strokeStyle = "yellow"; 
-            params.ctx.lineWidth = 1;
-            params.ctx.beginPath();
-            params.ctx.moveTo(0, 0);
-            params.ctx.lineTo(100, 400);
-            params.ctx.moveTo(100, 400);
-            params.ctx.lineTo(200, 80);
-            params.ctx.closePath();
-            params.ctx.stroke();
-            params.ctx.restore();*/
       break;
     }
   }
@@ -1441,8 +1351,8 @@ Room.prototype.getPathPlayer = function (gx, gy) {
   }
 };
 
-Room.prototype.desenharGrafico = function (ctx, playerX, playerY) {
-  let posX = playerX - 300; //15
+Room.prototype.desenharGraficoRoom = function (ctx, playerX, playerY) {
+  let posX = playerX - 350; //15
   let posY = playerY + 150; //245
   let xQuadro = posX - 5; //10
   let yQuadro = posY - 235; //10
@@ -1461,8 +1371,8 @@ Room.prototype.desenharGrafico = function (ctx, playerX, playerY) {
     }
   }
 
-  let escalaX = this.pathRoom.steps.length; // Futuramente vai assumir a lenght dos caminhos
-  let escalaY = maior; // Futuramente vai assumir a maior distância encontrada nos mapas de influência
+  let escalaX = this.pathRoom.steps.length;
+  let escalaY = maior;
 
   // Desenho do quadro do gráfico - Arrumar posicionamento
   ctx.save();
@@ -1473,7 +1383,14 @@ Room.prototype.desenharGrafico = function (ctx, playerX, playerY) {
   ctx.strokeRect(xQuadro, yQuadro, wQuadro, hQuadro);
   ctx.font = "10px Arial Black";
   ctx.fillStyle = "white";
+  ctx.strokeStyle = "rgba(225, 225, 225, 0.9)";
   ctx.fillText(escalaX + " x " + escalaY, xQuadro + 200, yQuadro + 10);
+  ctx.font = "8px Arial Black";
+  ctx.fillText(
+    "Gráfico Path Entrada-Saída: Sala " + this.number,
+    posX + 200,
+    posY + 15
+  );
   ctx.restore();
 
   // Desenho dos eixos do gráfico
@@ -1511,7 +1428,7 @@ Room.prototype.desenharGrafico = function (ctx, playerX, playerY) {
   ctx.closePath();
   ctx.stroke();
 
-  //ctx.moveTo(posX, posY); // posição 0,0 no gráfico
+  // posição 0,0 no gráfico
   let xZero = posX;
   let yZero = posY;
 
@@ -1594,6 +1511,178 @@ Room.prototype.desenharGrafico = function (ctx, playerX, playerY) {
     }
 
     valY = this.pathRoom.steps[i].distFirezones;
+
+    if (i !== 0) {
+      ctx.moveTo(xAtual, yAtual);
+      ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
+    }
+    xAtual = xAtual + espacamentoX;
+    yAtual = yAtual + espacamentoY * muxY;
+  }
+  ctx.closePath();
+  ctx.stroke();
+};
+
+Room.prototype.desenharGraficoTesouros = function (ctx, playerX, playerY) {
+  let posX = playerX - 350; //15
+  let posY = playerY + 150; //245
+  let xQuadro = posX - 5; //10
+  let yQuadro = posY - 235; //10
+  let hQuadro = 240; //240
+  let wQuadro = 400; //400
+  let maior = 1;
+  for (let i = 0; i < this.pathRoom.steps.length; i++) {
+    if (this.pathTesouros.steps[i].distTesouros > maior) {
+      maior = this.pathTesouros.steps[i].distTesouros;
+    }
+    if (this.pathTesouros.steps[i].distInimigos > maior) {
+      maior = this.pathTesouros.steps[i].distInimigos;
+    }
+    if (this.pathTesouros.steps[i].distFirezones > maior) {
+      maior = this.pathTesouros.steps[i].distFirezones;
+    }
+  }
+
+  let escalaX = this.pathTesouros.steps.length;
+  let escalaY = maior;
+
+  // Desenho do quadro do gráfico - Arrumar posicionamento
+  ctx.save();
+  ctx.fillStyle = "rgba(10, 10, 10, 0.8)";
+  ctx.strokeStyle = "rgba(105, 105, 105, 0.9)";
+  ctx.globalAlpha = 1.9;
+  ctx.fillRect(xQuadro, yQuadro, wQuadro, hQuadro);
+  ctx.strokeRect(xQuadro, yQuadro, wQuadro, hQuadro);
+  ctx.font = "10px Arial Black";
+  ctx.fillStyle = "white";
+  ctx.strokeStyle = "rgba(225, 225, 225, 0.9)";
+  ctx.fillText(escalaX + " x " + escalaY, xQuadro + 200, yQuadro + 10);
+  ctx.font = "8px Arial Black";
+  ctx.fillText(
+    "Gráfico Path Entrada-Tesouros-Saída: Sala " + this.number,
+    posX + 200,
+    posY + 15
+  );
+  ctx.restore();
+
+  // Desenho dos eixos do gráfico
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  // Eixo X - 390 pixels
+  ctx.moveTo(posX, posY);
+  ctx.lineTo(posX + 390, posY);
+  // Eixo Y - 230 pixels
+  ctx.moveTo(posX, posY);
+  ctx.lineTo(posX, posY - 230);
+
+  // Marcações X
+  let espacamentoX = 390 / escalaX; //Math.trunc(390 / escalaX);
+  if (escalaX <= 200) {
+    let atualX = posX;
+    for (let i = 0; i < escalaX; i++) {
+      ctx.moveTo(atualX + espacamentoX, posY - 2);
+      ctx.lineTo(atualX + espacamentoX, posY + 2);
+      atualX = atualX + espacamentoX;
+    }
+  }
+
+  // Marcações Y
+  let espacamentoY = 230 / escalaY; //Math.trunc(230 / escalaY);
+  let atualY = posY;
+  for (let i = 0; i < escalaY; i++) {
+    ctx.moveTo(posX - 2, atualY - espacamentoY);
+    ctx.lineTo(posX + 2, atualY - espacamentoY);
+    atualY = atualY - espacamentoY;
+  }
+
+  // Fecha desenho do gráfico
+  ctx.closePath();
+  ctx.stroke();
+
+  // posição 0,0 no gráfico
+  let xZero = posX;
+  let yZero = posY;
+
+  let xAtual = xZero;
+  let yAtual = yZero - espacamentoY * this.pathTesouros.steps[0].distTesouros;
+
+  let valY = this.pathTesouros.steps[0].distTesouros;
+  let muxY;
+
+  // Desenho da linha do gráfico de distância para tesouros
+  ctx.beginPath();
+  ctx.strokeStyle = "yellow";
+  for (let i = 0; i < this.pathTesouros.steps.length; i++) {
+    if (valY < this.pathTesouros.steps[i].distTesouros) {
+      muxY = -1;
+    } else if (valY > this.pathTesouros.steps[i].distTesouros) {
+      muxY = 1;
+    } else if (valY === this.pathTesouros.steps[i].distTesouros) {
+      muxY = 0;
+    }
+
+    valY = this.pathTesouros.steps[i].distTesouros;
+
+    if (i !== 0) {
+      ctx.moveTo(xAtual, yAtual);
+      ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
+    }
+    xAtual = xAtual + espacamentoX;
+    yAtual = yAtual + espacamentoY * muxY;
+  }
+  ctx.closePath();
+  ctx.stroke();
+
+  xAtual = xZero;
+  yAtual = yZero - espacamentoY * this.pathTesouros.steps[0].distInimigos;
+
+  valY = this.pathTesouros.steps[0].distInimigos;
+  muxY = 0;
+
+  // Desenho da linha do gráfico de distância para inimigos
+  ctx.beginPath();
+  ctx.strokeStyle = "rgba(225, 0, 0, 0.6)";
+  for (let i = 0; i < this.pathTesouros.steps.length; i++) {
+    if (valY < this.pathTesouros.steps[i].distInimigos) {
+      muxY = -1;
+    } else if (valY > this.pathTesouros.steps[i].distInimigos) {
+      muxY = 1;
+    } else if (valY === this.pathTesouros.steps[i].distInimigos) {
+      muxY = 0;
+    }
+
+    valY = this.pathTesouros.steps[i].distInimigos;
+
+    if (i !== 0) {
+      ctx.moveTo(xAtual, yAtual);
+      ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
+    }
+    xAtual = xAtual + espacamentoX;
+    yAtual = yAtual + espacamentoY * muxY;
+  }
+  ctx.closePath();
+  ctx.stroke();
+
+  xAtual = xZero;
+  yAtual = yZero - espacamentoY * this.pathTesouros.steps[0].distFirezones;
+
+  valY = this.pathTesouros.steps[0].distFirezones;
+  muxY = 0;
+
+  // Desenho da linha do gráfico de distância para firezones
+  ctx.beginPath();
+  ctx.strokeStyle = "rgba(0, 255, 127, 0.6)";
+  for (let i = 0; i < this.pathTesouros.steps.length; i++) {
+    if (valY < this.pathTesouros.steps[i].distFirezones) {
+      muxY = -1;
+    } else if (valY > this.pathTesouros.steps[i].distFirezones) {
+      muxY = 1;
+    } else if (valY === this.pathTesouros.steps[i].distFirezones) {
+      muxY = 0;
+    }
+
+    valY = this.pathTesouros.steps[i].distFirezones;
 
     if (i !== 0) {
       ctx.moveTo(xAtual, yAtual);
