@@ -820,8 +820,8 @@ Level.prototype.desenhar = function(ctx) {
       this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
       this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
       this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
+      this.rooms[playerPresente].desenharGrafico(ctx, this.player.x, this.player.y)
     }
-    this.rooms[10].desenharGrafico(ctx, this.player.x, this.player.y)
   }
 };
 
