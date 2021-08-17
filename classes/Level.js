@@ -758,6 +758,13 @@ Level.prototype.desenhar = function(ctx) {
   }
   this.mapa.desenharDebugMode(ctx);
 
+
+  if(getDebugMode() === 0){
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].getPathPlayer(this.player.gx, this.player.gy);
+    }
+  }
   if(getDebugMode() > 3){
     for(let i = 0; i < this.rooms.length; i++){
       this.rooms[i].desenharCamadas({
@@ -809,7 +816,7 @@ Level.prototype.desenhar = function(ctx) {
   if(getDebugMode() === 14){
     let playerPresente = this.ondeEstaOPlayer();
     if(playerPresente !== -1){
-      this.rooms[playerPresente].getPathPlayer(this.player.gx, this.player.gy);
+      //this.rooms[playerPresente].getPathPlayer(this.player.gx, this.player.gy);
       this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
     }
   }

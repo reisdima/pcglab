@@ -592,6 +592,24 @@ Room.prototype.desenharCamadas = function (params = {}) {
       this.pathGPS.desenhar(params.ctx, params.s);
       break;
     }
+    case 18: { // Pintar área de room específico 
+      for (let i = 0; i < this.blocks.length; i++) {
+        if(this.number === 1){ // Informar número do room
+          params.ctx.save();
+          params.ctx.fillStyle = "lime";
+          params.ctx.linewidth = 1;
+          params.ctx.globalAlpha = 0.5;
+          params.ctx.fillRect(
+            this.blocks[i].coluna * params.s,
+            this.blocks[i].linha * params.s,
+            params.s,
+            params.s
+          );
+          params.ctx.restore();
+        }
+      }
+      break;
+    }
   }
 };
 
@@ -1352,7 +1370,7 @@ Room.prototype.getPathPlayer = function (gx, gy) {
 };
 
 Room.prototype.desenharGraficoRoom = function (ctx, playerX, playerY) {
-  let posX = playerX - 300; //15
+  let posX = playerX - 350; //15
   let posY = playerY + 150; //245
   let xQuadro = posX - 5; //10
   let yQuadro = posY - 235; //10
@@ -1419,11 +1437,13 @@ Room.prototype.desenharGraficoRoom = function (ctx, playerX, playerY) {
 
   // Marcações Y
   let espacamentoY = 230 / escalaY; //Math.trunc(230 / escalaY);
-  let atualY = posY;
-  for (let i = 0; i < escalaY; i++) {
-    ctx.moveTo(posX - 2, atualY - espacamentoY);
-    ctx.lineTo(posX + 2, atualY - espacamentoY);
-    atualY = atualY - espacamentoY;
+  if(escalaY !== 999){
+    let atualY = posY;
+    for (let i = 0; i < escalaY; i++) {
+      ctx.moveTo(posX - 2, atualY - espacamentoY);
+      ctx.lineTo(posX + 2, atualY - espacamentoY);
+      atualY = atualY - espacamentoY;
+    }
   }
 
   // Fecha desenho do gráfico
@@ -1526,7 +1546,7 @@ Room.prototype.desenharGraficoRoom = function (ctx, playerX, playerY) {
 };
 
 Room.prototype.desenharGraficoTesouros = function (ctx, playerX, playerY) {
-  let posX = playerX - 300; //15 
+  let posX = playerX - 350; //15 
   let posY = playerY + 150; //245
   let xQuadro = posX - 5; //10
   let yQuadro = posY - 235; //10
@@ -1585,7 +1605,7 @@ Room.prototype.desenharGraficoTesouros = function (ctx, playerX, playerY) {
   ctx.lineTo(posX, posY - eixoY);
 
   // Marcações X
-  let espacamentoX = eixoX / escalaX; //Math.trunc(390 / escalaX);
+  let espacamentoX = eixoX / escalaX; 
   if (escalaX <= 200) {
     let atualX = posX;
     for (let i = 0; i < escalaX; i++) {
@@ -1596,12 +1616,14 @@ Room.prototype.desenharGraficoTesouros = function (ctx, playerX, playerY) {
   }
 
   // Marcações Y
-  let espacamentoY = eixoY / escalaY; //Math.trunc(230 / escalaY);
-  let atualY = posY;
-  for (let i = 0; i < escalaY; i++) {
-    ctx.moveTo(posX - 2, atualY - espacamentoY);
-    ctx.lineTo(posX + 2, atualY - espacamentoY);
-    atualY = atualY - espacamentoY;
+  let espacamentoY = eixoY / escalaY; 
+  if(escalaY !== 999){
+    let atualY = posY;
+    for (let i = 0; i < escalaY; i++) {
+      ctx.moveTo(posX - 2, atualY - espacamentoY);
+      ctx.lineTo(posX + 2, atualY - espacamentoY);
+      atualY = atualY - espacamentoY;
+    }
   }
 
   // Fecha desenho do gráfico
