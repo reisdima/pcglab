@@ -346,9 +346,11 @@ Map.prototype.desenharCell = function (ctx, l, c) {
 
   }
   
-  ctx.strokeStyle = "white";
-  ctx.lineWidth = 1;
-  ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
+  if(getDebugMode() < 16){
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
+  }
 };
 
 Map.prototype.escreveTexto = function (ctx, texto, x, y) {

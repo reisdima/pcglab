@@ -1352,7 +1352,7 @@ Room.prototype.getPathPlayer = function (gx, gy) {
 };
 
 Room.prototype.desenharGraficoRoom = function (ctx, playerX, playerY) {
-  let posX = playerX - 350; //15
+  let posX = playerX - 300; //15
   let posY = playerY + 150; //245
   let xQuadro = posX - 5; //10
   let yQuadro = posY - 235; //10
@@ -1384,11 +1384,13 @@ Room.prototype.desenharGraficoRoom = function (ctx, playerX, playerY) {
   ctx.font = "10px Arial Black";
   ctx.fillStyle = "white";
   ctx.strokeStyle = "rgba(225, 225, 225, 0.9)";
-  ctx.fillText(escalaX + " x " + escalaY, xQuadro + 200, yQuadro + 10);
+  ctx.fillText(escalaX + " x " + escalaY, posX + wQuadro / 2, yQuadro + 10);
+  ctx.font = "7px Arial Black";
+  ctx.fillText("Passo x Distância", posX + wQuadro / 2, yQuadro + 20);
   ctx.font = "8px Arial Black";
   ctx.fillText(
     "Gráfico Path Entrada-Saída: Sala " + this.number,
-    posX + 200,
+    posX + wQuadro / 2,
     posY + 15
   );
   ctx.restore();
@@ -1524,14 +1526,14 @@ Room.prototype.desenharGraficoRoom = function (ctx, playerX, playerY) {
 };
 
 Room.prototype.desenharGraficoTesouros = function (ctx, playerX, playerY) {
-  let posX = playerX - 350; //15
+  let posX = playerX - 300; //15 
   let posY = playerY + 150; //245
   let xQuadro = posX - 5; //10
   let yQuadro = posY - 235; //10
   let hQuadro = 240; //240
   let wQuadro = 400; //400
   let maior = 1;
-  for (let i = 0; i < this.pathRoom.steps.length; i++) {
+  for (let i = 0; i < this.pathTesouros.steps.length; i++) {
     if (this.pathTesouros.steps[i].distTesouros > maior) {
       maior = this.pathTesouros.steps[i].distTesouros;
     }
@@ -1546,6 +1548,10 @@ Room.prototype.desenharGraficoTesouros = function (ctx, playerX, playerY) {
   let escalaX = this.pathTesouros.steps.length;
   let escalaY = maior;
 
+  if(escalaX > 999) {wQuadro = 600;}
+  let eixoX = wQuadro - 10;
+  let eixoY = hQuadro - 10;
+
   // Desenho do quadro do gráfico - Arrumar posicionamento
   ctx.save();
   ctx.fillStyle = "rgba(10, 10, 10, 0.8)";
@@ -1556,11 +1562,13 @@ Room.prototype.desenharGraficoTesouros = function (ctx, playerX, playerY) {
   ctx.font = "10px Arial Black";
   ctx.fillStyle = "white";
   ctx.strokeStyle = "rgba(225, 225, 225, 0.9)";
-  ctx.fillText(escalaX + " x " + escalaY, xQuadro + 200, yQuadro + 10);
+  ctx.fillText(escalaX + " x " + escalaY, posX + wQuadro / 2, yQuadro + 10);
+  ctx.font = "7px Arial Black";
+  ctx.fillText("Passo x Distância", posX + wQuadro / 2, yQuadro + 20);
   ctx.font = "8px Arial Black";
   ctx.fillText(
     "Gráfico Path Entrada-Tesouros-Saída: Sala " + this.number,
-    posX + 200,
+    posX + wQuadro / 2,
     posY + 15
   );
   ctx.restore();
@@ -1571,13 +1579,13 @@ Room.prototype.desenharGraficoTesouros = function (ctx, playerX, playerY) {
   ctx.beginPath();
   // Eixo X - 390 pixels
   ctx.moveTo(posX, posY);
-  ctx.lineTo(posX + 390, posY);
+  ctx.lineTo(posX + eixoX, posY);
   // Eixo Y - 230 pixels
   ctx.moveTo(posX, posY);
-  ctx.lineTo(posX, posY - 230);
+  ctx.lineTo(posX, posY - eixoY);
 
   // Marcações X
-  let espacamentoX = 390 / escalaX; //Math.trunc(390 / escalaX);
+  let espacamentoX = eixoX / escalaX; //Math.trunc(390 / escalaX);
   if (escalaX <= 200) {
     let atualX = posX;
     for (let i = 0; i < escalaX; i++) {
@@ -1588,7 +1596,7 @@ Room.prototype.desenharGraficoTesouros = function (ctx, playerX, playerY) {
   }
 
   // Marcações Y
-  let espacamentoY = 230 / escalaY; //Math.trunc(230 / escalaY);
+  let espacamentoY = eixoY / escalaY; //Math.trunc(230 / escalaY);
   let atualY = posY;
   for (let i = 0; i < escalaY; i++) {
     ctx.moveTo(posX - 2, atualY - espacamentoY);
