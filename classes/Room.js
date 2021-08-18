@@ -1810,97 +1810,99 @@ Room.prototype.desenharGraficoPlayer = function (ctx, playerX, playerY) {
   ctx.closePath();
   ctx.stroke();
 
-  // posição 0,0 no gráfico
-  let xZero = posX;
-  let yZero = posY;
-
-  let xAtual = xZero;
-  let yAtual = yZero - espacamentoY * this.pathPlayer.steps[0].distTesouros;
-
-  let valY = this.pathPlayer.steps[0].distTesouros;
-  let muxY;
-
-  // Desenho da linha do gráfico de distância para tesouros
-  ctx.beginPath();
-  ctx.strokeStyle = "yellow";
-  for (let i = 0; i < this.pathPlayer.steps.length; i++) {
-    if (valY < this.pathPlayer.steps[i].distTesouros) {
-      muxY = -1;
-    } else if (valY > this.pathPlayer.steps[i].distTesouros) {
-      muxY = 1;
-    } else if (valY === this.pathPlayer.steps[i].distTesouros) {
-      muxY = 0;
+  if(this.pathPlayer.steps.length > 0){
+    // posição 0,0 no gráfico
+    let xZero = posX;
+    let yZero = posY;
+  
+    let xAtual = xZero;
+    let yAtual = yZero - espacamentoY * this.pathPlayer.steps[0].distTesouros;
+  
+    let valY = this.pathPlayer.steps[0].distTesouros;
+    let muxY;
+  
+    // Desenho da linha do gráfico de distância para tesouros
+    ctx.beginPath();
+    ctx.strokeStyle = "yellow";
+    for (let i = 0; i < this.pathPlayer.steps.length; i++) {
+      if (valY < this.pathPlayer.steps[i].distTesouros) {
+        muxY = -1;
+      } else if (valY > this.pathPlayer.steps[i].distTesouros) {
+        muxY = 1;
+      } else if (valY === this.pathPlayer.steps[i].distTesouros) {
+        muxY = 0;
+      }
+  
+      valY = this.pathPlayer.steps[i].distTesouros;
+  
+      if (i !== 0) {
+        ctx.moveTo(xAtual, yAtual);
+        ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
+      }
+      xAtual = xAtual + espacamentoX;
+      yAtual = yAtual + espacamentoY * muxY;
     }
-
-    valY = this.pathPlayer.steps[i].distTesouros;
-
-    if (i !== 0) {
-      ctx.moveTo(xAtual, yAtual);
-      ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
+    ctx.closePath();
+    ctx.stroke();
+  
+    xAtual = xZero;
+    yAtual = yZero - espacamentoY * this.pathPlayer.steps[0].distInimigos;
+  
+    valY = this.pathPlayer.steps[0].distInimigos;
+    muxY = 0;
+  
+    // Desenho da linha do gráfico de distância para inimigos
+    ctx.beginPath();
+    ctx.strokeStyle = "rgba(225, 0, 0, 0.6)";
+    for (let i = 0; i < this.pathPlayer.steps.length; i++) {
+      if (valY < this.pathPlayer.steps[i].distInimigos) {
+        muxY = -1;
+      } else if (valY > this.pathPlayer.steps[i].distInimigos) {
+        muxY = 1;
+      } else if (valY === this.pathPlayer.steps[i].distInimigos) {
+        muxY = 0;
+      }
+  
+      valY = this.pathPlayer.steps[i].distInimigos;
+  
+      if (i !== 0) {
+        ctx.moveTo(xAtual, yAtual);
+        ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
+      }
+      xAtual = xAtual + espacamentoX;
+      yAtual = yAtual + espacamentoY * muxY;
     }
-    xAtual = xAtual + espacamentoX;
-    yAtual = yAtual + espacamentoY * muxY;
+    ctx.closePath();
+    ctx.stroke();
+  
+    xAtual = xZero;
+    yAtual = yZero - espacamentoY * this.pathPlayer.steps[0].distFirezones;
+  
+    valY = this.pathPlayer.steps[0].distFirezones;
+    muxY = 0;
+  
+    // Desenho da linha do gráfico de distância para firezones
+    ctx.beginPath();
+    ctx.strokeStyle = "rgba(0, 255, 127, 0.6)";
+    for (let i = 0; i < this.pathPlayer.steps.length; i++) {
+      if (valY < this.pathPlayer.steps[i].distFirezones) {
+        muxY = -1;
+      } else if (valY > this.pathPlayer.steps[i].distFirezones) {
+        muxY = 1;
+      } else if (valY === this.pathPlayer.steps[i].distFirezones) {
+        muxY = 0;
+      }
+  
+      valY = this.pathPlayer.steps[i].distFirezones;
+  
+      if (i !== 0) {
+        ctx.moveTo(xAtual, yAtual);
+        ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
+      }
+      xAtual = xAtual + espacamentoX;
+      yAtual = yAtual + espacamentoY * muxY;
+    }
+    ctx.closePath();
+    ctx.stroke();
   }
-  ctx.closePath();
-  ctx.stroke();
-
-  xAtual = xZero;
-  yAtual = yZero - espacamentoY * this.pathPlayer.steps[0].distInimigos;
-
-  valY = this.pathPlayer.steps[0].distInimigos;
-  muxY = 0;
-
-  // Desenho da linha do gráfico de distância para inimigos
-  ctx.beginPath();
-  ctx.strokeStyle = "rgba(225, 0, 0, 0.6)";
-  for (let i = 0; i < this.pathPlayer.steps.length; i++) {
-    if (valY < this.pathPlayer.steps[i].distInimigos) {
-      muxY = -1;
-    } else if (valY > this.pathPlayer.steps[i].distInimigos) {
-      muxY = 1;
-    } else if (valY === this.pathPlayer.steps[i].distInimigos) {
-      muxY = 0;
-    }
-
-    valY = this.pathPlayer.steps[i].distInimigos;
-
-    if (i !== 0) {
-      ctx.moveTo(xAtual, yAtual);
-      ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
-    }
-    xAtual = xAtual + espacamentoX;
-    yAtual = yAtual + espacamentoY * muxY;
-  }
-  ctx.closePath();
-  ctx.stroke();
-
-  xAtual = xZero;
-  yAtual = yZero - espacamentoY * this.pathPlayer.steps[0].distFirezones;
-
-  valY = this.pathPlayer.steps[0].distFirezones;
-  muxY = 0;
-
-  // Desenho da linha do gráfico de distância para firezones
-  ctx.beginPath();
-  ctx.strokeStyle = "rgba(0, 255, 127, 0.6)";
-  for (let i = 0; i < this.pathPlayer.steps.length; i++) {
-    if (valY < this.pathPlayer.steps[i].distFirezones) {
-      muxY = -1;
-    } else if (valY > this.pathPlayer.steps[i].distFirezones) {
-      muxY = 1;
-    } else if (valY === this.pathPlayer.steps[i].distFirezones) {
-      muxY = 0;
-    }
-
-    valY = this.pathPlayer.steps[i].distFirezones;
-
-    if (i !== 0) {
-      ctx.moveTo(xAtual, yAtual);
-      ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
-    }
-    xAtual = xAtual + espacamentoX;
-    yAtual = yAtual + espacamentoY * muxY;
-  }
-  ctx.closePath();
-  ctx.stroke();
 };
