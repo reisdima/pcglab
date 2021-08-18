@@ -342,6 +342,7 @@ const hud = {
     this.debugText.push("Mode 15 - Sobreposição de caminhos");
     this.debugText.push("Mode 16 - Gráfico Entrada-Saída");
     this.debugText.push("Mode 17 - Gráfico Entrada-Tesouros-Saída");
+    this.debugText.push("Mode 18 - Gráfico Caminho do Player");
     this.updateElementos(tela);
     this.bussola.init();
   },

@@ -844,6 +844,14 @@ Level.prototype.desenhar = function(ctx) {
       this.rooms[playerPresente].desenharGraficoTesouros(ctx, this.player.x, this.player.y);
     }
   }
+
+  if(getDebugMode() === 18){
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
+      this.rooms[playerPresente].desenharGraficoPlayer(ctx, this.player.x, this.player.y);
+    }
+  }
 };
 
 Level.prototype.removerInimigos = function(){
