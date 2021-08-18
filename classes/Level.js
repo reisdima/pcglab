@@ -783,11 +783,11 @@ Level.prototype.desenhar = function(ctx) {
     if(!this.roomIniciado){
       this.iniciaRooms();
       this.roomIniciado = true;
-      for(let i = 0; i < this.rooms.length; i++){
+      /*for(let i = 0; i < this.rooms.length; i++){
         this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
         this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
         this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
-      }
+      }*/
     }
   }
   if(getDebugMode() === 11){
@@ -934,6 +934,11 @@ Level.prototype.iniciaRooms = function(){
     this.rooms[i].init();
     this.rooms[i].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
     this.rooms[i].constroiRota();
+  }
+  for(let i = 0; i < this.rooms.length; i++){
+    this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
+    this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
+    this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
   }
   //this.rooms[10].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
   //this.rooms[10].constroiRota();
