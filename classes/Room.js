@@ -1393,7 +1393,7 @@ Room.prototype.desenharGraficoRoom = function (ctx, playerX, playerY) {
 
   // Desenho do quadro do gráfico 
   ctx.save();
-  ctx.fillStyle = "rgba(10, 10, 10, 0.8)";
+  ctx.fillStyle = "rgba(10, 10, 10, 1)"; //0.8
   ctx.strokeStyle = "rgba(105, 105, 105, 0.9)";
   ctx.globalAlpha = 1.9;
   ctx.fillRect(xQuadro, yQuadro, wQuadro, hQuadro);
@@ -1571,7 +1571,7 @@ Room.prototype.desenharGraficoTesouros = function (ctx, playerX, playerY) {
 
   // Desenho do quadro do gráfico 
   ctx.save();
-  ctx.fillStyle = "rgba(10, 10, 10, 0.8)";
+  ctx.fillStyle = "rgba(10, 10, 10, 1)"; //0.8
   ctx.strokeStyle = "rgba(105, 105, 105, 0.9)";
   ctx.globalAlpha = 1.9;
   ctx.fillRect(xQuadro, yQuadro, wQuadro, hQuadro);
@@ -1583,7 +1583,7 @@ Room.prototype.desenharGraficoTesouros = function (ctx, playerX, playerY) {
   ctx.font = "6px Arial Black";
   ctx.fillText("Passo (" + escalaX + ")", posX + wQuadro / 2, posY + 10);
   ctx.font = "8px Arial Black";
-  ctx.fillText("Gráfico Path Entrada-Saída: Sala " + this.number, posX + wQuadro / 2, yQuadro + 10);
+  ctx.fillText("Gráfico Path Entrada-Tesouros-Saída: Sala " + this.number, posX + wQuadro / 2, yQuadro + 10);
   ctx.font = "6px Arial Black";
   ctx.rotate(-15 * Math.PI / 30);
   ctx.fillText("Distância (" + escalaY + ")", (posY - wQuadro / 4 - 10) * -1, posX - 5);
@@ -1750,7 +1750,7 @@ Room.prototype.desenharGraficoPlayer = function (ctx, playerX, playerY) {
 
   // Desenho do quadro do gráfico 
   ctx.save();
-  ctx.fillStyle = "rgba(10, 10, 10, 0.8)";
+  ctx.fillStyle = "rgba(10, 10, 10, 1)"; //0.8
   ctx.strokeStyle = "rgba(105, 105, 105, 0.9)";
   ctx.globalAlpha = 1.9;
   ctx.fillRect(xQuadro, yQuadro, wQuadro, hQuadro);
@@ -1762,7 +1762,7 @@ Room.prototype.desenharGraficoPlayer = function (ctx, playerX, playerY) {
   ctx.font = "6px Arial Black";
   ctx.fillText("Passo (" + escalaX + ")", posX + wQuadro / 2, posY + 10);
   ctx.font = "8px Arial Black";
-  ctx.fillText("Gráfico Path Entrada-Saída: Sala " + this.number, posX + wQuadro / 2, yQuadro + 10);
+  ctx.fillText("Gráfico Path Player: Sala " + this.number, posX + wQuadro / 2, yQuadro + 10);
   ctx.font = "6px Arial Black";
   ctx.rotate(-15 * Math.PI / 30);
   ctx.fillText("Distância (" + escalaY + ")", (posY - wQuadro / 4 - 10) * -1, posX - 5);
@@ -1827,15 +1827,14 @@ Room.prototype.desenharGraficoPlayer = function (ctx, playerX, playerY) {
       } else if (valY === this.pathPlayer.steps[i].distTesouros) {
         muxY = 0;
       }
-  
-      valY = this.pathPlayer.steps[i].distTesouros;
-  
+      
       if (i !== 0) {
         ctx.moveTo(xAtual, yAtual);
-        ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
+        ctx.lineTo(xAtual + espacamentoX, yAtual + (Math.abs(valY - this.pathPlayer.steps[i].distTesouros)) * espacamentoY * muxY);
       }
       xAtual = xAtual + espacamentoX;
-      yAtual = yAtual + espacamentoY * muxY;
+      yAtual = yAtual + (Math.abs(valY - this.pathPlayer.steps[i].distTesouros)) * espacamentoY * muxY; 
+      valY = this.pathPlayer.steps[i].distTesouros;
     }
     ctx.closePath();
     ctx.stroke();
@@ -1858,14 +1857,13 @@ Room.prototype.desenharGraficoPlayer = function (ctx, playerX, playerY) {
         muxY = 0;
       }
   
-      valY = this.pathPlayer.steps[i].distInimigos;
-  
       if (i !== 0) {
         ctx.moveTo(xAtual, yAtual);
-        ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
+        ctx.lineTo(xAtual + espacamentoX, yAtual + (Math.abs(valY - this.pathPlayer.steps[i].distInimigos)) * espacamentoY * muxY);
       }
       xAtual = xAtual + espacamentoX;
-      yAtual = yAtual + espacamentoY * muxY;
+      yAtual = yAtual + (Math.abs(valY - this.pathPlayer.steps[i].distInimigos)) * espacamentoY * muxY; 
+      valY = this.pathPlayer.steps[i].distInimigos;
     }
     ctx.closePath();
     ctx.stroke();
@@ -1888,14 +1886,13 @@ Room.prototype.desenharGraficoPlayer = function (ctx, playerX, playerY) {
         muxY = 0;
       }
   
-      valY = this.pathPlayer.steps[i].distFirezones;
-  
       if (i !== 0) {
         ctx.moveTo(xAtual, yAtual);
-        ctx.lineTo(xAtual + espacamentoX, yAtual + espacamentoY * muxY);
+        ctx.lineTo(xAtual + espacamentoX, yAtual + (Math.abs(valY - this.pathPlayer.steps[i].distFirezones)) * espacamentoY * muxY);
       }
       xAtual = xAtual + espacamentoX;
-      yAtual = yAtual + espacamentoY * muxY;
+      yAtual = yAtual + (Math.abs(valY - this.pathPlayer.steps[i].distFirezones)) * espacamentoY * muxY; 
+      valY = this.pathPlayer.steps[i].distFirezones;
     }
     ctx.closePath();
     ctx.stroke();

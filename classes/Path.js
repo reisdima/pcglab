@@ -27,14 +27,14 @@ export default class Path{
       case 1:{
         for(let i = 0; i < this.steps.length; i++){
           ctx.save();
-          ctx.fillStyle = "#006400";
+          ctx.fillStyle = "#FF4500";
           ctx.linewidth = 1;
           ctx.globalAlpha = 0.2;
           ctx.fillRect(this.steps[i].coluna * s, this.steps[i].linha * s, s, s);
           ctx.restore();
-          ctx.fillStyle = "#006400";
+          ctx.fillStyle = "#FF4500";
           ctx.strokeStyle = "black";
-          this.escreveTexto(ctx, (this.steps[i].notacaoPlayer), this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2 + 5);
+          this.escreveTexto(ctx, (this.steps[i].notacaoTesouros), this.steps[i].coluna * s + s / 2, this.steps[i].linha * s + s / 2 + 5);
           if(!this.a){
             console.log(this.steps.length);
             this.a = true;

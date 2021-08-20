@@ -642,6 +642,12 @@
             if (estado != 2) {
               if (stateMainMenu == 0) {
                 loadLevel(0);               //Carregamento de level
+                /*for (let i = 0; i < levels.length; i++) {
+                  if(!levels[i].roomIniciado){
+                    levels[i].iniciaRooms();
+                    levels[i].roomIniciado = true;
+                  }
+                }*/
                 estado = 0;
               }
               else {
