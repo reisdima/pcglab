@@ -240,9 +240,24 @@ var WFC = function({pesos,regras}){
   var wavefront = {}
   var n_padroes = pesos.length
   var wavefront = {}
+  var seedWFC;
+
+  let seedValueURL = location.search;
+  if(seedValueURL.length != 0){                   //SEED PASSADA NA URL
+    let aux = "?seed=";
+    seedValueURL = seedValueURL.substring(aux.length, seedValueURL.length);
+    seedWFC = parseInt(seedValueURL);
+  }else{
+    seedWFC = Math.random()*100000000000
+  }
 
   this.getOnda = function(){
     return wave;
+  }
+
+  function random() {
+    var x = Math.sin(seedWFC++) * 10000;
+    return x - Math.floor(x);
   }
 
   function coord(k){
@@ -270,7 +285,7 @@ var WFC = function({pesos,regras}){
     for (var i = 0; i < x.length; i++){
       one += x[i]*pesos[i]
     }
-    var r = Math.random()*one
+    var r = random()*one
     for (var i = 0; i < x.length; i++){
       r -= x[i]*pesos[i]
       if (r < 0){
@@ -449,7 +464,7 @@ var WFC = function({pesos,regras}){
       if (ent == 0){
         continue;
       }
-      ent += (Math.random()-0.5)
+      ent += (random()-0.5)
       if (ent < min_ent){
         min_ent = ent
         min_arg = coord(k)
