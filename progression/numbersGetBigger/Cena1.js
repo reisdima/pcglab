@@ -81,7 +81,7 @@ export default class Cena1 extends Cena {
     this.counter += this.dt;
     this.controle();
     this.currentScore = parseFloat(
-      (this.currentScore + this.scoreRate).toFixed(10)
+      (this.currentScore + this.scoreRate*this.dt).toFixed(10)
     );
     if (this.counter >= 1) {
       this.counter = 0;
