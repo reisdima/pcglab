@@ -64,9 +64,9 @@ export default class Cena1 extends Cena {
     this.ctx.fillStyle = "white";
     this.ctx.textAlign = "left";
     this.ctx.fillText("Poder: ", 50, 50);
-    this.ctx.fillText(this.currentScore, 125, 50);
+    this.ctx.fillText(this.currentScore.toFixed(1), 125, 50);
     this.ctx.fillText("Taxa: ", 50, 75);
-    this.ctx.fillText(this.scoreRate, 125, 75);
+    this.ctx.fillText(this.scoreRate + " /s", 125, 75);
     this.ctx.fillText("Gasto: ", 50, 100);
     this.ctx.fillText(this.scoreSpent, 125, 100);
     this.desenharTabela();
@@ -103,9 +103,9 @@ export default class Cena1 extends Cena {
     this.newGame = new Button(
       0.7 * this.canvas.width,
       0.2 * this.canvas.height,
-      0.2 * this.canvas.width,
+      0.15 * this.canvas.width,
       0.07 * this.canvas.height,
-      "Click me"
+      "Power up!"
     );
   }
 
