@@ -1,0 +1,42 @@
+export const resources = [
+    {
+      label: "A",
+      quantity: 0,
+      currentCost: 15,
+      initialCost: 15,
+      currentIncome: 0,
+      income: 0.1,
+    },
+    {
+      label: "B",
+      quantity: 0,
+      currentCost: 100,
+      initialCost: 100,
+      currentIncome: 0,
+      income: 0.5,
+    },
+    {
+      label: "C",
+      quantity: 0,
+      currentCost: 500,
+      initialCost: 500,
+      currentIncome: 0,
+      income: 4,
+    },
+    {
+      label: "D",
+      quantity: 0,
+      currentCost: 3000,
+      initialCost: 3000,
+      currentIncome: 0,
+      income: 10,
+    },
+    {
+      label: "E",
+      quantity: 0,
+      currentCost: 40000,
+      initialCost: 40000,
+      currentIncome: 0,
+      income: 40,
+    },
+  ]
