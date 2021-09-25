@@ -1,4 +1,7 @@
-function Sprite(params = {s: 16}) {
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
+
+
+export default function Sprite(params = {s: 16}) {
 
   let exemplo = {
     //Atibutos da Fisica
@@ -67,19 +70,19 @@ Sprite.prototype.mover = function (dt) {
     this.x = this.gx*this.map.s + this.s;       //Andando por grade
     this.y = this.gy*this.map.s + this.s;
   */
-  if(debugMode === 0 || debugMode === 4){
+  if(getDebugMode() === 0 || getDebugMode() === 4){
     if(this.gx === 0 || this.gx === (this.map.w - 1))  //Trata casos extremos do mapa =>{gx <= 0, gx >= gxMapa}
     {
       if(this.gx === 0){
         if(this.vx < 0){
-          var limite = (this.gx)*this.map.s;
-          var maxDx = limite-(this.x-this.s/2);
-          var Dx = this.vx*dt;
+          let limite = (this.gx)*this.map.s;
+          let maxDx = limite-(this.x-this.s/2);
+          let Dx = this.vx*dt;
           this.x += Math.max(Dx, maxDx);
         } else if( this.vx > 0 && this.map.cell[this.gy][this.gx+1].tipo===1){
-          var limite = (this.gx+1)*this.map.s;
-          var maxDx = limite-(this.x+this.s/2);
-          var Dx = this.vx*dt;
+          let limite = (this.gx+1)*this.map.s;
+          let maxDx = limite-(this.x+this.s/2);
+          let Dx = this.vx*dt;
           this.x += Math.min(Dx, maxDx);
         }else {
           this.x += this.vx*dt;
@@ -87,14 +90,14 @@ Sprite.prototype.mover = function (dt) {
       }
       else{
         if(this.vx < 0 && this.map.cell[this.gy][this.gx-1].tipo===1){
-          var limite = (this.gx)*this.map.s;
-          var maxDx = limite-(this.x-this.s/2);
-          var Dx = this.vx*dt;
+          let limite = (this.gx)*this.map.s;
+          let maxDx = limite-(this.x-this.s/2);
+          let Dx = this.vx*dt;
           this.x += Math.max(Dx, maxDx);
         } else if( this.vx > 0){
-          var limite = (this.gx+1)*this.map.s;
-          var maxDx = limite-(this.x+this.s/2);
-          var Dx = this.vx*dt;
+          let limite = (this.gx+1)*this.map.s;
+          let maxDx = limite-(this.x+this.s/2);
+          let Dx = this.vx*dt;
           this.x += Math.min(Dx, maxDx);
         }else {
           this.x += this.vx*dt;
@@ -103,14 +106,14 @@ Sprite.prototype.mover = function (dt) {
     }
     else{
       if(this.vx < 0 && this.map.cell[this.gy][this.gx-1].tipo===1){
-        var limite = (this.gx)*this.map.s;
-        var maxDx = limite-(this.x-this.s/2);
-        var Dx = this.vx*dt;
+        let limite = (this.gx)*this.map.s;
+        let maxDx = limite-(this.x-this.s/2);
+        let Dx = this.vx*dt;
         this.x += Math.max(Dx, maxDx);
       } else if( this.vx > 0 && this.map.cell[this.gy][this.gx+1].tipo===1){
-        var limite = (this.gx+1)*this.map.s;
-        var maxDx = limite-(this.x+this.s/2);
-        var Dx = this.vx*dt;
+        let limite = (this.gx+1)*this.map.s;
+        let maxDx = limite-(this.x+this.s/2);
+        let Dx = this.vx*dt;
         this.x += Math.min(Dx, maxDx);
       }else {
         this.x += this.vx*dt;
@@ -121,14 +124,14 @@ Sprite.prototype.mover = function (dt) {
     {
       if(this.gy === 0){
         if(this.vy < 0){
-          var limite = (this.gy)*this.map.s;
-          var maxDy = limite-(this.y-this.s/2);
-          var Dy = (this.vy)*dt;
+          let limite = (this.gy)*this.map.s;
+          let maxDy = limite-(this.y-this.s/2);
+          let Dy = (this.vy)*dt;
           this.y += Math.max(Dy, maxDy);
         } else if((this.vy) >0 && this.map.cell[this.gy+1][this.gx].tipo!==0){
-          var limite = (this.gy+1)*this.map.s;
-          var maxDy = limite-(this.y+this.s/2);
-          var Dy = (this.vy)*dt;
+          let limite = (this.gy+1)*this.map.s;
+          let maxDy = limite-(this.y+this.s/2);
+          let Dy = (this.vy)*dt;
           this.y += Math.min(Dy, maxDy);
         }else {
           this.y += (this.vy)*dt;
@@ -136,14 +139,14 @@ Sprite.prototype.mover = function (dt) {
       }
       else{
         if((this.vy)<0 && this.map.cell[this.gy-1][this.gx].tipo!==0){
-          var limite = (this.gy)*this.map.s;
-          var maxDy = limite-(this.y-this.s/2);
-          var Dy = (this.vy)*dt;
+          let limite = (this.gy)*this.map.s;
+          let maxDy = limite-(this.y-this.s/2);
+          let Dy = (this.vy)*dt;
           this.y += Math.max(Dy, maxDy);
         } else if((this.vy) > 0){
-          var limite = (this.gy+1)*this.map.s;
-          var maxDy = limite-(this.y+this.s/2);
-          var Dy = (this.vy)*dt;
+          let limite = (this.gy+1)*this.map.s;
+          let maxDy = limite-(this.y+this.s/2);
+          let Dy = (this.vy)*dt;
           this.y += Math.min(Dy, maxDy);
         }else {
           this.y += (this.vy)*dt;
@@ -152,14 +155,14 @@ Sprite.prototype.mover = function (dt) {
     }
     else{
       if((this.vy) < 0 && this.map.cell[this.gy-1][this.gx].tipo!==0){
-        var limite = (this.gy)*this.map.s;
-        var maxDy = limite-(this.y-this.s/2);
-        var Dy = (this.vy)*dt;
+        let limite = (this.gy)*this.map.s;
+        let maxDy = limite-(this.y-this.s/2);
+        let Dy = (this.vy)*dt;
         this.y += Math.max(Dy, maxDy);
       } else if((this.vy) > 0 && this.map.cell[this.gy+1][this.gx].tipo!==0){
-        var limite = (this.gy+1)*this.map.s;
-        var maxDy = limite-(this.y+this.s/2);
-        var Dy = (this.vy)*dt;
+        let limite = (this.gy+1)*this.map.s;
+        let maxDy = limite-(this.y+this.s/2);
+        let Dy = (this.vy)*dt;
         this.y += Math.min(Dy, maxDy);
       }else {
         this.y += (this.vy) * dt;
@@ -178,7 +181,7 @@ Sprite.prototype.mover2 = function(dt){
   this.gx = Math.floor(this.x/this.map.s);
   this.gy = Math.floor(this.y/this.map.s);
 
-  if(debugMode == 0 || debugMode == 4){
+  if(getDebugMode() == 0 || getDebugMode() == 4){
     this.adicionaRestricaoMovimento(dt);
   }
   else{
@@ -216,8 +219,8 @@ Sprite.prototype.adicionaRestricaoMovimento = function(dt){
   this.x = this.x + dx;
   this.y = this.y + dy;
 
-  var MAXX = this.map.s * this.map.c - this.w / 2;
-  var MAXY = this.map.s * this.map.l - this.h / 2;
+  const MAXX = this.map.s * this.map.c - this.w / 2;
+  const MAXY = this.map.s * this.map.l - this.h / 2;
 
   if (this.x > MAXX) this.x = MAXX;
   if (this.y > MAXY) {
@@ -305,7 +308,7 @@ Sprite.prototype.desenharBarraEnergiaHUD = function (ctx, player) {
   // Texto com o número no meio da barra
   ctx.font = "13px Arial Black";
   ctx.fillStyle = "yellow";
-  ctx.textAlign = alignMainMenu;
+  ctx.textAlign = "center"; //alignMainMenu;
   ctx.lineWidth = 2;
   ctx.strokeStyle = "black";
   ctx.strokeText(player.hp, this.x + this.w/2, this.y + this.h/2 + 4);
@@ -394,4 +397,4 @@ Sprite.prototype.atacar = function (alvo) {
   return true;
 };
 
-module.exports = Sprite;
+//module.exports = Sprite;

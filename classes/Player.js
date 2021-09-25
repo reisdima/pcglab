@@ -1,4 +1,18 @@
-function Player(params) {
+import Sprite from "./Sprite.js";
+import assetsMng from "./AssetsMng.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
+
+let _player = null;
+
+export function setPlayer(newPlayer){
+  _player = newPlayer;
+}
+
+export function getPlayer() {
+  return _player;
+}
+
+export default function Player(params) {
   /**
    * Estabelece a relação de Herança entre Player e Sprite:
    *  -> Sprite é pai e player é filho
@@ -74,6 +88,7 @@ Player.prototype.setRoom = function(){
 }
 
 Player.prototype.moverCompleto = function(dt){
+
   this.cooldownTeleporte = this.cooldownTeleporte - dt;         // Cooldown de teleporte pra não teleportar direto
   this.cooldownImune = this.cooldownImune - dt;         
   this.tratarAnimacao();
@@ -82,7 +97,7 @@ Player.prototype.moverCompleto = function(dt){
     this.mover(dt);
   }
   this.moverTiros(dt);
-  this.animationController();
+  this.animationController(dt);
   this.removerTiros();
   if(this.hp <= 0){
     this.vivo = false;
@@ -184,7 +199,7 @@ Player.prototype.criarAnimacoes = function(){
 
 Player.prototype.controlePorTeclas = function(){
   // Teclas direcionais
-  if(this.teclas.up){this.vy = - this.playerVel; this.sentidoMovimento = 0;}
+  if(this.teclas.up){this.vy = - this.playerVel; this.sentidoMovimento = 0; }
   if(this.teclas.right){this.vx = this.playerVel; this.sentidoMovimento = 3;}
   if(this.teclas.down){this.vy = this.playerVel; this.sentidoMovimento = 2;}
   if(this.teclas.left){this.vx = - this.playerVel; this.sentidoMovimento = 1;}
@@ -250,7 +265,7 @@ Player.prototype.tratarAnimacao = function(){
   this.speedAnimation = this.animation[this.atacando].animationPosition[this.sentidoMovimento].speedAnimation;
 }
 
-Player.prototype.animationController = function(){
+Player.prototype.animationController = function(dt){
 
   this.pose = this.pose + this.speedAnimation * dt;
   if(this.atacando === 0){
@@ -312,12 +327,12 @@ Player.prototype.desenhar = function(ctx){
     dx: (- auxAnimation.sw/2), dy: (5 - auxAnimation.sh),  dw: auxAnimation.sw, dh: auxAnimation.sh
   });
   ctx.restore();
-  if(debugMode == 3){
+  if(getDebugMode() == 3){
     this.desenharCell(ctx);         //Debug mode Grid
     this.desenharCentro(ctx);
     this.desenharCentroHitBox(ctx);
   }
-  else if(debugMode == 4){
+  else if(getDebugMode() == 4){
     this.desenharCell(ctx);         //Debug mode Grid    
     this.desenharHurtBox(ctx);
     this.desenharCentro(ctx);
@@ -372,19 +387,19 @@ Player.prototype.mover = function (dt) {
   this.gx = Math.floor(this.x/this.map.s);
   this.gy = Math.floor(this.y/this.map.s);
 
-  if(debugMode === 0 || debugMode === 4){
+  if(getDebugMode() === 0 || getDebugMode() === 4){
     if(this.gx === 0 || this.gx === (this.map.w - 1))  // Trata casos extremos do mapa =>{gx <= 0, gx >= gxMapa}
     {
       if(this.gx === 0){
         if(this.vx < 0){
-          var limite = (this.gx) * this.map.s;
-          var maxDx = limite - (this.x - this.w/2);
-          var Dx = this.vx * dt;
+          let limite = (this.gx) * this.map.s;
+          let maxDx = limite - (this.x - this.w/2);
+          let Dx = this.vx * dt;
           this.x += Math.max(Dx, maxDx);
         } else if( this.vx > 0 && this.map.cell[this.gy][this.gx + 1].tipo === 1){
-          var limite = (this.gx + 1) * this.map.s;
-          var maxDx = limite - (this.x + this.w/2);
-          var Dx = this.vx * dt;
+          let limite = (this.gx + 1) * this.map.s;
+          let maxDx = limite - (this.x + this.w/2);
+          let Dx = this.vx * dt;
           this.x += Math.min(Dx, maxDx);
         }else {
           this.x += this.vx * dt;
@@ -392,14 +407,14 @@ Player.prototype.mover = function (dt) {
       }
       else{
         if(this.vx < 0 && this.map.cell[this.gy][this.gx - 1].tipo === 1){
-          var limite = (this.gx) * this.map.s;
-          var maxDx = limite - (this.x - this.w/2);
-          var Dx = this.vx * dt;
+          let limite = (this.gx) * this.map.s;
+          let maxDx = limite - (this.x - this.w/2);
+          let Dx = this.vx * dt;
           this.x += Math.max(Dx, maxDx);
         } else if( this.vx > 0){
-          var limite = (this.gx + 1) * this.map.s;
-          var maxDx = limite - (this.x + this.w/2);
-          var Dx = this.vx * dt;
+          let limite = (this.gx + 1) * this.map.s;
+          let maxDx = limite - (this.x + this.w/2);
+          let Dx = this.vx * dt;
           this.x += Math.min(Dx, maxDx);
         }else {
           this.x += this.vx * dt;
@@ -408,14 +423,14 @@ Player.prototype.mover = function (dt) {
     }
     else{
       if(this.vx < 0 && this.map.cell[this.gy][this.gx - 1].tipo === 1){
-        var limite = (this.gx) * this.map.s;
-        var maxDx = limite - (this.x - this.w/2);
-        var Dx = this.vx * dt;
+        let limite = (this.gx) * this.map.s;
+        let maxDx = limite - (this.x - this.w/2);
+        let Dx = this.vx * dt;
         this.x += Math.max(Dx, maxDx);
       } else if( this.vx > 0 && this.map.cell[this.gy][this.gx + 1].tipo === 1){
-        var limite = (this.gx + 1) * this.map.s;
-        var maxDx = limite - (this.x + this.w/2);
-        var Dx = this.vx * dt;
+        let limite = (this.gx + 1) * this.map.s;
+        let maxDx = limite - (this.x + this.w/2);
+        let Dx = this.vx * dt;
         this.x += Math.min(Dx, maxDx);
       }else {
         this.x += this.vx * dt;
@@ -426,14 +441,14 @@ Player.prototype.mover = function (dt) {
     {
       if(this.gy === 0){
         if(this.vy < 0){
-          var limite = (this.gy) * this.map.s;
-          var maxDy = limite - (this.y - this.h/2);
-          var Dy = (this.vy) * dt;
+          let limite = (this.gy) * this.map.s;
+          let maxDy = limite - (this.y - this.h/2);
+          let Dy = (this.vy) * dt;
           this.y += Math.max(Dy, maxDy);
         } else if((this.vy) > 0 && this.map.cell[this.gy + 1][this.gx].tipo !== 0){
-          var limite = (this.gy + 1) * this.map.s;
-          var maxDy = limite - (this.y + this.h/2);
-          var Dy = (this.vy) * dt;
+          let limite = (this.gy + 1) * this.map.s;
+          let maxDy = limite - (this.y + this.h/2);
+          let Dy = (this.vy) * dt;
           this.y += Math.min(Dy, maxDy);
         }else {
           this.y += (this.vy) * dt;
@@ -441,14 +456,14 @@ Player.prototype.mover = function (dt) {
       }
       else{
         if((this.vy) < 0 && this.map.cell[this.gy - 1][this.gx].tipo !== 0){
-          var limite = (this.gy) * this.map.s;
-          var maxDy = limite - (this.y - this.h/2);
-          var Dy = (this.vy) * dt;
+          let limite = (this.gy) * this.map.s;
+          let maxDy = limite - (this.y - this.h/2);
+          let Dy = (this.vy) * dt;
           this.y += Math.max(Dy, maxDy);
         } else if((this.vy) > 0){
-          var limite = (this.gy + 1) * this.map.s;
-          var maxDy = limite - (this.y + this.h/2);
-          var Dy = (this.vy) * dt;
+          let limite = (this.gy + 1) * this.map.s;
+          let maxDy = limite - (this.y + this.h/2);
+          let Dy = (this.vy) * dt;
           this.y += Math.min(Dy, maxDy);
         }else {
           this.y += (this.vy) * dt;
@@ -457,14 +472,14 @@ Player.prototype.mover = function (dt) {
     }
     else{
       if((this.vy) < 0 && this.map.cell[this.gy - 1][this.gx].tipo !== 0){
-        var limite = (this.gy) * this.map.s;
-        var maxDy = limite - (this.y - this.h/2);
-        var Dy = (this.vy) * dt;
+        let limite = (this.gy) * this.map.s;
+        let maxDy = limite - (this.y - this.h/2);
+        let Dy = (this.vy) * dt;
         this.y += Math.max(Dy, maxDy);
       } else if((this.vy) > 0 && this.map.cell[this.gy + 1][this.gx].tipo !== 0){
-        var limite = (this.gy + 1) * this.map.s;
-        var maxDy = limite - (this.y + this.h/2);
-        var Dy = (this.vy) * dt;
+        let limite = (this.gy + 1) * this.map.s;
+        let maxDy = limite - (this.y + this.h/2);
+        let Dy = (this.vy) * dt;
         this.y += Math.min(Dy, maxDy);
       }else {
         this.y += (this.vy) * dt;
@@ -514,4 +529,8 @@ Player.prototype.atacarModoPlayer = function(alvo){
 
 Player.prototype.getRoom = function(){
   return this.map.cell[this.gy][this.gx].room;
+}
+
+Player.prototype.setTeclas = function(key, value){
+  this.teclas[key] = value;
 }

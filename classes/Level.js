@@ -1,5 +1,16 @@
-function Level(w, h, s) {
-  this.mapa = new Map(w,h,s);
+import Map from "./Map.js";
+import Room from "./Room.js";
+import Teleporter from "./Teleporter.js";
+import FireZone from "./FireZone.js";
+import Enemy from "./Enemy.js";
+import Treasure from "./Treasure.js";
+import Ordenacao from "./Ordenacao.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
+
+
+//TODO Fix parametro
+export default function Level(w, h, s, {hud, seedGen, assetsMng}) {
+  this.mapa = new Map(w,h,s, assetsMng);
   this.rooms = [];
   this.tempoFase = 0;
   this.tempoTotal = 0;
@@ -11,7 +22,12 @@ function Level(w, h, s) {
   this.teleporteFinalLevel  = new Teleporter(1);        //(Final) mapa
   this.player = undefined;
   this.hud = hud;
+  this.seedGen = seedGen;
   this.filaDesenho = [];
+  this.roomIniciado = false;
+  this.caminhoSaida = false;
+  this.caminhoTesouros = false;
+  this.caminhoPlayer = false;
 };
 
 /**
@@ -59,8 +75,8 @@ Level.prototype.clonarLevel= function(level){
   this.mapa.w = level.mapa.w;
   this.mapa.h = level.mapa.h;
   this.mapa.s = level.mapa.s;
-  for (var l = 0; l < level.mapa.h; l++) {
-    for (var c = 0; c < level.mapa.w; c++) {
+  for (let l = 0; l < level.mapa.h; l++) {
+    for (let c = 0; c < level.mapa.w; c++) {
       this.mapa.cell[l][c].clone(level.mapa.cell[l][c]);
     }
   }
@@ -86,7 +102,6 @@ Level.prototype.copiaSalas = function(rooms){
      this.rooms.push(new Room(0));
      this.rooms[this.rooms.length - 1].copyByLevelGeneration(rooms[i], this.mapa);
   }
-
 }
 
 Level.prototype.copiaSalasComReferencia = function(rooms){
@@ -109,7 +124,7 @@ Level.prototype.copiaSalasComReferencia = function(rooms){
  * Utiliza o gerador de seed como referencia pra escolha numerica
  */
 Level.prototype.getRandomInt = function(min, max){
-  return seedGen.getRandomIntMethod_1(min, max); 
+  return this.seedGen.getRandomIntMethod_1(min, max); 
 }
 
 Level.prototype.caminhoColetaTesouros = function(){
@@ -639,7 +654,7 @@ Level.prototype.posicionarInimigos = function(params){
 
 Level.prototype.movimento = function(dt) {
   this.player.moverCompleto(dt);
-  this.colisaoTeleportes(this.player);
+  this.colisaoTeleportes(this.player, this);
   this.colisaoFireZones(this.player);
   //this.colisaoInimigos(this.player);
   this.colisaoTesouros(this.player);
@@ -648,7 +663,7 @@ Level.prototype.movimento = function(dt) {
     this.rooms[this.player.room - 1].atackEnemiesPlayer(this.player);      // Ataque somente na sala do player
   }
   for(let i = 0; i < this.rooms.length; i++){
-    this.rooms[i].move(dt);
+    this.rooms[i].move(dt, this.player);
   }
   this.removerInimigos();
   this.criarFilaDesenho();
@@ -737,13 +752,20 @@ Level.prototype.criarFilaDesenho = function(){
 }
 
 Level.prototype.desenhar = function(ctx) {
-  this.mapa.desenhar(ctx);
+  this.mapa.desenhar(ctx, this.player);
   for(let i = 0; i < this.filaDesenho.length; i++){
     this.filaDesenho[i].desenhar(ctx);
   }
   this.mapa.desenharDebugMode(ctx);
 
-  if(debugMode > 3){
+
+  if(getDebugMode() === 0){
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].getPathPlayer(this.player.gx, this.player.gy);
+    }
+  }
+  if(getDebugMode() > 3){
     for(let i = 0; i < this.rooms.length; i++){
       this.rooms[i].desenharCamadas({
         ctx: ctx, s: this.mapa.s
@@ -751,10 +773,83 @@ Level.prototype.desenhar = function(ctx) {
     }
   }
   else{
-    if(debugMode === 3){
+    if(getDebugMode() === 3){
       for(let i = 0; i < this.rooms.length; i++){
         this.rooms[i].drawTeleportersLine(ctx);
       }
+    }
+  }
+  if(getDebugMode() === 1){
+    if(!this.roomIniciado){
+      this.iniciaRooms();
+      this.roomIniciado = true;
+      /*for(let i = 0; i < this.rooms.length; i++){
+        this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
+        this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
+        this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
+      }*/
+    }
+  }
+  if(getDebugMode() === 11){
+    for(let i = 0; i < this.rooms.length; i++){
+      this.rooms[i].getPathGPS(this.player.gx, this.player.gy);
+    }
+  }
+  if(getDebugMode() === 12){
+    /*for(let i = 0; i < this.rooms.length; i++){
+      this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
+    }*/
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
+    }
+  }
+  if(getDebugMode() === 13){
+    /*for(let i = 0; i < this.rooms.length; i++){
+      this.rooms[i].getPathTesouros(this.player.gx, this.player.gy);
+    }*/
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
+    }
+  }
+  if(getDebugMode() === 14){
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      //this.rooms[playerPresente].getPathPlayer(this.player.gx, this.player.gy);
+      this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
+    }
+  }
+  if(getDebugMode() === 15){
+    let playerPresente = this.ondeEstaOPlayer();
+    //console.log(playerPresente);
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
+      this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
+      this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
+    }
+  }
+  if(getDebugMode() === 16){
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
+      this.rooms[playerPresente].desenharGraficoRoom(ctx, this.player.x, this.player.y);
+    }
+  }
+
+  if(getDebugMode() === 17){
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
+      this.rooms[playerPresente].desenharGraficoTesouros(ctx, this.player.x, this.player.y);
+    }
+  }
+
+  if(getDebugMode() === 18){
+    let playerPresente = this.ondeEstaOPlayer();
+    if(playerPresente !== -1){
+      this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
+      this.rooms[playerPresente].desenharGraficoPlayer(ctx, this.player.x, this.player.y);
     }
   }
 };
@@ -781,11 +876,11 @@ Level.prototype.colisaoTeleportes = function(player){
   if(player.teclas.space){
     if(player.cooldownTeleporte < 0){
       if(auxRoom.teleporterInitial.colidiuCom2(player)){
-        auxRoom.teleporterInitial.teleportar(player);
+        auxRoom.teleporterInitial.teleportar(player, this);
         //this.hud.bussola.update();
       }
       else if(auxRoom.teleporterFinal.colidiuCom2(player)){
-        auxRoom.teleporterFinal.teleportar(player);
+        auxRoom.teleporterFinal.teleportar(player, this);
         //this.hud.bussola.update();
       }
       player.cooldownTeleporte = 1;
@@ -826,5 +921,37 @@ Level.prototype.colisaoTesouros = function(player){
   let auxRoom = this.rooms[player.room - 1];          // Checar somente a sala onde o player se encontra
   if(auxRoom.collisionTreasures(player)){      
     console.log("Colidiu com tesouros");
+    /*let salaInicial = this.rooms[this.teleporteInicioLevel.getCell().room - 1];
+    let indiceSala = salaInicial.room - 1;
+    auxRoom = this.rooms[indiceSala];
+    let celula = this.mapa.getCell(this.player.gy, this.player.gx);
+    this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 3);*/
   }
+}
+
+Level.prototype.iniciaRooms = function(){
+  for(let i = 0; i < this.rooms.length; i++){
+    this.rooms[i].init();
+    this.rooms[i].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
+    this.rooms[i].constroiRota();
+  }
+  for(let i = 0; i < this.rooms.length; i++){
+    this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
+    this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
+    this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
+  }
+  //this.rooms[10].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
+  //this.rooms[10].constroiRota();
+}
+
+Level.prototype.ondeEstaOPlayer = function(){ // Retorna o índice do room onde o player está, ou -1 caso não esteja em nenhum.
+  for (let i = 0; i < this.rooms.length; i++) {
+    for (let j = 0; j < this.rooms[i].blocks.length; j++) {
+        if(this.rooms[i].blocks[j].linha === this.player.gy && this.rooms[i].blocks[j].coluna === this.player.gx){
+            return i;
+        }
+    }
+  }
+
+  return -1;
 }

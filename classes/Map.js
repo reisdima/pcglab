@@ -1,8 +1,14 @@
-function Map(w, h, s) {
+import Cell from "./Cell.js";
+import {getMapArea, setMapArea} from "./MAPA_AREA.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
+import { getPlayer } from "./Player.js";
+
+export default function Map(w, h, s, assetsMng) {
   this.w = w;
   this.h = h;
   this.s = s;
   this.cell = [];
+  this.assetsMng = assetsMng;
   for (let l = 0; l < h; l++) {
     this.cell[l] = [];
     for (let c = 0; c < w; c++) {
@@ -28,8 +34,8 @@ Map.prototype.constructor = Map;
 
 Map.prototype.copyDates = function (matrix) {           // Copia a matriz de geração procedural que contém apenas o tipo da celula
   //this.cell = JSON.parse(JSON.stringify(matrix)); //Copia matriz
-  for (var l = 0; l < this.h; l++) {
-    for (var c = 0; c < this.w; c++) {
+  for (let l = 0; l < this.h; l++) {
+    for (let c = 0; c < this.w; c++) {
       this.cell[l][c].tipo = matrix[l][c];
     }
   }
@@ -218,21 +224,21 @@ Map.prototype.camadaDistCompostas = function(){
  ************************************************/
 
 
-Map.prototype.desenhar = function (ctx) {
+Map.prototype.desenhar = function (ctx, player) {
   ctx.lineWidth = 2;
-  for (var l = Math.max(0, player.gy - MAPA_AREA); l < Math.min(this.h, player.gy + MAPA_AREA); l++) {
-    for (var c = Math.max(0, player.gx - MAPA_AREA); c < Math.min(this.w, player.gx + MAPA_AREA); c++) {
+  for (let l = Math.max(0, player.gy - getMapArea()); l < Math.min(this.h, player.gy + getMapArea()); l++) {
+    for (let c = Math.max(0, player.gx - getMapArea()); c < Math.min(this.w, player.gx + getMapArea()); c++) {
       switch (this.cell[l][c].tipo) {
         case 0:   // Vazio     -- Chão
-          assetsMng.drawSize({ctx: ctx, key: "floor_sand", x: (c * this.s), 
+          this.assetsMng.drawSize({ctx: ctx, key: "floor_sand", x: (c * this.s), 
           y: (l * this.s), w: this.s, h: this.s});
           break;
         case 1:   // Bloqueado -- Muro
-          assetsMng.drawSize({ctx: ctx, key: "brick_gray", x: (c * this.s), 
+          this.assetsMng.drawSize({ctx: ctx, key: "brick_gray", x: (c * this.s), 
             y: (l * this.s), w: this.s, h: this.s});
           break;
         case 2:   // Caverna
-          assetsMng.drawClipSize({ctx: ctx, key: "rockBlock", sx: 0, sy: 0, w: 32, h: 32,
+          this.assetsMng.drawClipSize({ctx: ctx, key: "rockBlock", sx: 0, sy: 0, w: 32, h: 32,
             dx: (c * this.s), dy: (l * this.s), dw: this.s, dh: this.s});
           break;
         default:
@@ -240,7 +246,7 @@ Map.prototype.desenhar = function (ctx) {
           break;
       }
 
-      /*if (debugMode >= 5 || (debugMode <= 2 && debugMode > 0)) {//if (debugMode === 3) {
+      /*if (getDebugMode() >= 5 || (getDebugMode() <= 2 && getDebugMode() > 0)) {//if (getDebugMode() === 3) {
         this.desenharCell(ctx, l, c);         //Debug mode Grid
       }*/
     }
@@ -248,9 +254,10 @@ Map.prototype.desenhar = function (ctx) {
 }
 
 Map.prototype.desenharDebugMode = function(ctx){
-  if (debugMode >= 5 || (debugMode <= 2 && debugMode > 0)) {
-    for (var l = Math.max(0, player.gy - MAPA_AREA); l < Math.min(this.h, player.gy + MAPA_AREA); l++) {
-      for (var c = Math.max(0, player.gx - MAPA_AREA); c < Math.min(this.w, player.gx + MAPA_AREA); c++) {
+  const player = getPlayer();
+  if (getDebugMode() >= 5 || (getDebugMode() <= 2 && getDebugMode() > 0)) {
+    for (let l = Math.max(0, player.gy - getMapArea()); l < Math.min(this.h, player.gy + getMapArea()); l++) {
+      for (let c = Math.max(0, player.gx - getMapArea()); c < Math.min(this.w, player.gx + getMapArea()); c++) {
           this.desenharCell(ctx, l, c);         //Debug mode Grid
       }
     }
@@ -272,7 +279,7 @@ Map.prototype.desenharCell = function (ctx, l, c) {
     ctx.lineWidth = 2;
     ctx.font = "10px Arial Black";
 
-    switch(debugMode){
+    switch(getDebugMode()){
       case 1:                   // Tipos
         this.escreveTexto(ctx, this.cell[l][c].tipo + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
         break;
@@ -287,7 +294,7 @@ Map.prototype.desenharCell = function (ctx, l, c) {
     ctx.lineWidth = 2;
     ctx.font = "10px Arial Black";
 
-    switch(debugMode){
+    switch(getDebugMode()){
       case 1:                   // Tipos
         this.escreveTexto(ctx, this.cell[l][c].tipo + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
         break;
@@ -339,9 +346,11 @@ Map.prototype.desenharCell = function (ctx, l, c) {
 
   }
   
-  ctx.strokeStyle = "white";
-  ctx.lineWidth = 1;
-  ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
+  if(getDebugMode() < 16){
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
+  }
 };
 
 Map.prototype.escreveTexto = function (ctx, texto, x, y) {

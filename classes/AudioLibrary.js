@@ -5,7 +5,7 @@ AudioLibrary = function(){
   this.loaded = 0;
   this.size = 0;
 
-  for (var i = 0; i < this.MAX_CANAIS; i++) {
+  for (let i = 0; i < this.MAX_CANAIS; i++) {
     this.canais[i] = {
       audio: new Audio(),
       fim: -1
@@ -26,9 +26,9 @@ AudioLibrary.prototype.load = function (key, url) {
 };
 
 AudioLibrary.prototype.play = function (key) {
-  var agora = new Date();
-  for (var i = 0; i < this.canais.length; i++) {
-    var canal = this.canais[i];
+  const agora = new Date();
+  for (let i = 0; i < this.canais.length; i++) {
+    const canal = this.canais[i];
     if(canal.fim < agora.getTime()){
       canal.audio.src = this.audios[key].src;
       canal.fim = agora.getTime()+this.audios[key].duration*1000;
@@ -40,8 +40,8 @@ AudioLibrary.prototype.play = function (key) {
 };
 
 AudioLibrary.prototype.pause = function (key) {
-  for (var i = 0; i < this.canais.length; i++) {
-    var canal = this.canais[i];
+  for (let i = 0; i < this.canais.length; i++) {
+    const canal = this.canais[i];
     if(canal.audio.src == this.audios[key].src){
       canal.audio.pause();
       //console.log("Pausou: "+ canal.audio.currentTime);
@@ -51,8 +51,8 @@ AudioLibrary.prototype.pause = function (key) {
 };
 
 AudioLibrary.prototype.resume = function (key) {
-  for (var i = 0; i < this.canais.length; i++) {
-    var canal = this.canais[i];
+  for (let i = 0; i < this.canais.length; i++) {
+    const canal = this.canais[i];
     if(canal.audio.src == this.audios[key].src){
       canal.audio.play();
       //console.log("Voltou: "+ canal.audio.currentTime);
@@ -62,8 +62,8 @@ AudioLibrary.prototype.resume = function (key) {
 };
 
 AudioLibrary.prototype.isPaused = function (key) {         //retorna se o audio está pausado
-  for (var i = 0; i < this.canais.length; i++) {
-    var canal = this.canais[i];
+  for (let i = 0; i < this.canais.length; i++) {
+    const canal = this.canais[i];
     if(canal.audio.src == this.audios[key].src){
       if(canal.audio.paused){
         return true;
@@ -75,7 +75,7 @@ AudioLibrary.prototype.isPaused = function (key) {         //retorna se o audio 
 };
 
 AudioLibrary.prototype.stop = function (key) {            //parar de executar o áudio removendo do canal
-  for (var i = 0; i < this.canais.length; i++) {
+  for (let i = 0; i < this.canais.length; i++) {
     if(this.canais[i].audio.src == this.audios[key].src){
       this.canais[i].audio.pause();
       this.canais[i] = {
@@ -89,8 +89,8 @@ AudioLibrary.prototype.stop = function (key) {            //parar de executar o 
 };
 
 AudioLibrary.prototype.isEnded = function (key) {       //Se o audio terminou de ser executado
-  for (var i = 0; i < this.canais.length; i++) {
-    var canal = this.canais[i];
+  for (let i = 0; i < this.canais.length; i++) {
+    const canal = this.canais[i];
     if(canal.audio.src == this.audios[key].src){
       if(canal.audio.ended){
         return true;
@@ -113,7 +113,7 @@ AudioLibrary.prototype.duration = function (key) {        //tempo de duração d
 };
 
 AudioLibrary.prototype.currentTime = function (key) {      //tempo até onde o audio foi executado
-  for (var i = 0; i < this.canais.length; i++) {
+  for (let i = 0; i < this.canais.length; i++) {
     if(this.canais[i].audio.src == this.audios[key].src){
       return this.canais[i].audio.currentTime;
     }

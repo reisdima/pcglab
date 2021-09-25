@@ -6,24 +6,6 @@
   <link rel='icon' type='image/png' sizes='32x32' href='assets/images/favicon-32x32.png'>
   <link rel='icon' type='image/png' sizes='64x64' href='assets/images/favicon-64x64.png'>
   <title>Maze Runner - Aplicação de técnicas na geração procedural de conteúdo</title>
-  <script src="classes/Map.js"></script>
-  <script src="classes/Room.js"></script>
-  <script src="classes/Level.js"></script>
-  <script src="classes/Sprite.js"></script>
-  <script src="classes/Player.js"></script>
-  <script src="classes/Teleporter.js"></script>
-  <script src="classes/Treasure.js"></script>
-  <script src="classes/Enemy.js"></script>
-  <script src="classes/FireZone.js"></script>
-  <script src="classes/Ordenacao.js"></script>
-  <script src="classes/Cell.js"></script>
-  <!--
-    <script src="classes/ImageLibrary.js"></script>
-    <script src="classes/AudioLibrary.js"></script>
-  -->
-  <script src="classes/AssetsManager.js"></script>
-  <script src="classes/CellularAutomata.js"></script>
-  <script src="classes/SeedGenerator.js"></script>
   <link rel="stylesheet" href="css/default.css">
 </head>
 
@@ -32,8 +14,25 @@
     Seu browser não suporta canvas!
   </canvas>
 
-  <script>
-    var tela = document.getElementById("canvas");
+  <script type="module">
+    
+    import AssetsManager from "./classes/AssetsManager.js";
+    import SeedGenerator from "./classes/SeedGenerator.js";
+    import Sprite from "./classes/Sprite.js";
+    import Player, {setPlayer, getPlayer} from "./classes/Player.js";
+    import Level from "./classes/Level.js";
+    import Room from "./classes/Room.js";
+    import Map from "./classes/Map.js";
+    import Cell from "./classes/Cell.js";
+    import CellularAutomata from "./classes/CellularAutomata.js";
+    import assetsMng from "./classes/AssetsMng.js";
+    import {setMapArea, getMapArea} from "./classes/MAPA_AREA.js";
+    import {setDebugMode, getDebugMode} from "./classes/DebugMode.js";
+    import {setHud, getHud} from "./classes/Hud.js";
+    import {converteTelaCheia, escreveTexto} from "./classes/Utils.js";
+
+
+    const tela = document.getElementById("canvas");
     
     // Ocupa a janela toda
     tela.width  = window.innerWidth;
@@ -42,13 +41,15 @@
     tela.heightOld = 350;
 
     tela.style.border = '2px solid #000';                       //Colocando borda no canvas
-    var ctx = tela.getContext("2d");
-    var fullscreen = false;
-    var anterior = dt = 0;
-    var estado = 1;
+    const ctx = tela.getContext("2d");
+    let fullscreen = false;
+    let anterior = 0;
+    let dt = 0;
+    let estado = 1;
 
     // Controle das imagens e sons presentes no jogo
-    var assetsMng = new AssetsManager();
+    //var assetsMng = new AssetsManager();
+    //console.log(assetsMng);
 
     // Carregamento das imagens do jogo
     assetsMng.loadImage("brick_gray", "assets/images/brick_gray.png");
@@ -67,7 +68,7 @@
     assetsMng.loadAudio("teleporte", "assets/audios/Teleport.wav");
 
     // SeedGenerator ===> Utilizado para retornar ao mesmo mapa com apenas o código da seed
-    var seedValueURL = location.search;
+    let seedValueURL = location.search;
 
     if(seedValueURL.length != 0){                   //SEED PASSADA NA URL
       let aux = "?seed=";
@@ -77,22 +78,22 @@
     else{                                           //SEED ALEATÓRIA
       let maxValue = 5000000;
       let minValue = 500000;
-      seedValueURL = (Math.floor(Math.random() * (maxValue - minValue)) + minValue);
+      seedValueURL = 4248372;//(Math.floor(Math.random() * (maxValue - minValue)) + minValue);
     }
-    var seedGen = new SeedGenerator({seed_1: seedValueURL , seed_2_string: "teste"});
+    const seedGen = new SeedGenerator({seed_1: seedValueURL , seed_2_string: "teste"});
 
     // Proporções do mapa
     
-    var widthMap = 120;   
-    var heightMap = 120;  
-    var sizeMap = 32;     
-    var MAPA_AREA = 14;  //20
-    var escala = 1.8;
-    var K = 1;
-    var debugModeBegin = 0;
-    var debugModeEnd = 10;
-    var debugMode = debugModeBegin;    // 0
-    var player = new Player({s: 27, w: 27, h: 11,
+    const widthMap = 120;   
+    const heightMap = 120;  
+    const sizeMap = 32;     
+    //setMapArea(14);  //20
+    let escala = 1.8;
+    const K = 1;
+    const debugModeBegin = 0;
+    const debugModeEnd = 18;
+    setDebugMode(debugModeBegin);    // 0
+    const player = new Player({s: 27, w: 27, h: 11,
       hitBox: {
         x: 0,
         y: 0,
@@ -102,10 +103,14 @@
         hDefault: 11
       }
     });  
+    setPlayer(player);
 
-    var levelAtual = new Level(widthMap, heightMap, sizeMap);
-    var levels = [];
-    levels.push(new Level(widthMap, heightMap, sizeMap));
+    const hud = getHud(); 
+    hud.init(tela);
+
+    const levelAtual = new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng});
+    let levels = [];
+    levels.push(new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng}));
 
     /**
       METODO DE SUBMATRIZES
@@ -132,9 +137,9 @@
     /**
       METODO DA MATRIZ TOTAL
     */
-    var geraFase = new CellularAutomata({
+    const geraFase = new CellularAutomata({
       HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5, 
-      totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1
+      totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1, seedGen
     });   //new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
     // 0 => floor
     // 2 => rock
@@ -150,19 +155,19 @@
     levels[0].montarLevel({
       dt: dt,
       geraFase: geraFase,
-      player: player,
+      player: getPlayer(),
     });
     levels[0].setTempo(20);                // 20 segundos
 
-    var tempoGameOver = 2;
+    let tempoGameOver = 2;
 
     levelAtual.clonarLevel(levels[0]);
-    player.map = levelAtual.mapa;
+    getPlayer().map = levelAtual.mapa;
 
-    var teasuresCollected = 0;    
+    let teasuresCollected = 0;    
 
     // Tempo
-    var barraTempo = {
+    const barraTempo = {
       externa: new Sprite(),
       interna: new Sprite(),
       desenhar: function(ctx){
@@ -188,10 +193,10 @@
     barraTempo.init();
 
     // Energia === Player
-    var barraEnergia = {
+    const barraEnergia = {
       sprite: new Sprite(),
       desenhar: function(ctx){
-        this.sprite.desenharBarraEnergiaHUD(ctx, player);
+        this.sprite.desenharBarraEnergiaHUD(ctx, getPlayer());
       },
       init: function(){
         this.sprite.w = 127;
@@ -205,284 +210,11 @@
 
     barraEnergia.init();
 
-    // HUD
-    var hud = {
-      tempo: { x: 0, y: 0, text: "Tempo: "},
-      energia: { x: 0, y: 0, text: "Energia: "},
-      vidas: { x: 0, y: 0, text: "Vidas: "},
-      tesouros: { x: 0, y: 0, text: "Tesouros: "},
-      bussola: { 
-        centerX: 0, centerY: 0, raio: 40, color: "rgba(10, 10, 10, 0.6)", stroke: "rgba(105, 105, 105, 0.4)",
-        sAngle: 0, eAngle: Math.PI * 2, counterclockwise: false,
-        salaPlayer: null, tesouros: null, inimigos: null, teleporteInitial: null, teleporteFinal: null,
-        mapMode: 0, mapModeText: [],
-        desenhar: function(ctx){
-          ctx.linewidth = 1;
-          ctx.fillStyle = this.color;     //"rgba(10, 10, 10, 0.4)";
-          ctx.strokeStyle = this.stroke;  //"rgba(10, 10, 10, 0.4)";
-          //  Circulo de fora
-          ctx.save();
-          ctx.beginPath();
-          ctx.arc(this.centerX, this.centerY, this.raio, this.sAngle, this.eAngle, 
-          this.counterclockwise);
-          ctx.closePath();
-          ctx.fill();
-          ctx.stroke();
-          ctx.restore();
-
-          switch(this.mapMode){
-            case 0:
-              { // Todos
-                for(let i = 0; i < this.tesouros.length; i++){
-                  let vetorUnitario = {
-                    x: this.tesouros[i].x - player.x,
-                    y: this.tesouros[i].y - player.y,
-                    modulo: 0
-                  };
-                  vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
-                  vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-                  vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
-                  
-                  ctx.save();
-                  ctx.strokeStyle = "yellow";                              // linha de acabamento preta pra facilitar a visualização
-                  ctx.lineWidth = 1;
-                  ctx.beginPath();
-                  ctx.moveTo(this.centerX, this.centerY);
-                  ctx.lineTo(this.centerX + vetorUnitario.x * (this.raio/2), this.centerY + vetorUnitario.y * (this.raio/2));
-                  ctx.closePath();
-                  ctx.stroke()
-                  ctx.restore();
-                }
-
-                for(let i = 0; i < this.inimigos.length; i++){
-                  // Ligação entre os teleportes
-                  let vetorUnitario = {
-                    x: this.inimigos[i].x - player.x,
-                    y: this.inimigos[i].y - player.y,
-                    modulo: 0
-                  };
-                  vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
-                  vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-                  vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
-                  
-                  ctx.save();
-                  ctx.strokeStyle = "red";                              // linha de acabamento preta pra facilitar a visualização
-                  ctx.lineWidth = 1;
-                  ctx.beginPath();
-                  ctx.moveTo(this.centerX, this.centerY);
-                  ctx.lineTo(this.centerX + vetorUnitario.x * (this.raio/2), this.centerY + vetorUnitario.y * (this.raio/2));
-                  ctx.closePath();
-                  ctx.stroke()
-                  ctx.restore();
-                }
-
-                let vetorUnitario = {
-                  x: this.teleporteInitial.x - player.x,
-                  y: this.teleporteInitial.y - player.y,
-                  modulo: 0
-                };
-                vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
-                vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-                vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
-                
-                ctx.save();
-                ctx.strokeStyle = "green";                              // linha de acabamento preta pra facilitar a visualização
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(this.centerX, this.centerY);
-                ctx.lineTo(this.centerX + vetorUnitario.x * (this.raio/2), this.centerY + vetorUnitario.y * (this.raio/2));
-                ctx.closePath();
-                ctx.stroke()
-                ctx.restore();
-
-                vetorUnitario = {
-                  x: this.teleporteFinal.x - player.x,
-                  y: this.teleporteFinal.y - player.y,
-                  modulo: 0
-                };
-                vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
-                vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-                vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
-                
-                ctx.save();
-                ctx.strokeStyle = "green";                              // linha de acabamento preta pra facilitar a visualização
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(this.centerX, this.centerY);
-                ctx.lineTo(this.centerX + vetorUnitario.x * (this.raio/2), this.centerY + vetorUnitario.y * (this.raio/2));
-                ctx.closePath();
-                ctx.stroke()
-                ctx.restore();
-              }
-              break;
-            case 1:
-              {   //Teleportes
-                let vetorUnitario = {
-                  x: this.teleporteInitial.x - player.x,
-                  y: this.teleporteInitial.y - player.y,
-                  modulo: 0
-                };
-                vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
-                vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-                vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
-                
-                ctx.save();
-                ctx.strokeStyle = "green";                              // linha de acabamento preta pra facilitar a visualização
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(this.centerX, this.centerY);
-                ctx.lineTo(this.centerX + vetorUnitario.x * (this.raio/2), this.centerY + vetorUnitario.y * (this.raio/2));
-                ctx.closePath();
-                ctx.stroke()
-                ctx.restore();
-
-                vetorUnitario = {
-                  x: this.teleporteFinal.x - player.x,
-                  y: this.teleporteFinal.y - player.y,
-                  modulo: 0
-                };
-                vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
-                vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-                vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
-                
-                ctx.save();
-                ctx.strokeStyle = "green";                              // linha de acabamento preta pra facilitar a visualização
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(this.centerX, this.centerY);
-                ctx.lineTo(this.centerX + vetorUnitario.x * (this.raio/2), this.centerY + vetorUnitario.y * (this.raio/2));
-                ctx.closePath();
-                ctx.stroke()
-                ctx.restore();
-              }
-              break;
-            case 2:
-              {  // Inimigos
-                for(let i = 0; i < this.inimigos.length; i++){
-                  // Ligação entre os teleportes
-                  let vetorUnitario = {
-                    x: this.inimigos[i].x - player.x,
-                    y: this.inimigos[i].y - player.y,
-                    modulo: 0
-                  };
-                  vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
-                  vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-                  vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
-                  
-                  ctx.save();
-                  ctx.strokeStyle = "red";                              // linha de acabamento preta pra facilitar a visualização
-                  ctx.lineWidth = 1;
-                  ctx.beginPath();
-                  ctx.moveTo(this.centerX, this.centerY);
-                  ctx.lineTo(this.centerX + vetorUnitario.x * (this.raio/2), this.centerY + vetorUnitario.y * (this.raio/2));
-                  ctx.closePath();
-                  ctx.stroke()
-                  ctx.restore();
-                }
-              }
-              break;
-            case 3:
-              {
-                for(let i = 0; i < this.tesouros.length; i++){
-                  let vetorUnitario = {
-                    x: this.tesouros[i].x - player.x,
-                    y: this.tesouros[i].y - player.y,
-                    modulo: 0
-                  };
-                  vetorUnitario.modulo = Math.sqrt(vetorUnitario.x * vetorUnitario.x + vetorUnitario.y * vetorUnitario.y);
-                  vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-                  vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
-                  
-                  ctx.save();
-                  ctx.strokeStyle = "yellow";                              // linha de acabamento preta pra facilitar a visualização
-                  ctx.lineWidth = 1;
-                  ctx.beginPath();
-                  ctx.moveTo(this.centerX, this.centerY);
-                  ctx.lineTo(this.centerX + vetorUnitario.x * (this.raio/2), this.centerY + vetorUnitario.y * (this.raio/2));
-                  ctx.closePath();
-                  ctx.stroke()
-                  ctx.restore();
-                }
-              }
-              break;
-          }
-
-          // centro
-          ctx.save();
-          ctx.beginPath();
-          ctx.lineWidth = 1;
-          ctx.fillStyle = "yellow";
-          ctx.arc(this.centerX, this.centerY, 2, this.sAngle, this.eAngle, 
-          this.counterclockwise);
-          ctx.closePath();
-          ctx.fill();
-          ctx.restore();
-
-          // Titulo
-          ctx.fillStyle = wordsColor;
-          ctx.textAlign = alignMainMenu;
-          ctx.lineWidth = 2;
-          ctx.strokeStyle = "black";
-          escreveTexto(ctx, (this.mapMode + 1) + " - " + this.mapModeText[this.mapMode], this.centerX, 
-          this.centerY + this.raio + (this.raio / 2));
-        },
-
-        update: function(){
-          this.salaPlayer = levelAtual.getPlayerRoom();
-          this.tesouros = this.salaPlayer.treasures;
-          this.inimigos = this.salaPlayer.enemies;
-          this.teleporteInitial = this.salaPlayer.teleporterInitial;
-          this.teleporteFinal = this.salaPlayer.teleporterFinal;
-        },
-
-        init: function(){
-          this.mapModeText.push("Todos");  
-          this.mapModeText.push("Teleportes");
-          this.mapModeText.push("Inimigos");  
-          this.mapModeText.push("Tesouros");  
-        }
-      },
-
-      level:{ x: 0, y: 0, text: "Level: "},
-      debugText: [],
-      init: function(){
-        this.debugText.push("Mode 1 - Tipo da celula");      
-        this.debugText.push("Mode 2 - Room da celula");      
-        this.debugText.push("Mode 3 - Ligação dos Teleportes");// Centro do personagem e celula marcada
-        this.debugText.push("Mode 4 - Caixa de Colisão");      // Box collision
-        this.debugText.push("Mode 5 - Distancia - Teleportes");// Dados das celulas -- DistTeleportes
-        this.debugText.push("Mode 6 - Distancia - Firezones"); // Dados das celulas -- DistFirezones
-        this.debugText.push("Mode 7 - Distancia - Inimigos");  // Dados das celulas -- DistInimigos
-        this.debugText.push("Mode 8 - Distancia - Tesouros");  // Dados das celulas -- DistTesouros
-        this.debugText.push("Mode 9 - Dist - Inimigos + Teleportes");  // Dados das celulas -- DistTesouros
-        this.debugText.push("Mode 10 - Dist - Inimigos + Telep.. + Fire..");  // Dados das celulas -- DistInimigosTeleporte
-        this.updateElementos();
-        this.bussola.init();
-      },
-      updateElementos: function(){
-        this.tempo.x = converteTelaCheia(40, tela.widthOld, tela.width);
-        this.tempo.y = converteTelaCheia(20, tela.heightOld, tela.height);
-        this.energia.x = converteTelaCheia(200, tela.widthOld, tela.width);
-        this.energia.y = converteTelaCheia(20, tela.heightOld, tela.height);
-        this.vidas.x = converteTelaCheia(350, tela.widthOld, tela.width);
-        this.vidas.y = converteTelaCheia(20, tela.heightOld, tela.height);
-        this.tesouros.x = converteTelaCheia(450, tela.widthOld, tela.width);
-        this.tesouros.y = converteTelaCheia(20, tela.heightOld, tela.height);
-        this.level.x = converteTelaCheia(545, tela.widthOld, tela.width);
-        this.level.y = converteTelaCheia(20, tela.heightOld, tela.height);
-        this.bussola.centerX = converteTelaCheia(545, tela.widthOld, tela.width);
-        this.bussola.centerY = converteTelaCheia(250, tela.heightOld, tela.height);
-        this.bussola.raio = converteTelaCheia(20, tela.heightOld, tela.height);
-      }
-    }
-    
-    hud.init();
-
     // Main Menu campos
-    var fontMainMenu = "30px Arial Black";
-    var wordsColor = "white";
-    var alignMainMenu = "center";
-    var stateMainMenu = 0;
+    const fontMainMenu = "30px Arial Black";
+    const wordsColor = "white";
+    const alignMainMenu = "center";
+    let stateMainMenu = 0;
 
     /******************************************************************************
     *   ---------------------------- DEBUG MODE ------------------------------    *
@@ -531,11 +263,11 @@
             controleTempo();
             ctx.save();
             ctx.scale(escala, escala);
-            ctx.translate(-player.x + tela.width/4 , - player.y + tela.height/4);            
+            ctx.translate(-getPlayer().x + tela.width/4 , - getPlayer().y + tela.height/4);            
             levelAtual.desenhar(ctx);
             ctx.restore();
             desenharHUD(ctx);
-            if(!player.vivo){
+            if(!getPlayer().vivo){
               estado = 5;
             }
             break;
@@ -597,15 +329,15 @@
             barraTempo.interna.w = 127;
             /*treasuresCount = 0;
             teasuresCollected = 0;*/
-            player.levelNumber = player.levelNumber + 1;
+            getPlayer().levelNumber = getPlayer().levelNumber + 1;
             loadLevel(0);       // Load new level
             break;
           case 5:     // Recarregar fase
             barraTempo.interna.w = 127;
             /*treasuresCount = 0;
             teasuresCollected = 0;*/
-            player.vidas--;
-            if(player.vidas < 1){       // Game over
+            getPlayer().vidas--;
+            if(getPlayer().vidas < 1){       // Game over
               estado = 2;
               tempoGameOver = 2;
             }
@@ -622,8 +354,8 @@
 
     // A cada 1 segundo ele executa uma diminuição na barra de tempo
     function controleTempo(){
-      if(debugMode == 0){
-        //if(!player.imune){
+      if(getDebugMode() == 0){
+        //if(!getPlayer().imune){
           barraTempo.interna.w = barraTempo.interna.w - levelAtual.taxaDiminuicaoTempo;  
           levelAtual.updateTempo();
           if(barraTempo.interna.w <= 0){
@@ -647,14 +379,14 @@
       ctx.strokeStyle = "black";
       escreveTexto(ctx, hud.tempo.text, hud.tempo.x, hud.tempo.y);
       escreveTexto(ctx, hud.energia.text, hud.energia.x, hud.energia.y);
-      escreveTexto(ctx, hud.vidas.text + player.vidas, hud.vidas.x, hud.vidas.y);
-      escreveTexto(ctx, hud.tesouros.text + player.tesourosColetados, hud.tesouros.x, hud.tesouros.y);
-      escreveTexto(ctx, hud.level.text + player.levelNumber, hud.level.x, hud.level.y);
+      escreveTexto(ctx, hud.vidas.text + getPlayer().vidas, hud.vidas.x, hud.vidas.y);
+      escreveTexto(ctx, hud.tesouros.text + getPlayer().tesourosColetados, hud.tesouros.x, hud.tesouros.y);
+      escreveTexto(ctx, hud.level.text + getPlayer().levelNumber, hud.level.x, hud.level.y);
       
       
 
-      if(debugMode >= 1){       
-        let typeMode = hud.debugText[debugMode - 1];
+      if(getDebugMode() >= 1){       
+        let typeMode = hud.debugText[getDebugMode() - 1];
 
         // Desenha menu debaixo
         ctx.font = "13px Arial Black"; 
@@ -672,33 +404,23 @@
         escreveTexto(ctx, "Teleporte Inicial Level: [" + (levelAtual.teleporteInicioLevel.gy) + "][" + (levelAtual.teleporteInicioLevel.gx) + "]", converteTelaCheia(tela.widthOld/2, tela.widthOld, tela.width), converteTelaCheia(321, tela.heightOld, tela.height));
         escreveTexto(ctx, "Teleporte Final Level: [" + (levelAtual.teleporteFinalLevel.gy) + "][" + (levelAtual.teleporteFinalLevel.gx) + "]", converteTelaCheia(tela.widthOld/2, tela.widthOld, tela.width), converteTelaCheia(343, tela.heightOld, tela.height));
         escreveTexto(ctx, "Escala mapa: " + escala.toFixed(4), converteTelaCheia(500, tela.widthOld, tela.width), converteTelaCheia(321, tela.heightOld, tela.height));
-        escreveTexto(ctx, "Grade Player: [" + (player.gy) + "][" + (player.gx) + "]", converteTelaCheia(500, tela.widthOld, tela.width), converteTelaCheia(332, tela.heightOld, tela.height));
+        escreveTexto(ctx, "Grade Player: [" + (getPlayer().gy) + "][" + (getPlayer().gx) + "]", converteTelaCheia(500, tela.widthOld, tela.width), converteTelaCheia(332, tela.heightOld, tela.height));
         escreveTexto(ctx, "Seed: " + seedValueURL, converteTelaCheia(500, tela.widthOld, tela.width), converteTelaCheia(343, tela.heightOld, tela.height));
       }
     }
-    
-    function escreveTexto (ctx, texto, x, y) {
-      ctx.strokeText(texto, x, y);
-      ctx.fillText(texto, x, y);
-    }
 
-    // Conversão de escalas para o canvas ocupando a tela toda
-    function converteTelaCheia(valorAntigo, telaAntiga, telaNova){
-      let aux = Math.round(((valorAntigo * 100)/telaAntiga) * 100)/ 100;  // Arrendonda a porcentagem para duas casas decimais
-      return Math.floor(parseInt((aux / 100) * telaNova));
-    }
 
     // Atualiza o formato do convas ao mudar o formato da janela ou ser redimensionada
-    function onResize(){
+    function onResize(tela){
       tela.width = window.innerWidth;
       tela.height = window.innerHeight;
-      updateTamanhoElementos();
+      updateTamanhoElementos(tela);
     }
 
     window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
 
     // Atualiza o tamanho dos elementos quando a interface é redimensionada
-    function updateTamanhoElementos(){
+    function updateTamanhoElementos(tela){
       // Update barra de tempo
       barraTempo.externa.x = converteTelaCheia(67, tela.widthOld, tela.width);
       barraTempo.externa.y = converteTelaCheia(13.5, tela.heightOld, tela.height);
@@ -710,17 +432,17 @@
       barraEnergia.sprite.y = converteTelaCheia(13.5, tela.heightOld, tela.height);
 
       // HUD
-      hud.updateElementos();
+      hud.updateElementos(tela);
     }
 
-    updateTamanhoElementos();
+    updateTamanhoElementos(tela);
 
     function limparDados() {
-      levelAtual = new Level(widthMap, heightMap, sizeMap);
+      levelAtual = new Level(widthMap, heightMap, sizeMap, {hud, seedGen, assetsMng});
       levelAtual.clonarLevel(levels[0]);
-      levelAtual.posicionarPlayer(player);
+      levelAtual.posicionarPlayer(getPlayer());
       levelAtual.setTaxaDiminuicaoTempo(dt, barraTempo.interna);        // Atualiza o decaimento da barra
-      player.restart();
+      getPlayer().restart();
       hud.bussola.update();
     }
 
@@ -732,26 +454,26 @@
     function loadLevel(option) {
       switch(option){
         case 0:   //Load New Level
-          if (player.levelNumber > levels.length) {
+          if (getPlayer().levelNumber > levels.length) {
             limparDados();
             estado = 1;
           }
           else {
-            levelAtual.clonarLevel(levels[player.levelNumber - 1]);
+            levelAtual.clonarLevel(levels[getPlayer().levelNumber - 1]);
             levelAtual.posicionarPlayer(player);
             levelAtual.setTaxaDiminuicaoTempo(dt, barraTempo.interna);        // Atualiza o decaimento da barra
-            player.restart();
-            hud.bussola.update();
-            player.vidas = 3;
+            getPlayer().restart();
+            hud.bussola.update(levelAtual);
+            getPlayer().vidas = 3;
             estado = 0;
           }
           break;
         case 1:   //Reload
-          levelAtual.clonarLevel(levels[player.levelNumber - 1]);
-          levelAtual.posicionarPlayer(player);
+          levelAtual.clonarLevel(levels[getPlayer().levelNumber - 1]);
+          levelAtual.posicionarPlayer(getPlayer());
           levelAtual.setTaxaDiminuicaoTempo(dt, barraTempo.interna);        // Atualiza o decaimento da barra
-          player.restart();
-          hud.bussola.update();
+          getPlayer().restart();
+          hud.bussola.update(levelAtual);
           estado = 0;
           break;
       }
@@ -804,25 +526,25 @@
           }
           break;
         case 37:       // Left Arrow
-          player.teclas.left = true;
+          getPlayer().setTeclas("left", true);
           break;
         case 39:      // Right Arrow
-          player.teclas.right = true;
+          getPlayer().setTeclas("right", true);
           break;
         case 38:            // Up Arrow
-          player.teclas.up = true;
+          getPlayer().setTeclas("up", true);
           break;
         case 40:            // Down Arrow
-          player.teclas.down = true;
+          getPlayer().setTeclas("down", true);
           break;
         case 32:  //Espaco  -- Ativa teleporte
-          player.teclas.space = true;          
+          getPlayer().setTeclas("space", true);          
           break;
         case 17:            // Left CTRL -- Ataque
-          player.teclas.ctrl = true;
+          getPlayer().setTeclas("ctrl", true);
           break;
         case 16:            // Left SHIFT -- Correr
-          player.teclas.shift = true;
+          getPlayer().setTeclas("shift", true);
           break;
         case 77:            // M
           hud.bussola.mapMode = hud.bussola.mapMode + 1;
@@ -840,26 +562,34 @@
          *  Debug Mode
          */
         case 80:      //Pressionar a letra P
-          debugMode = debugMode + 1;
-          if(debugMode > debugModeEnd){
-            debugMode = debugModeBegin;  //Padrão do jogo
+          setDebugMode(getDebugMode() + 1);
+          if(getDebugMode() > debugModeEnd){
+            setDebugMode(debugModeBegin);  //Padrão do jogo
             escala = 1.8;
-            MAPA_AREA = 14;
+            setMapArea(14);
+          }
+          break;
+        case 79:  // Pressionar tecla O - Voltar no menu do Debug
+          setDebugMode(getDebugMode() - 1);
+          if(getDebugMode() < debugModeBegin){
+            setDebugMode(debugModeBegin);  //Padrão do jogo
+            escala = 1.8;
+            setMapArea(14);
           }
           break;
         case 187:
         case 107:      //+
-          if(debugMode >= 1){
+          if(getDebugMode() >= 1){
             escala = escala + 0.025;
             if(escala >= 0.85)
-              MAPA_AREA = 20;
+              setMapArea(20);
             else{
               if(escala > 0.3){
-                MAPA_AREA = 100;
+                setMapArea(100);
               }
               else{
                 if(escala >=  0.0){
-                  MAPA_AREA = 160;
+                  setMapArea(160);
                 }
               }
             }
@@ -867,17 +597,17 @@
           break;
         case 189:
         case 109:      //-
-          if(debugMode >= 1){
+          if(getDebugMode() >= 1){
             escala = escala - 0.025;
             if(escala >= 0.85)
-              MAPA_AREA = 20;
+              setMapArea(20);
             else{
               if(escala > 0.3){
-                MAPA_AREA = 80;
+                setMapArea(80);
               }
               else{
                 if(escala >=  0.0){
-                  MAPA_AREA = 160;
+                  setMapArea(160);
                 }
               }
             }
@@ -912,6 +642,12 @@
             if (estado != 2) {
               if (stateMainMenu == 0) {
                 loadLevel(0);               //Carregamento de level
+                /*for (let i = 0; i < levels.length; i++) {
+                  if(!levels[i].roomIniciado){
+                    levels[i].iniciaRooms();
+                    levels[i].roomIniciado = true;
+                  }
+                }*/
                 estado = 0;
               }
               else {
@@ -944,28 +680,28 @@
      */
     addEventListener("keyup", function (e) {
       e.preventDefault();                         //Evento padrao do navegador
-      if (player != null) {
+      if (getPlayer() != null) {
         switch (e.keyCode) {
           case 37:
-            player.teclas.left = false;
+            getPlayer().setTeclas("left", false);
             break;
           case 39:
-            player.teclas.right = false;
+            getPlayer().setTeclas("right", false);
             break;
           case 38:
-            player.teclas.up = false;
+            getPlayer().setTeclas("up", false);
             break;
           case 40:
-            player.teclas.down = false;
+            getPlayer().setTeclas("down", false);
             break;
           case 17:  //Left CTRL
-            player.teclas.ctrl = false;
+            getPlayer().setTeclas("ctrl", false);
             break
           case 32:  //Espaco  -- Ativa teleporte
-            player.teclas.space = false;          
+            getPlayer().setTeclas("space", false);          
             break;
           case 16: //Left SHIFT -- Correr
-            player.teclas.shift = false;
+            getPlayer().setTeclas("shift", false);
             break;
           default:
             break;

@@ -1,4 +1,10 @@
-function FireZone() {
+import Sprite from "./Sprite.js";
+import seedGen from "./SeedGen.js";
+import assetsMng from "./AssetsMng.js";
+import {setDebugMode, getDebugMode} from "./DebugMode.js";
+
+
+export default function FireZone() {
     /**
      * Estabelece a relação de Herança entre Player e Sprite:
      *  -> Sprite é pai e player é filho
@@ -71,11 +77,11 @@ FireZone.prototype.desenhar = function (ctx) {
         dy: -12
     });
     ctx.restore();
-    if(debugMode === 3){
+    if(getDebugMode() === 3){
         //this.desenharCell(ctx);         //Debug mode Grid
         this.desenharCentro(ctx);
     }
-    else if(debugMode === 4){
+    else if(getDebugMode() === 4){
         //this.desenharCell(ctx);         //Debug mode Grid
         this.desenharCaixaColisao(ctx);
         this.desenharCentro(ctx);
