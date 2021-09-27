@@ -171,7 +171,7 @@ CellularAutomata.prototype.filterRooms = function(sizeRoomsMinimal = 10){
 }*/
 
 CellularAutomata.prototype.getRandomInt = function(min, max){
-    return this.seedGen.getRandomIntMethod_1(min, max);    
+    return this.seedGen.nextRandInt(min, max);    
 }
 
 /*CellularAutomata.prototype.setTeleporters = function(){
@@ -514,7 +514,7 @@ CellularAutomata.prototype.scenarioRandomWall = function (){
     }
     let rockInMap = (this.r * this.HS * this.WS);
     for(let i = 0; i < rockInMap; i++){
-      let matrixIndexRandom = Math.floor(this.seedGen.getRandomMethod_1() * matrix.length);//Math.random() * matrix.length);
+      let matrixIndexRandom = this.seedGen.nextRandInt(0, matrix.length);
       this.map[matrix[matrixIndexRandom][0]][matrix[matrixIndexRandom][1]] = this.rockIndex;
       this.map2[matrix[matrixIndexRandom][0]][matrix[matrixIndexRandom][1]] = this.rockIndex;
       matrix.splice(matrixIndexRandom, 1);
