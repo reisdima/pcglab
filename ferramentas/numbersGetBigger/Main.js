@@ -6,6 +6,7 @@ import Cena1 from "./Cena1.js";
 import CenaJogo from '../../classes/Cenas/CenaJogo.js'
 import CenaMenu from '../../classes/Cenas/CenaMenu.js'
 import StartScene from "./StartScene.js";
+import Graph from './Graph.js'
 
 const input = new InputManager();
 const mixer = new Mixer(10);
@@ -15,6 +16,7 @@ const canvas = document.querySelector("canvas");
 canvas.width = 16 * 60;
 canvas.height = 9 * 48;
 
+var myChart = new Graph();
 input.configurarTeclado({
   ArrowLeft: "MOVE_ESQUERDA",
   ArrowRight: "MOVE_DIREITA",
@@ -38,6 +40,7 @@ input.configurarTeclado({
 });
 
 const game = new Game(canvas, assets, input);
+game.graph = myChart;
 // const cenaMenu = new CenaMenu(canvas);
 // const cenaJogo = new CenaJogo(canvas);
 // game.adicionarCena("menu", cenaMenu);

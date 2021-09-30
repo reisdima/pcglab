@@ -9,9 +9,19 @@ export default class Cena1 extends Cena {
     super(canvas, assets);
     this.resources = resources;
     this.scoreRate = 0;
-    this.scoreSpent = 0;
-    this.currentScore = 15;
-    this.counter = 0;
+		this.powerSpent = 0;
+		this.currentPower = 0;
+		this.mapaTeclado = {
+			a: false,
+			b: false,
+			c: false,
+			d: false,
+			e: false,
+		}
+		this.log = {
+			upgrades: [],
+			registros: []
+		}
     this.spacePressed = false;
     this.createAreas();
   }
@@ -20,17 +30,23 @@ export default class Cena1 extends Cena {
     this.ctx.fillStyle = "black";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
+		this.desenharTextos();
+		this.desenharTabela();
+		this.powerUpButton.draw(this.ctx);
+	}
+
+	desenharTextos() {
     this.ctx.font = "20px Times";
     this.ctx.fillStyle = "white";
     this.ctx.textAlign = "left";
     this.ctx.fillText("Poder: ", 50, 50);
-    this.ctx.fillText(this.currentScore.toFixed(1), 125, 50);
+		this.ctx.fillText(this.currentPower.toFixed(1), 125, 50);
     this.ctx.fillText("Taxa: ", 50, 75);
     this.ctx.fillText(this.scoreRate + " /s", 125, 75);
     this.ctx.fillText("Gasto: ", 50, 100);
-    this.ctx.fillText(this.scoreSpent, 125, 100);
-    this.desenharTabela();
-    this.newGame.draw(this.ctx);
+		this.ctx.fillText(this.powerSpent, 125, 100);
+		this.ctx.fillText("Tempo: ", 785, 40);
+		this.ctx.fillText(this.temporizador.toFixed(0), 850, 40);
   }
 
   desenharTabela() {
@@ -60,7 +76,7 @@ export default class Cena1 extends Cena {
   }
 
   createAreas() {
-    this.newGame = new Button(
+		this.powerUpButton = new Button(
       0.7 * this.canvas.width,
       0.2 * this.canvas.height,
       0.15 * this.canvas.width,
@@ -71,51 +87,44 @@ export default class Cena1 extends Cena {
 
   quadro(t) {
     super.quadro(t);
+		this.temporizador += this.dt;
     this.counter += this.dt;
     this.controle();
-    this.currentScore = parseFloat(
-      (this.currentScore + this.scoreRate*this.dt).toFixed(10)
+		this.currentPower = parseFloat(
+			(this.currentPower + this.scoreRate * this.dt).toFixed(10)
     );
     if (this.counter >= 1) {
+			this.log.registros.push({
+				"tempo": this.temporizador.toFixed(0),
+				"totalGasto": this.powerSpent,
+				"taxaAtual": this.scoreRate,
+				"poderAtual": this.currentPower.toFixed(1)
+			});
+			this.game.graph.adicionarDado(this.temporizador.toFixed(0), this.scoreRate);
+			this.game.graph.atualizarGrafico();
+			// console.log(this.log);
       this.counter = 0;
     }
+		// if (this.temporizador.toFixed(0) % 5 === 0) {
+		// 	this.game.graph.atualizarGrafico();
+		// }
   }
 
+	// Controle dos inputs do teclado
   controle() {
     for (let i = 0; i < this.resources.length; i++) {
       const element = this.resources[i];
       if (this.input.comandos.get(element.label)) {
-        if (this.currentScore >= element.currentCost) {
-          this.currentScore = parseFloat(
-            (this.currentScore - element.currentCost).toFixed(10)
-          );
-          this.scoreSpent += parseFloat(
-            element.currentCost.toFixed(10)
-          );
-          element.quantity++;
-          element.currentCost = Math.round(
-            element.initialCost * Math.pow(1.15, element.quantity)
-          );
-          this.scoreRate = parseFloat(
-            (this.scoreRate + element.income).toFixed(10)
-          );
+				if (!this.mapaTeclado[element.label]) {
+					this.mapaTeclado[element.label] = true;
+					if (this.currentPower >= element.currentCost) {
+						this.upgrade(element);
         }
         return;
       }
-    }
-    if (this.input.comandos.get("MAKE_POINT")) {
-      if (!this.spacePressed) {
-        this.spacePressed = true;
-        // this.currentScore = parseFloat(
-        //   (
-        //     this.currentScore +
-        //     1 +
-        //     this.resources[0].quantity * this.resources[0].income
-        //   ).toFixed(10)
-        // );
-      }
     } else {
-      this.spacePressed = false;
+				this.mapaTeclado[element.label] = false;
+			}
     }
   }
 
@@ -157,9 +166,9 @@ export default class Cena1 extends Cena {
     }
   }
 
-  mousemove(e){
+	mousemove(e) {
     const [x, y] = getXY(e, this.canvas);
-    if (this.newGame.hasPoint({ x, y })) {
+		if (this.powerUpButton.hasPoint({ x, y })) {
       this.canvas.style.cursor = 'pointer'
     } else {
       this.canvas.style.cursor = 'default'
@@ -169,14 +178,8 @@ export default class Cena1 extends Cena {
   click(e) {
     this.mousedown(e);
     const [x, y] = getXY(e, this.canvas);
-    if (this.newGame.hasPoint({ x, y })) {
-      this.currentScore = parseFloat(
-        (
-          this.currentScore +
-          1 +
-          this.resources[0].quantity * this.resources[0].income
-        ).toFixed(10)
-      );
+		if (this.powerUpButton.hasPoint({ x, y })) {
+			this.powerUp();
     }
   }
 
@@ -188,4 +191,39 @@ export default class Cena1 extends Cena {
     this.ctx.fillText("Moedas coletadas: " + this.game.moedas, 10, 20);
     this.ctx.fillText("Sprites na tela: " + this.sprites.length, 10, 40);
   }
+
+	upgrade(resource) {
+		if (resource.currentCost > this.currentPower)
+			return;
+		this.currentPower = parseFloat(
+			(this.currentPower - resource.currentCost).toFixed(10)
+		);
+		this.powerSpent += parseFloat(
+			resource.currentCost.toFixed(10)
+		);
+		resource.quantity++;
+		this.scoreRate = parseFloat(
+			(this.scoreRate + resource.income).toFixed(10)
+		);
+		this.log.upgrades.push({
+			"recursoMelhorado": resource.label,
+			"custo": resource.currentCost,
+		});
+		resource.currentCost = Math.round(
+			resource.initialCost * Math.pow(1.15, resource.quantity)
+		);
+		// this.game.graph.adicionarDado(resource.currentIncome, resource.currentCost);
+		// this.game.graph.atualizarGrafico();
+		return;
+	}
+
+	powerUp() {
+		this.currentPower = parseFloat(
+			(
+				this.currentPower +
+				1 +
+				this.resources[0].quantity * this.resources[0].income
+			).toFixed(10)
+		);
+	}
 }
