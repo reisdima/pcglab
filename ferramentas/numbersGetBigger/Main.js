@@ -7,6 +7,7 @@ import CenaJogo from '../../classes/Cenas/CenaJogo.js'
 import CenaMenu from '../../classes/Cenas/CenaMenu.js'
 import StartScene from "./StartScene.js";
 import Graph from './Graph.js'
+import CheaperFirst from "./heuristicas/CheaperFirst.js";
 
 const input = new InputManager();
 const mixer = new Mixer(10);

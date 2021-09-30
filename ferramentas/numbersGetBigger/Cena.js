@@ -6,6 +6,7 @@ export default class Cena {
     this.ctx = canvas?.getContext("2d");
     this.assets = assets;
     this.game = null;
+    this.heuristica = null;
     this.counter = 0;
     this.temporizador = 0;
     this.preparar();
@@ -78,7 +79,7 @@ export default class Cena {
     }
   }
 
-  quandoColidir(a, b) {}
+  quandoColidir(a, b) { }
 
   removerSprites() {
     for (const alvo of this.aRemover) {
@@ -123,5 +124,14 @@ export default class Cena {
     this.mousedown(e);
   }
 
-  desenharHud() {}
+  desenharHud() { }
+
+  adicionarHeuristica(heuristica) {
+    this.heuristica = heuristica;
+
+  }
+
+  mousemove(e) {
+
+  }
 }
