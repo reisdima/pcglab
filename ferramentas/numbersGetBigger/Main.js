@@ -2,12 +2,9 @@ import AssetManager from "../../js/AssetManager.js";
 import Mixer from "../../js/Mixer.js";
 import InputManager from "../../js/InputManager.js";
 import Game from "../../js/Game.js";
-import Cena1 from "./Cena1.js";
-import CenaJogo from '../../classes/Cenas/CenaJogo.js'
-import CenaMenu from '../../classes/Cenas/CenaMenu.js'
+import CenaScene from "./GameScene.js";
 import StartScene from "./StartScene.js";
 import Graph from './Graph.js'
-import CheaperFirst from "./heuristicas/CheaperFirst.js";
 
 const input = new InputManager();
 const mixer = new Mixer(10);
@@ -53,7 +50,7 @@ game.graph = myChart;
 // game.adicionarCena("fase1", cena1);
 // game.adicionarCena("fase2", cena2);
 
-const cena1 = new Cena1(canvas);
+const cena1 = new CenaScene(canvas);
 const startScene = new StartScene(canvas);
 game.adicionarCena("startScene", startScene);
 game.adicionarCena("cena1", cena1);

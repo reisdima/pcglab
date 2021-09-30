@@ -4,7 +4,7 @@ import Button from "../../js/utils/Button.js";
 import getXY from "../../js/utils/getXY.js";
 import { resources } from "./resources.js"
 
-export default class Cena1 extends Cena {
+export default class GameScene extends Cena {
 	constructor(canvas = null, assets = null) {
 		super(canvas, assets);
 		this.resources = resources;
