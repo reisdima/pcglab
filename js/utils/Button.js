@@ -10,8 +10,12 @@ export default class Button extends Sprite {
     this.h = h;
     this.text = text;
     this.useImage = useImage;
+    this.esconder = false;
   }
-  draw(ctx) {
+
+  desenhar(ctx) {
+    if (this.esconder)
+      return;
     ctx.beginPath();
     let fontSize = 0.05 * ctx.canvas.height;
     ctx.font = `${fontSize}px 'Skranji'`;

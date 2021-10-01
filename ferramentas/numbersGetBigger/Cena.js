@@ -1,3 +1,5 @@
+import getXY from "../../js/utils/getXY.js";
+
 export default class Cena {
   // Esta classe é responsável por desenhar elementos na tela em uma animação
 
@@ -9,7 +11,16 @@ export default class Cena {
     this.heuristica = null;
     this.counter = 0;
     this.temporizador = 0;
-    this.preparar();
+    this.sprites = [];
+    this.aRemover = [];
+    this.t0 = null;
+    this.dt = 0;
+    this.idAnim = null;
+    this.mapa = null;
+    this.layer = null;
+    this.path = null;
+    this.rodando = true;
+    this.botoes = [];
   }
 
   desenhar() {
@@ -20,6 +31,7 @@ export default class Cena {
     this.layer?.desenhar(this.ctx);
     this.path?.desenhar(this.ctx);
     this.desenharHud();
+    this.desenharBotoes();
 
     //this.ctx.fillStyle = "black";
     //this.ctx.fillRect(17*48 - 72, 554, 10, 10);
@@ -40,7 +52,7 @@ export default class Cena {
 
   quadro(t) {
     this.t0 = this.t0 ?? t;
-    this.dt = (t - this.t0) / 1000;
+    this.dt = this.rodando ? (t - this.t0) / 1000 : 0;
 
     this.passo(this.dt);
     this.desenhar();
@@ -116,6 +128,7 @@ export default class Cena {
     this.layer = null;
     this.path = null;
     this.rodando = true;
+    this.botoes = [];
   }
 
   mousedown(e) {
@@ -132,6 +145,32 @@ export default class Cena {
   }
 
   mousemove(e) {
+    const [x, y] = getXY(e, this.canvas);
+    for (let i = 0; i < this.botoes.length; i++) {
+      const botao = this.botoes[i];
+      if (!botao.esconder && botao.hasPoint({ x, y })) {
+        this.canvas.style.cursor = 'pointer'
+        return;
+      }
+    }
+    this.canvas.style.cursor = 'default'
+  }
 
+  adicionarBotao(botao) {
+    console.log("Adicionou Botao: ");
+    console.log(botao);
+    this.botoes.push(botao);
+    console.log(this.botoes);
+    return botao;
+  }
+
+  desenharBotoes() {
+    this.botoes.forEach(botao => {
+      botao.desenhar(this.ctx);
+    });
+  }
+
+  pausarJogo() {
+    this.rodando = !this.rodando
   }
 }

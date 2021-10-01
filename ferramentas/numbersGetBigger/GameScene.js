@@ -23,7 +23,6 @@ export default class GameScene extends Cena {
 			registros: []
 		}
 		this.spacePressed = false;
-		this.createAreas();
 	}
 
 	desenhar() {
@@ -32,7 +31,7 @@ export default class GameScene extends Cena {
 
 		this.desenharTextos();
 		this.desenharTabela();
-		this.powerUpButton.draw(this.ctx);
+		super.desenharBotoes();
 	}
 
 	desenharTextos() {
@@ -76,13 +75,13 @@ export default class GameScene extends Cena {
 	}
 
 	createAreas() {
-		this.powerUpButton = new Button(
+		this.powerUpButton = this.adicionarBotao(new Button(
 			0.7 * this.canvas.width,
 			0.2 * this.canvas.height,
 			0.15 * this.canvas.width,
 			0.07 * this.canvas.height,
 			"Power up!"
-		);
+		));
 	}
 
 	quadro(t) {
@@ -112,6 +111,11 @@ export default class GameScene extends Cena {
 
 	// Controle dos inputs do teclado
 	controle() {
+		// if (this.input.comandos.get("PAUSAR_JOGO")) {
+		// 	console.log("Teste12");
+		// 	this.pausarJogo();
+		// 	return;
+		// }
 		this.heuristica?.controle(this);
 		for (let i = 0; i < this.resources.length; i++) {
 			const element = this.resources[i];
@@ -150,6 +154,7 @@ export default class GameScene extends Cena {
 
 	preparar() {
 		super.preparar();
+		this.createAreas();
 		this.canvas.onmousedown = (e) => {
 			this.mousedown(e);
 		};
@@ -168,12 +173,7 @@ export default class GameScene extends Cena {
 	}
 
 	mousemove(e) {
-		const [x, y] = getXY(e, this.canvas);
-		if (this.powerUpButton.hasPoint({ x, y })) {
-			this.canvas.style.cursor = 'pointer'
-		} else {
-			this.canvas.style.cursor = 'default'
-		}
+		super.mousemove(e);
 	}
 
 	click(e) {

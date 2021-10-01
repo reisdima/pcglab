@@ -55,6 +55,7 @@ const startScene = new StartScene(canvas);
 game.adicionarCena("startScene", startScene);
 game.adicionarCena("cena1", cena1);
 
+game.preparar();
 game.iniciar();
 
 document.addEventListener("keydown", (e) => {

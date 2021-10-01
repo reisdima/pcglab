@@ -45,5 +45,6 @@ export default class Game {
 
     adicionarHeuristica(heuristica) {
         this.heuristica = heuristica;
+        this.cena?.adicionarHeuristica(heuristica);
     }
 }

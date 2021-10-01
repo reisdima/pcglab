@@ -11,8 +11,6 @@ export default class StartScene extends Cena {
 
   desenhar() {
     super.desenhar();
-    this.newGame.draw(this.ctx);
-    this.heuristicaCheaperFirst.draw(this.ctx);
   }
 
   quadro(t) {
@@ -25,34 +23,33 @@ export default class StartScene extends Cena {
 
   preparar() {
     super.preparar();
+    this.createAreas();
+    this.canvas.onmousedown = (e) => {
+      this.mousedown(e);
+    };
+    this.canvas.onmousemove = (e) => {
+      this.mousemove(e);
+    };
+    this.canvas.onclick = (e) => {
+      this.click(e);
+    };
   }
 
   createAreas() {
-    this.newGame = new Button(
+    this.newGame = this.adicionarBotao(new Button(
       0.5 * this.canvas.width,
       0.6 * this.canvas.height,
       0.25 * this.canvas.width,
       0.07 * this.canvas.height,
       "New Game"
-    );
-    this.heuristicaCheaperFirst = new Button(
+    ));
+    this.heuristicaCheaperFirst = this.adicionarBotao(new Button(
       0.5 * this.canvas.width,
       0.7 * this.canvas.height,
       0.25 * this.canvas.width,
       0.07 * this.canvas.height,
       "Heurística mais barato"
-    );
-  }
-
-  preparar() {
-    super.preparar();
-    this.createAreas();
-    this.canvas.onmousedown = (e) => {
-      this.mousedown(e);
-    };
-    this.canvas.onclick = (e) => {
-      this.click(e);
-    };
+    ));
   }
 
   mousedown(e) {
@@ -64,12 +61,17 @@ export default class StartScene extends Cena {
       this.game.selecionaCena("cena1");
     }
     if (this.heuristicaCheaperFirst.hasPoint({ x, y })) {
-      this.game.adicionarHeuristica(new CheaperFirst())
       this.game.selecionaCena("cena1");
+      this.game.adicionarHeuristica(new CheaperFirst(this.canvas))
     }
   }
+
   click(e) {
     this.mousedown(e);
+  }
+
+  mousemove(e) {
+    super.mousemove(e);
   }
 
   desenharHud() { }
