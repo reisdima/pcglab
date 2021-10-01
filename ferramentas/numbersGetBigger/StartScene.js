@@ -2,7 +2,8 @@ import Cena from "./Cena.js";
 import Sprite from "../../js/Sprite.js";
 import Button from "../../js/utils/Button.js";
 import getXY from "../../js/utils/getXY.js";
-import CheaperFirst from "./heuristicas/CheaperFirst.js";
+import MaisBarato from "./heuristicas/MaisBarato.js";
+import CustoBeneficio from "./heuristicas/CustoBeneficio.js";
 
 export default class StartScene extends Cena {
   constructor(canvas = null, assets = null) {
@@ -50,6 +51,13 @@ export default class StartScene extends Cena {
       0.07 * this.canvas.height,
       "Heurística mais barato"
     ));
+    this.heuristicaCustoBeneficio = this.adicionarBotao(new Button(
+      0.5 * this.canvas.width,
+      0.8 * this.canvas.height,
+      0.25 * this.canvas.width,
+      0.07 * this.canvas.height,
+      "Heurística custo benefício"
+    ));
   }
 
   mousedown(e) {
@@ -62,7 +70,11 @@ export default class StartScene extends Cena {
     }
     if (this.heuristicaCheaperFirst.hasPoint({ x, y })) {
       this.game.selecionaCena("cena1");
-      this.game.adicionarHeuristica(new CheaperFirst(this.canvas))
+      this.game.adicionarHeuristica(new MaisBarato(this.canvas))
+    }
+    if (this.heuristicaCustoBeneficio.hasPoint({ x, y })) {
+      this.game.selecionaCena("cena1");
+      this.game.adicionarHeuristica(new CustoBeneficio(this.canvas))
     }
   }
 

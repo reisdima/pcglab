@@ -35,6 +35,9 @@ export default class Game {
         }
     }
 
+    preparar() {
+        this.cena?.preparar();
+    }
     iniciar() {
         this.cena?.iniciar();
     }

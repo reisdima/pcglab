@@ -5,14 +5,13 @@
 
 import Heuristica from "./Heuristica.js";
 
-export default class CheaperFirst extends Heuristica {
+export default class MaisBarato extends Heuristica {
     constructor(canvas) {
         super(canvas);
     }
 
     controle(cena) {
         super.controle(cena);
-
         if (cena.counter >= 1) {
             cena.powerUp();
         }
