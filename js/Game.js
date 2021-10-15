@@ -7,7 +7,7 @@ export default class Game {
         this.cenas = new Map();
         this.cena = null;
         this.moedas = 0;
-        this.pause = "false";
+        this.pause = false;
         this.heuristica = null;
     }
 
@@ -30,7 +30,6 @@ export default class Game {
             this.parar();
             this.cena = this.cenas.get(chave);
             this.cena.preparar();
-            this.cena.adicionarHeuristica(this.heuristica);
             this.iniciar();
         }
     }
@@ -38,6 +37,7 @@ export default class Game {
     preparar() {
         this.cena?.preparar();
     }
+
     iniciar() {
         this.cena?.iniciar();
     }
@@ -50,4 +50,10 @@ export default class Game {
         this.heuristica = heuristica;
         this.cena?.adicionarHeuristica(heuristica);
     }
+
+    pausarJogo() {
+        this.pause = false;
+    }
+
+
 }
