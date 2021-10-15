@@ -108,8 +108,8 @@ export default class GameScene extends Cena {
 				"taxaAtual": this.scoreRate,
 				"poderAtual": this.currentPower.toFixed(1)
 			});
-			this.game.graph.adicionarDado(this.temporizador.toFixed(0), this.scoreRate);
-			this.game.graph.atualizarGrafico();
+			// this.game.graph.adicionarDado(parseInt(this.temporizador), this.scoreRate);
+			// this.game.graph.atualizarGrafico();
 			// console.log(this.log);
 			this.counter = 0;
 		}
@@ -245,6 +245,8 @@ export default class GameScene extends Cena {
 		resource.currentCost = Math.round(
 			resource.initialCost * Math.pow(1.15, resource.quantity)
 		);
+		this.game.graph.adicionarDado(parseInt(this.temporizador), this.scoreRate);
+		this.game.graph.atualizarGrafico()
 		// this.game.graph.adicionarDado(resource.currentIncome, resource.currentCost);
 		// this.game.graph.atualizarGrafico();
 		return;
