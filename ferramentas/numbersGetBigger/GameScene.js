@@ -60,7 +60,15 @@ export default class GameScene extends Cena {
 		this.ctx.fillText("Quantidade", startX + 3 * offsetX, startY);
 		this.ctx.fillText("Custo", startX + 4 * offsetX, startY);
 		startY += offsetY;
+		let best = this.resources[0];
+		this.resources.forEach(resource => {
+			let custoBeneficioAtual = best.currentCost / best.income;
+			let custoBeneficio = resource.currentCost / resource.income;
+			if (custoBeneficio < custoBeneficioAtual)
+				best = resource;
+		});
 		this.resources.forEach((resource) => {
+			this.ctx.fillStyle = best.label == resource.label ? "red" : "white";
 			this.ctx.fillText(resource.name, startX, startY);
 			this.ctx.fillText(resource.income, startX + offsetX, startY);
 			this.ctx.fillText(
