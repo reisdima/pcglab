@@ -20,6 +20,11 @@ export default class Graph {
                         grid: {
                             display: false
                         }
+                    },
+                    y: {
+                        suggestedMin: 0,
+                        suggestedMax: 10,
+                        type: 'logarithmic',
                     }
                 },
                 elements: {
@@ -44,6 +49,7 @@ export default class Graph {
     }
 
     adicionarDado(label, data) {
+        // this.chart.data.labels.push(label);
         this.chart.data.labels.push('');
         this.chart.data.datasets.forEach((dataset) => {
             dataset.data.push(data);
