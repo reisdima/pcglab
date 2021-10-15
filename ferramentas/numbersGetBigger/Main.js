@@ -34,7 +34,9 @@ input.configurarTeclado({
   c: "C",
   d: "D",
   e: "E",
-  Enter: "ENTER"
+  Enter: "ENTER",
+  l: "PAUSAR_JOGO",
+  "+": "MIL"
 });
 
 const game = new Game(canvas, assets, input);

@@ -17,6 +17,7 @@ export default class GameScene extends Cena {
 			c: false,
 			d: false,
 			e: false,
+			"+": false
 		}
 		this.log = {
 			upgrades: [],
@@ -124,6 +125,16 @@ export default class GameScene extends Cena {
 		// 	this.pausarJogo();
 		// 	return;
 		// }
+		// Atalho para aumentar pontos
+		if (this.input.comandos.get("MIL")) {
+			if (!this.mapaTeclado["+"]) {
+				this.mapaTeclado["+"] = true;
+				this.currentPower += 1000;
+			}
+			return;
+		} else {
+			this.mapaTeclado["+"] = false;
+		}
 		this.heuristica?.controle(this);
 		for (let i = 0; i < this.resources.length; i++) {
 			const element = this.resources[i];
