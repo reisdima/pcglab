@@ -61,7 +61,7 @@ export default class GameScene extends Cena {
 		this.ctx.fillText("Custo", startX + 4 * offsetX, startY);
 		startY += offsetY;
 		this.resources.forEach((resource) => {
-			this.ctx.fillText(resource.label, startX, startY);
+			this.ctx.fillText(resource.name, startX, startY);
 			this.ctx.fillText(resource.income, startX + offsetX, startY);
 			this.ctx.fillText(
 				parseFloat((resource.income * resource.quantity).toFixed(10)),
@@ -152,6 +152,19 @@ export default class GameScene extends Cena {
 		// }
 	}
 
+
+	obterRecursoPorNome(nome) {
+		let resource = null;
+		for (let i = 0; i < this.resources.length; i++) {
+			const res = this.resources[i];
+			if (res.name === nome) {
+				resource = res;
+				break;
+			}
+		}
+		return resource;
+	}
+
 	preparar() {
 		super.preparar();
 		this.createAreas();
@@ -219,11 +232,12 @@ export default class GameScene extends Cena {
 	}
 
 	powerUp() {
+		const pointer = this.obterRecursoPorNome("Pointer");
 		this.currentPower = parseFloat(
 			(
 				this.currentPower +
 				1 +
-				this.resources[0].quantity * this.resources[0].income
+				pointer.quantity * pointer.income
 			).toFixed(10)
 		);
 	}
