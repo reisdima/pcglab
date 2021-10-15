@@ -17,11 +17,13 @@ export default class CustoBeneficio extends Heuristica {
         }
         let resources = cena.resources.slice(0);
         let best = resources[0];
+        let custoBeneficioAtual = best.currentCost / best.income;
         resources.forEach(resource => {
-            let custoBeneficioAtual = best.currentCost / best.income;
             let custoBeneficio = resource.currentCost / resource.income;
-            if (custoBeneficio < custoBeneficioAtual)
+            if (custoBeneficio < custoBeneficioAtual) {
                 best = resource;
+                custoBeneficioAtual = best.currentCost / best.income;
+            }
         });
         cena.upgrade(best);
 
