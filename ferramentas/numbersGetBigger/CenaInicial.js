@@ -5,7 +5,7 @@ import getXY from "../../js/utils/getXY.js";
 import MaisBarato from "./heuristicas/MaisBarato.js";
 import CustoBeneficio from "./heuristicas/CustoBeneficio.js";
 
-export default class StartScene extends Cena {
+export default class CenaInicial extends Cena {
   constructor(canvas = null, assets = null) {
     super(canvas, assets);
   }

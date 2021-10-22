@@ -1,4 +1,4 @@
-export default class Graph {
+export default class Grafico {
     constructor() {
         this.labels = [];
         this.data = {

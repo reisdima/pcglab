@@ -2,15 +2,15 @@ import Cena from "./Cena.js";
 import Sprite from "../../js/Sprite.js";
 import Button from "../../js/utils/Button.js";
 import getXY from "../../js/utils/getXY.js";
-import { resources } from "./resources.js"
+import { recursos } from "./recursos.js"
 
-export default class GameScene extends Cena {
+export default class CenaJogo extends Cena {
 	constructor(canvas = null, assets = null) {
 		super(canvas, assets);
-		this.resources = resources;
-		this.scoreRate = 0;
-		this.powerSpent = 0;
-		this.currentPower = 0;
+		this.recursos = recursos;
+		this.taxaPonto = 0;
+		this.pontosGastos = 0;
+		this.pontosAtuais = 10000;
 		this.mapaTeclado = {
 			a: false,
 			b: false,
@@ -23,7 +23,7 @@ export default class GameScene extends Cena {
 			upgrades: [],
 			registros: []
 		}
-		this.spacePressed = false;
+		this.espacoPressionado = false;
 	}
 
 	desenhar() {
@@ -40,11 +40,11 @@ export default class GameScene extends Cena {
 		this.ctx.fillStyle = "white";
 		this.ctx.textAlign = "left";
 		this.ctx.fillText("Poder: ", 50, 50);
-		this.ctx.fillText(this.currentPower.toFixed(1), 125, 50);
+		this.ctx.fillText(this.pontosAtuais.toFixed(1), 125, 50);
 		this.ctx.fillText("Taxa: ", 50, 75);
-		this.ctx.fillText(this.scoreRate + " /s", 125, 75);
+		this.ctx.fillText(this.taxaPonto + " /s", 125, 75);
 		this.ctx.fillText("Gasto: ", 50, 100);
-		this.ctx.fillText(this.powerSpent, 125, 100);
+		this.ctx.fillText(this.pontosGastos, 125, 100);
 		this.ctx.fillText("Tempo: ", 785, 40);
 		this.ctx.fillText(this.temporizador.toFixed(0), 850, 40);
 	}
@@ -61,16 +61,16 @@ export default class GameScene extends Cena {
 		this.ctx.fillText("Quantidade", startX + 3 * offsetX, startY);
 		this.ctx.fillText("Custo", startX + 4 * offsetX, startY);
 		startY += offsetY;
-		let best = this.resources[0];
+		let best = this.recursos[0];
 		let custoBeneficioAtual = best.currentCost / best.income;
-		this.resources.forEach(resource => {
+		this.recursos.forEach(resource => {
 			let custoBeneficio = resource.currentCost / resource.income;
 			if (custoBeneficio < custoBeneficioAtual) {
 				best = resource;
 				custoBeneficioAtual = best.currentCost / best.income;
 			}
 		});
-		this.resources.forEach((resource) => {
+		this.recursos.forEach((resource) => {
 			this.ctx.fillStyle = best.label == resource.label ? "red" : "white";
 			this.ctx.fillText(resource.name, startX, startY);
 			this.ctx.fillText(resource.income, startX + offsetX, startY);
@@ -100,17 +100,17 @@ export default class GameScene extends Cena {
 		this.temporizador += this.dt;
 		this.counter += this.dt;
 		this.controle();
-		this.currentPower = parseFloat(
-			(this.currentPower + this.scoreRate * this.dt).toFixed(10)
+		this.pontosAtuais = parseFloat(
+			(this.pontosAtuais + this.taxaPonto * this.dt).toFixed(10)
 		);
 		if (this.counter >= 1) {
 			this.log.registros.push({
 				"tempo": this.temporizador.toFixed(0),
-				"totalGasto": this.powerSpent,
-				"taxaAtual": this.scoreRate,
-				"poderAtual": this.currentPower.toFixed(1)
+				"totalGasto": this.pontosGastos,
+				"taxaAtual": this.taxaPonto,
+				"poderAtual": this.pontosAtuais.toFixed(1)
 			});
-			// this.game.graph.adicionarDado(parseInt(this.temporizador), this.scoreRate);
+			// this.game.graph.adicionarDado(parseInt(this.temporizador), this.taxaPonto);
 			// this.game.graph.atualizarGrafico();
 			// console.log(this.log);
 			this.counter = 0;
@@ -131,19 +131,19 @@ export default class GameScene extends Cena {
 		if (this.input.comandos.get("MIL")) {
 			if (!this.mapaTeclado["+"]) {
 				this.mapaTeclado["+"] = true;
-				this.currentPower += 1000;
+				this.pontosAtuais += 1000;
 			}
 			return;
 		} else {
 			this.mapaTeclado["+"] = false;
 		}
 		this.heuristica?.controle(this);
-		for (let i = 0; i < this.resources.length; i++) {
-			const element = this.resources[i];
+		for (let i = 0; i < this.recursos.length; i++) {
+			const element = this.recursos[i];
 			if (this.input.comandos.get(element.label)) {
 				if (!this.mapaTeclado[element.label]) {
 					this.mapaTeclado[element.label] = true;
-					if (this.currentPower >= element.currentCost) {
+					if (this.pontosAtuais >= element.currentCost) {
 						this.upgrade(element);
 					}
 					return;
@@ -176,8 +176,8 @@ export default class GameScene extends Cena {
 
 	obterRecursoPorNome(nome) {
 		let resource = null;
-		for (let i = 0; i < this.resources.length; i++) {
-			const res = this.resources[i];
+		for (let i = 0; i < this.recursos.length; i++) {
+			const res = this.recursos[i];
 			if (res.name === nome) {
 				resource = res;
 				break;
@@ -228,17 +228,17 @@ export default class GameScene extends Cena {
 	}
 
 	upgrade(resource) {
-		if (resource.currentCost > this.currentPower)
+		if (resource.currentCost > this.pontosAtuais)
 			return;
-		this.currentPower = parseFloat(
-			(this.currentPower - resource.currentCost).toFixed(10)
+		this.pontosAtuais = parseFloat(
+			(this.pontosAtuais - resource.currentCost).toFixed(10)
 		);
-		this.powerSpent += parseFloat(
+		this.pontosGastos += parseFloat(
 			resource.currentCost.toFixed(10)
 		);
 		resource.quantity++;
-		this.scoreRate = parseFloat(
-			(this.scoreRate + resource.income).toFixed(10)
+		this.taxaPonto = parseFloat(
+			(this.taxaPonto + resource.income).toFixed(10)
 		);
 		this.log.upgrades.push({
 			"recursoMelhorado": resource.label,
@@ -247,7 +247,7 @@ export default class GameScene extends Cena {
 		resource.currentCost = Math.round(
 			resource.initialCost * Math.pow(1.15, resource.quantity)
 		);
-		this.game.graph.adicionarDado(parseInt(this.temporizador), this.scoreRate);
+		this.game.graph.adicionarDado(parseInt(this.temporizador), this.taxaPonto);
 		this.game.graph.atualizarGrafico()
 		// this.game.graph.adicionarDado(resource.currentIncome, resource.currentCost);
 		// this.game.graph.atualizarGrafico();
@@ -256,9 +256,9 @@ export default class GameScene extends Cena {
 
 	powerUp() {
 		const pointer = this.obterRecursoPorNome("Pointer");
-		this.currentPower = parseFloat(
+		this.pontosAtuais = parseFloat(
 			(
-				this.currentPower +
+				this.pontosAtuais +
 				1 +
 				pointer.quantity * pointer.income
 			).toFixed(10)
