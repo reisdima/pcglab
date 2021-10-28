@@ -1,4 +1,4 @@
-export const recursos = [
+export const recursosNormal = [
   {
     label: "A",
     name: "Pointer",
@@ -41,6 +41,53 @@ export const recursos = [
     quantity: 0,
     currentCost: 40000,
     initialCost: 40000,
+    currentIncome: 0,
+    income: 40,
+  },
+]
+export const recursosRegressivo = [
+  {
+    label: "A",
+    name: "Pointer",
+    quantity: 0,
+    currentCost: 3,
+    initialCost: 3,
+    currentIncome: 0,
+    income: 0.1,
+  },
+  {
+    label: "B",
+    name: "Grandma",
+    quantity: 0,
+    currentCost: 20,
+    initialCost: 20,
+    currentIncome: 0,
+    income: 0.5,
+  },
+  {
+    label: "C",
+    name: "Farm",
+    quantity: 0,
+    currentCost: 100,
+    initialCost: 100,
+    currentIncome: 0,
+    income: 4,
+  },
+  {
+    label: "D",
+    name: "Mine",
+    quantity: 0,
+    currentCost: 600,
+    initialCost: 600,
+    currentIncome: 0,
+    income: 10,
+  },
+  {
+    label: "E",
+    name: "Factory",
+    quantity: 0,
+    currentCost: 8000,
+    initialCost: 8000,
     currentIncome: 0,
     income: 40,
   },

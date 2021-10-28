@@ -2,15 +2,14 @@ import Cena from "./Cena.js";
 import Sprite from "../../js/Sprite.js";
 import Button from "../../js/utils/Button.js";
 import getXY from "../../js/utils/getXY.js";
-import { recursos } from "./recursos.js"
 
 export default class CenaJogo extends Cena {
 	constructor(canvas = null, assets = null) {
 		super(canvas, assets);
-		this.recursos = recursos;
+		// this.recursos = recursosNormal;
 		this.taxaPonto = 0;
 		this.pontosGastos = 0;
-		this.pontosAtuais = 10000;
+		this.pontosAtuais = 100;
 		this.mapaTeclado = {
 			a: false,
 			b: false,
@@ -97,19 +96,17 @@ export default class CenaJogo extends Cena {
 
 	quadro(t) {
 		super.quadro(t);
-		this.temporizador += this.dt;
-		this.counter += this.dt;
 		this.controle();
 		this.pontosAtuais = parseFloat(
 			(this.pontosAtuais + this.taxaPonto * this.dt).toFixed(10)
 		);
 		if (this.counter >= 1) {
-			this.log.registros.push({
-				"tempo": this.temporizador.toFixed(0),
-				"totalGasto": this.pontosGastos,
-				"taxaAtual": this.taxaPonto,
-				"poderAtual": this.pontosAtuais.toFixed(1)
-			});
+			// this.log.registros.push({
+			// 	"tempo": this.temporizador.toFixed(0),
+			// 	"totalGasto": this.pontosGastos,
+			// 	"taxaAtual": this.taxaPonto,
+			// 	"poderAtual": this.pontosAtuais.toFixed(1)
+			// });
 			// this.game.graph.adicionarDado(parseInt(this.temporizador), this.taxaPonto);
 			// this.game.graph.atualizarGrafico();
 			// console.log(this.log);
@@ -140,6 +137,7 @@ export default class CenaJogo extends Cena {
 		this.heuristica?.controle(this);
 		for (let i = 0; i < this.recursos.length; i++) {
 			const element = this.recursos[i];
+			console.log("Teste7");
 			if (this.input.comandos.get(element.label)) {
 				if (!this.mapaTeclado[element.label]) {
 					this.mapaTeclado[element.label] = true;

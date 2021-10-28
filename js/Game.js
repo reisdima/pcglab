@@ -29,6 +29,7 @@ export default class Game {
             //console.log(chave);
             this.parar();
             this.cena = this.cenas.get(chave);
+            this.cena.setHeuristica(this.heuristica);
             this.cena.preparar();
             this.iniciar();
         }
@@ -46,13 +47,14 @@ export default class Game {
         this.cena?.parar();
     }
 
-    adicionarHeuristica(heuristica) {
+    setHeuristica(heuristica) {
         this.heuristica = heuristica;
-        this.cena?.adicionarHeuristica(heuristica);
+        this.cena?.setHeuristica(heuristica);
     }
 
     pausarJogo() {
         this.pause = false;
+        this.cena?.pausarJogo();
     }
 
 

@@ -2,14 +2,16 @@ import AssetManager from "../../js/AssetManager.js";
 import Mixer from "../../js/Mixer.js";
 import InputManager from "../../js/InputManager.js";
 import Game from "../../js/Game.js";
-import CenaJogo from "./CenaJogo.js";
 import CenaInicial from "./CenaInicial.js";
 import Graph from './Grafico.js'
+import CenaJogoRegressivo from "./CenaJogoRegressivo.js";
+import CenaJogoNormal from "./CenaJogoNormal.js";
 
 const input = new InputManager();
 const mixer = new Mixer(10);
 export const assets = new AssetManager(mixer);
-console.log('Teste99');
+
+assets.carregaImagem("checkbox", "../../assets/images/checkbox.png"); // 75x77
 const canvas = document.querySelector("canvas");
 canvas.width = 16 * 60;
 canvas.height = 9 * 48;
@@ -52,10 +54,12 @@ game.graph = myChart;
 // game.adicionarCena("fase1", cena1);
 // game.adicionarCena("fase2", cena2);
 
-const cena1 = new CenaJogo(canvas);
+const cenaNormal = new CenaJogoNormal(canvas);
+const cenaRegressivo = new CenaJogoRegressivo(canvas);
 const cenaInicial = new CenaInicial(canvas);
 game.adicionarCena("CenaInicial", cenaInicial);
-game.adicionarCena("cena1", cena1);
+game.adicionarCena("cenaNormal", cenaNormal);
+game.adicionarCena("cenaRegressivo", cenaRegressivo);
 
 game.preparar();
 game.iniciar();

@@ -139,7 +139,7 @@ export default class Cena {
 
   desenharHud() { }
 
-  adicionarHeuristica(heuristica) {
+  setHeuristica(heuristica) {
     this.heuristica = heuristica;
 
   }
@@ -157,10 +157,7 @@ export default class Cena {
   }
 
   adicionarBotao(botao) {
-    console.log("Adicionou Botao: ");
-    console.log(botao);
     this.botoes.push(botao);
-    console.log(this.botoes);
     return botao;
   }
 
