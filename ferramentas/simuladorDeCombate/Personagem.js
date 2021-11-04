@@ -14,7 +14,7 @@ export default class Personagem {
     controle() {
         this.contador -= this.cena.dt;
         if (this.contador <= 0) {
-            this.atacar(); console.log(this.cooldown);
+            this.atacar();
             this.contador = this.cooldown;
         }
     }
@@ -26,5 +26,21 @@ export default class Personagem {
 
     atacar() {
 
+    }
+
+    desenhaBarraDeAtaque(x, y, width, height) {
+        const w = width ?? 0.25 * this.canvas.width;
+        const h = height ?? 0.01 * this.canvas.height;
+        const sr = (this.cooldown - this.contador) / this.cooldown;
+        // background
+        this.ctx.fillStyle = "white";
+        this.ctx.fillRect(x, y, w, h);
+        //filling bar
+        this.ctx.fillStyle = "red";
+        this.ctx.fillRect(x, y, w * sr, h);
+        // border
+        this.ctx.strokeStyle = "hsl(120,50%,25%)";
+        this.ctx.lineWidth = h / 3;
+        this.ctx.strokeRect(x, y, w, h);
     }
 }

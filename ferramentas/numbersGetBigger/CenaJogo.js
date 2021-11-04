@@ -137,7 +137,6 @@ export default class CenaJogo extends Cena {
 		this.heuristica?.controle(this);
 		for (let i = 0; i < this.recursos.length; i++) {
 			const element = this.recursos[i];
-			console.log("Teste7");
 			if (this.input.comandos.get(element.label)) {
 				if (!this.mapaTeclado[element.label]) {
 					this.mapaTeclado[element.label] = true;

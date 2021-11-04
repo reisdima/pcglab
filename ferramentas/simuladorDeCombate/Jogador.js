@@ -55,6 +55,7 @@ export default class Jogador extends Personagem {
     }
 
     desenhar() {
+        this.ctx.fillStyle = "white";
         this.ctx.textAlign = "left";
         this.ctx.fillText("Jogador", 0.05 * this.canvas.width,
             0.3 * this.canvas.height);
@@ -66,19 +67,7 @@ export default class Jogador extends Personagem {
         // Barra de cooldown
         let x = 0.075 * this.canvas.width;
         let y = 0.7 * this.canvas.height;
-        const w = 0.25 * this.canvas.width;
-        const h = 0.01 * this.canvas.height;
-        const sr = (this.cooldown - this.contador) / this.cooldown;
-        // background
-        this.ctx.fillStyle = "white";
-        this.ctx.fillRect(x, y, w, h);
-        //filling bar
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(x, y, w * sr, h);
-        // border
-        this.ctx.strokeStyle = "hsl(120,50%,25%)";
-        this.ctx.lineWidth = h / 3;
-        this.ctx.strokeRect(x, y, w, h);
+        this.desenhaBarraDeAtaque(x, y);
     }
 
 

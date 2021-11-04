@@ -12,13 +12,8 @@ export default class CenaJogo extends Cena {
         this.taxaPonto = 0;
         this.pontosGastos = 0;
         this.pontosAtuais = 100;
+        this.nivelAtual = 1;
         this.mapaTeclado = {
-            a: false,
-            b: false,
-            c: false,
-            d: false,
-            e: false,
-            "+": false,
             " ": false
         }
         this.log = {
@@ -40,21 +35,14 @@ export default class CenaJogo extends Cena {
     desenharPersonagens() {
 
         this.jogador.desenhar();
+        this.inimigo.desenhar();
 
-        // Inimigo
-        this.ctx.fillStyle = "white";
-        this.ctx.textAlign = "right";
-        this.ctx.fillText("Inimigo", 0.95 * this.canvas.width,
-            0.3 * this.canvas.height);
-        this.ctx.fillText("Vida: ", 0.85 * this.canvas.width - 25,
-            0.65 * this.canvas.height);
-        this.ctx.fillText(this.inimigo.vidaAtual, 0.85 * this.canvas.width,
-            0.65 * this.canvas.height);
 
     }
 
     desenharHud() {
-        this.ctx.fillStyle = "hsl(42 100% 50% / 1)";
+
+        this.ctx.fillStyle = "hsl(30, 100%, 60%)";
         this.ctx.fillRect(0, 0, this.canvas.width, 100);
         this.ctx.strokeStyle = "white";
         this.ctx.lineWidth = 2;
@@ -77,11 +65,38 @@ export default class CenaJogo extends Cena {
         this.ctx.fillText(this.jogador.nivel, x2, yOffset + yPadding);
         this.ctx.fillText(this.jogador.pontosAtributos, x2, yOffset + 2 * yPadding);
         this.ctx.fillStyle = "white";
+        // this.ctx.textAlign = "center";
+
+        this.ctx.font = "28px Times";
+        this.ctx.fillStyle = "hsl(30, 100%, 80%)";
+        this.ctx.fillText("Nivel ", 0.45 * this.canvas.width,
+            0.3 * this.canvas.height + (0.055 * this.canvas.height) / 2);
+        this.ctx.fillText(this.nivelAtual, 0.55 * this.canvas.width,
+            0.3 * this.canvas.height + (0.055 * this.canvas.height) / 2);
+        this.ctx.font = "20px Times";
 
     }
 
 
     createAreas() {
+        this.botaoProximaFase = this.adicionarBotao(new Button(
+            0.35 * this.canvas.width,
+            0.3 * this.canvas.height,
+            0.035 * this.canvas.width,
+            0.055 * this.canvas.height,
+            "",
+            true,
+            "arrow_left"
+        ));
+        this.botaoProximaFase = this.adicionarBotao(new Button(
+            0.65 * this.canvas.width,
+            0.3 * this.canvas.height,
+            0.035 * this.canvas.width,
+            0.055 * this.canvas.height,
+            "",
+            true,
+            "arrow_right"
+        ));
         this.botaoAtacar = this.adicionarBotao(new Button(
             0.5 * this.canvas.width,
             0.5 * this.canvas.height,
@@ -107,6 +122,7 @@ export default class CenaJogo extends Cena {
 
     quadro(t) {
         super.quadro(t);
+        this.temporizador += this.dt;
         this.controle();
         this.pontosAtuais = parseFloat(
             (this.pontosAtuais + this.taxaPonto * this.dt).toFixed(10)
@@ -120,7 +136,6 @@ export default class CenaJogo extends Cena {
             // });
             // this.game.graph.adicionarDado(parseInt(this.temporizador), this.taxaPonto);
             // this.game.graph.atualizarGrafico();
-            // console.log(this.log);
             this.counter = 0;
         }
         // if (this.temporizador.toFixed(0) % 5 === 0) {
@@ -132,11 +147,6 @@ export default class CenaJogo extends Cena {
     controle() {
         this.inimigo.controle();
         this.jogador.controle();
-        // if (this.input.comandos.get("PAUSAR_JOGO")) {
-        // 	console.log("Teste12");
-        // 	this.pausarJogo();
-        // 	return;
-        // }
         // Atalho para aumentar pontos
         if (this.input.comandos.get("MIL")) {
             if (!this.mapaTeclado["+"]) {
@@ -148,63 +158,9 @@ export default class CenaJogo extends Cena {
             this.mapaTeclado["+"] = false;
         }
 
-        if (this.input.comandos.get("ATACAR")) {
-            if (!this.mapaTeclado[" "]) {
-                this.jogador.atacar();
-                this.mapaTeclado[" "] = true;
-            }
-            return;
-        } else {
-            this.mapaTeclado[" "] = false;
-        }
         this.heuristica?.controle(this);
-        // for (let i = 0; i < this.recursos.length; i++) {
-        // 	const element = this.recursos[i];
-        // 	if (this.input.comandos.get(element.label)) {
-        // 		if (!this.mapaTeclado[element.label]) {
-        // 			this.mapaTeclado[element.label] = true;
-        // 			if (this.pontosAtuais >= element.currentCost) {
-        // 				this.upgrade(element);
-        // 			}
-        // 			return;
-        // 		}
-        // 	} else {
-        // 		this.mapaTeclado[element.label] = false;
-        // 	}
-        // }
     }
 
-    quandoColidir(a, b) {
-        // if(a.tags.has("pc") && b.tags.has("coin")){
-        //     if(!this.aRemover.includes(b)){
-        //         this.aRemover.push(b);
-        //         a.distancias.clear();
-        //     }
-        //     this.game.moedas += 1;
-        // }
-        // if(a.tags.has("pc") && b.tags.has("exit")){ // Se pc colidir com saída, remove os dois e reinicia a cena
-        //     if(!this.aRemover.includes(a)){
-        //         this.aRemover.push(a);
-        //     }
-        //     if(!this.aRemover.includes(b)){
-        //         this.aRemover.push(b);
-        //     }
-        //     this.game.selecionaCena("fase1");
-        // }
-    }
-
-
-    obterRecursoPorNome(nome) {
-        let resource = null;
-        for (let i = 0; i < this.recursos.length; i++) {
-            const res = this.recursos[i];
-            if (res.name === nome) {
-                resource = res;
-                break;
-            }
-        }
-        return resource;
-    }
 
     preparar() {
         super.preparar();
@@ -280,14 +236,4 @@ export default class CenaJogo extends Cena {
         this.jogador.atacar();
     }
 
-    powerUp() {
-        const pointer = this.obterRecursoPorNome("Pointer");
-        this.pontosAtuais = parseFloat(
-            (
-                this.pontosAtuais +
-                1 +
-                pointer.quantity * pointer.income
-            ).toFixed(10)
-        );
-    }
 }
