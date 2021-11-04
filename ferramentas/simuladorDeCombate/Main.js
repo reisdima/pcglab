@@ -10,6 +10,8 @@ const input = new InputManager();
 const mixer = new Mixer(10);
 export const assets = new AssetManager(mixer);
 
+assets.carregaImagem("arrow_right", "../../assets/images/arrow_right.png"); // 75x77
+assets.carregaImagem("arrow_left", "../../assets/images/arrow_left.png"); // 75x77
 const canvas = document.querySelector("canvas");
 canvas.width = 16 * 60;
 canvas.height = 9 * 48;
