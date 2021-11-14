@@ -9,7 +9,7 @@ export default class Jogador extends Personagem {
                 quantidade: 1,
                 custoAtual: 15,
                 custoInicial: 15,
-                valor: 50,
+                valor: 5,
                 fator: 1,
             },
             forca: {
@@ -25,7 +25,7 @@ export default class Jogador extends Personagem {
                 quantidade: 1,
                 custoAtual: 15,
                 custoInicial: 15,
-                valor: 50,
+                valor: 1,
                 fator: 1,
             },
             velocidade: {
@@ -37,6 +37,7 @@ export default class Jogador extends Personagem {
                 fator: 1,
             }
         }
+        this.vidaMaxima = this.atributos['vida'].valor;
         this.experienciaAtual = 10;
         this.experienciaNivel = 10;
         this.nivel = 1;
@@ -51,22 +52,25 @@ export default class Jogador extends Personagem {
     }
 
     atacar() {
-        this.cena.inimigo.sofrerDano(this);
+        this.cena.inimigo.sofrerDano(this.atributos['forca'].valor);
     }
 
     desenhar() {
-        this.ctx.fillStyle = "white";
+        let x = 0.05 * this.canvas.width;
+        let y = 0.38 * this.canvas.height;
+        super.desenhar(x, y);
         this.ctx.textAlign = "left";
         this.ctx.fillText("Jogador", 0.05 * this.canvas.width,
             0.3 * this.canvas.height);
-        this.ctx.fillText("Dano: ", 0.15 * this.canvas.width,
-            0.65 * this.canvas.height);
-        this.ctx.fillText(this.atributos['forca'].valor, 0.15 * this.canvas.width + 50,
-            0.65 * this.canvas.height);
 
+        x = 0.18 * this.canvas.width;
+        y = 0.63 * this.canvas.height;
+        this.ctx.fillText(this.vidaAtual + "/" + this.atributos['vida'].valor, x, y);
         // Barra de cooldown
-        let x = 0.075 * this.canvas.width;
-        let y = 0.7 * this.canvas.height;
+        x = 0.075 * this.canvas.width;
+        y = 0.65 * this.canvas.height;
+        this.desenharBarraDeVida(x, y);
+        y = 0.7 * this.canvas.height;
         this.desenhaBarraDeAtaque(x, y);
     }
 
@@ -112,7 +116,13 @@ export default class Jogador extends Personagem {
         */
     }
 
-
+    sofrerDano(dano) {
+        if (this.vidaAtual - dano <= 0) {
+            this.vidaAtual = 0;
+        } else {
+            super.sofrerDano(dano);
+        }
+    }
 
 
 }

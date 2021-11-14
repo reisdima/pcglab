@@ -8,18 +8,27 @@ export default class Inimigo extends Personagem {
     }
 
     desenhar() {
-        this.ctx.fillStyle = "white";
+        let x = 0.7 * this.canvas.width;
+        let y = 0.38 * this.canvas.height;
+        super.desenhar(x, y);
         this.ctx.textAlign = "right";
         this.ctx.fillText("Inimigo", 0.95 * this.canvas.width,
             0.3 * this.canvas.height);
-        this.ctx.fillText("Vida: ", 0.85 * this.canvas.width - 25,
-            0.65 * this.canvas.height);
-        this.ctx.fillText(this.vidaAtual, 0.85 * this.canvas.width,
-            0.65 * this.canvas.height);
+
+
+
+        this.ctx.textAlign = "center";
+        x = 0.8 * this.canvas.width;
+        y = 0.63 * this.canvas.height;
+
+        this.ctx.fillText(this.vidaAtual + "/" + this.vidaMaxima, x, y);
 
         // Barra de cooldown
-        let x = 0.925 * this.canvas.width - (0.25 * this.canvas.width);
-        let y = 0.7 * this.canvas.height;
+        x = 0.925 * this.canvas.width - (0.25 * this.canvas.width);
+        y = 0.65 * this.canvas.height;
+        this.desenharBarraDeVida(x, y);
+        // x = 0.925 * this.canvas.width;
+        y = 0.7 * this.canvas.height;
         this.desenhaBarraDeAtaque(x, y);
     }
 
@@ -35,10 +44,10 @@ export default class Inimigo extends Personagem {
         }
     }
 
-    sofrerDano(jogador) {
-        super.sofrerDano(jogador);
+    sofrerDano(dano) {
+        super.sofrerDano(dano);
         if (this.vidaAtual <= 0) {
-            jogador.experienciaAtual += this.pontosExperiencia;
+            this.cena.jogador.experienciaAtual += this.pontosExperiencia;
             this.resetar();
         }
     }
@@ -49,6 +58,7 @@ export default class Inimigo extends Personagem {
     }
 
     atacar() {
+        this.cena.jogador.sofrerDano(1);
         console.log("inimigo atacou");
     }
 

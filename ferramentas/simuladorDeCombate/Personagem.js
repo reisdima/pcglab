@@ -3,6 +3,41 @@ export default class Personagem {
         this.canvas = canvas;
         this.ctx = canvas?.getContext("2d");
         this.cena = cena;
+
+        this.atributos = {
+            vida: {
+                nome: "Vida",
+                quantidade: 1,
+                custoAtual: 15,
+                custoInicial: 15,
+                valor: 5,
+                fator: 1,
+            },
+            forca: {
+                nome: "Força",
+                quantidade: 1,
+                custoAtual: 15,
+                custoInicial: 15,
+                valor: 1,
+                fator: 1,
+            },
+            defesa: {
+                nome: "Defesa",
+                quantidade: 1,
+                custoAtual: 15,
+                custoInicial: 15,
+                valor: 1,
+                fator: 1,
+            },
+            velocidade: {
+                nome: "Velocidade",
+                quantidade: 1,
+                custoAtual: 15,
+                custoInicial: 15,
+                valor: 1,
+                fator: 1,
+            }
+        }
         this.vidaAtual = 5;
         this.vidaMaxima = 5;
         this.contador = 3;
@@ -19,8 +54,7 @@ export default class Personagem {
         }
     }
 
-    sofrerDano(personagem) {
-        let dano = personagem.atributos["forca"].valor;
+    sofrerDano(dano) {
         this.vidaAtual -= (dano - this.defesa);
     }
 
@@ -28,19 +62,46 @@ export default class Personagem {
 
     }
 
+    desenhar(x, y) {
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText("Vida máxima: ", x, y);
+        this.ctx.fillText(this.atributos['vida'].valor, x + 120, y);
+        y += 25
+        this.ctx.fillText("Dano: ", x, y);
+        this.ctx.fillText(this.atributos['forca'].valor, x + 120, y);
+        y += 25
+        this.ctx.fillText("Defesa: ", x, y);
+        this.ctx.fillText(this.atributos['defesa'].valor, x + 120, y);
+        y += 25
+        this.ctx.fillText("Velocidade: ", x, y);
+        this.ctx.fillText(this.atributos['velocidade'].valor, x + 120, y);
+    }
+
     desenhaBarraDeAtaque(x, y, width, height) {
+        const sr = (this.cooldown - this.contador) / this.cooldown;
+        this.desenharBarra(x, y, "red", sr, width, height);
+    }
+
+    desenharBarraDeVida(x, y, width, height) {
+        const sr = this.vidaAtual / this.vidaMaxima;
+        const h = height ?? 0.02 * this.canvas.height;
+        this.desenharBarra(x, y, "#2BDC36", sr, width, h);
+    }
+
+    desenharBarra(x, y, color, sr, width, height) {
         const w = width ?? 0.25 * this.canvas.width;
         const h = height ?? 0.01 * this.canvas.height;
-        const sr = (this.cooldown - this.contador) / this.cooldown;
+
         // background
         this.ctx.fillStyle = "white";
         this.ctx.fillRect(x, y, w, h);
         //filling bar
-        this.ctx.fillStyle = "red";
+        this.ctx.fillStyle = color;
         this.ctx.fillRect(x, y, w * sr, h);
         // border
         this.ctx.strokeStyle = "hsl(120,50%,25%)";
         this.ctx.lineWidth = h / 3;
         this.ctx.strokeRect(x, y, w, h);
+
     }
 }
