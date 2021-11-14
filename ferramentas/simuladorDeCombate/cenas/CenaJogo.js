@@ -97,13 +97,13 @@ export default class CenaJogo extends Cena {
             true,
             "arrow_right"
         ));
-        this.botaoAtacar = this.adicionarBotao(new Button(
-            0.5 * this.canvas.width,
-            0.5 * this.canvas.height,
-            0.15 * this.canvas.width,
-            0.07 * this.canvas.height,
-            "ATACAR"
-        ));
+        // this.botaoAtacar = this.adicionarBotao(new Button(
+        //     0.5 * this.canvas.width,
+        //     0.5 * this.canvas.height,
+        //     0.15 * this.canvas.width,
+        //     0.07 * this.canvas.height,
+        //     "ATACAR"
+        // ));
         this.botaoForca = this.adicionarBotao(new Button(
             0.2 * this.canvas.width,
             0.8 * this.canvas.height,
@@ -189,9 +189,9 @@ export default class CenaJogo extends Cena {
     click(e) {
         this.mousedown(e);
         const [x, y] = getXY(e, this.canvas);
-        if (this.botaoAtacar.hasPoint({ x, y })) {
-            this.atacar();
-        }
+        // if (this.botaoAtacar.hasPoint({ x, y })) {
+        //     this.atacar();
+        // }
         if (this.botaoForca.hasPoint({ x, y })) {
             this.upgrade('forca');
         }

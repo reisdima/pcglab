@@ -1,45 +1,13 @@
+import { atributos } from "./atributos.js";
+
 export default class Personagem {
     constructor(canvas = null, cena = null) {
         this.canvas = canvas;
         this.ctx = canvas?.getContext("2d");
         this.cena = cena;
-
-        this.atributos = {
-            vida: {
-                nome: "Vida",
-                quantidade: 1,
-                custoAtual: 15,
-                custoInicial: 15,
-                valor: 5,
-                fator: 1,
-            },
-            forca: {
-                nome: "Força",
-                quantidade: 1,
-                custoAtual: 15,
-                custoInicial: 15,
-                valor: 1,
-                fator: 1,
-            },
-            defesa: {
-                nome: "Defesa",
-                quantidade: 1,
-                custoAtual: 15,
-                custoInicial: 15,
-                valor: 1,
-                fator: 1,
-            },
-            velocidade: {
-                nome: "Velocidade",
-                quantidade: 1,
-                custoAtual: 15,
-                custoInicial: 15,
-                valor: 1,
-                fator: 1,
-            }
-        }
-        this.vidaAtual = 5;
-        this.vidaMaxima = 5;
+        this.atributos = atributos;
+        this.vidaMaxima = this.atributos['vida'].valor;
+        this.vidaAtual = this.vidaMaxima;
         this.contador = 3;
         this.cooldown = 3;
         this.defesa = 0;

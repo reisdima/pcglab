@@ -3,49 +3,14 @@ import Personagem from "./Personagem.js";
 export default class Jogador extends Personagem {
     constructor(canvas = null, cena = null) {
         super(canvas, cena);
-        this.atributos = {
-            vida: {
-                nome: "Vida",
-                quantidade: 1,
-                custoAtual: 15,
-                custoInicial: 15,
-                valor: 2,
-                fator: 1,
-            },
-            forca: {
-                nome: "Força",
-                quantidade: 1,
-                custoAtual: 15,
-                custoInicial: 15,
-                valor: 1,
-                fator: 1,
-            },
-            defesa: {
-                nome: "Defesa",
-                quantidade: 1,
-                custoAtual: 15,
-                custoInicial: 15,
-                valor: 1,
-                fator: 1,
-            },
-            velocidade: {
-                nome: "Velocidade",
-                quantidade: 1,
-                custoAtual: 15,
-                custoInicial: 15,
-                valor: 1,
-                fator: 1,
-            }
-        }
-        this.vidaMaxima = this.atributos['vida'].valor;
-        this.vidaAtual = this.vidaMaxima;
         this.experienciaAtual = 10;
         this.experienciaNivel = 10;
         this.nivel = 1;
         this.pontosAtributos = 0;
         this.stunned = false;
         this.stunCooldown = 4;
-        this.cooldown = 0.2 + ((3 - this.atributos['velocidade'].valor) < 0 ? 0 : 3 - this.atributos['velocidade'].valor)
+        this.cooldown = 0.2 + ((3 - this.atributos['velocidade'].valor) < 0 ? 0 : 3 - this.atributos['velocidade'].valor);
+        this.contador = this.cooldown;
     }
 
 
@@ -94,7 +59,7 @@ export default class Jogador extends Personagem {
         } else {
             sr = (this.cooldown - this.contador) / this.cooldown;
         }
-        this.desenharBarra(x, y, "red", sr);
+        this.desenharBarra(x, y, this.stunned ? "hsl(30, 100%, 60%)" : "red", sr);
     }
 
 

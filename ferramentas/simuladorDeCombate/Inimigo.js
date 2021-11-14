@@ -5,6 +5,7 @@ export default class Inimigo extends Personagem {
         super(canvas, cena);
         this.pontosExperiencia = 5;
         this.cooldown = 3;
+        this.dificuldade = 1;
     }
 
     desenhar() {
@@ -15,14 +16,10 @@ export default class Inimigo extends Personagem {
         this.ctx.fillText("Inimigo", 0.95 * this.canvas.width,
             0.3 * this.canvas.height);
 
-
-
         this.ctx.textAlign = "center";
         x = 0.8 * this.canvas.width;
         y = 0.63 * this.canvas.height;
-
         this.ctx.fillText(this.vidaAtual + "/" + this.vidaMaxima, x, y);
-
 
         x = 0.925 * this.canvas.width - (0.25 * this.canvas.width);
         // Barra de Vida
@@ -30,7 +27,6 @@ export default class Inimigo extends Personagem {
         let sr = this.vidaAtual / this.vidaMaxima;
         const h = 0.02 * this.canvas.height;
         this.desenharBarra(x, y, "#2BDC36", sr, null, h);
-
 
         // Barra de ataque
         y = 0.7 * this.canvas.height;
@@ -44,9 +40,11 @@ export default class Inimigo extends Personagem {
     }
 
     controle() {
-        super.controle();
-        if (this.vidaAtual <= 0) {
-            this.resetar();
+        if (!this.cena.jogador.stunned) {
+            super.controle();
+            if (this.vidaAtual <= 0) {
+                this.resetar();
+            }
         }
     }
 
@@ -61,6 +59,8 @@ export default class Inimigo extends Personagem {
     calcularDificuldade() {
         this.pontosExperiencia = this.pontosExperiencia + 5;;
         this.vidaMaxima = this.vidaMaxima + 20;
+
+
     }
 
     atacar() {
