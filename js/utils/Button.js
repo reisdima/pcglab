@@ -1,8 +1,8 @@
 import Sprite from "../../progression/Sprite.js";
-import { assets } from "../../ferramentas/numbersGetBigger/Main.js";
+import { assets } from "../../ferramentas/simuladorDeCombate/Main.js";
 
 export default class Button extends Sprite {
-  constructor(x, y, w, h, text, useImage = false) {
+  constructor(x, y, w, h, text, useImage = false, imageName = "button") {
     super({});
     this.x = x;
     this.y = y;
@@ -11,6 +11,7 @@ export default class Button extends Sprite {
     this.text = text;
     this.useImage = useImage;
     this.esconder = false;
+    this.imageName = imageName;
   }
 
   desenhar(ctx) {
@@ -21,16 +22,16 @@ export default class Button extends Sprite {
     ctx.font = `${fontSize}px 'Skranji'`;
     if (this.useImage) {
       ctx.drawImage(
-        assets.img("button"),
-        this.x - this.w * 0.65,
-        this.y - this.h * 0.9,
-        this.w * 1.32,
-        this.h * 1.9
+        assets.img(this.imageName),
+        this.x - this.w / 2,
+        this.y - this.h / 2,
+        this.w,
+        this.h
       );
     } else {
-      ctx.fillStyle = "hsl(42 100% 50% / 1)";
+      ctx.fillStyle = "hsl(30, 100%, 60%)";
       ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
-      ctx.strokeStyle = "hsl(28deg 100% 40%)";
+      ctx.strokeStyle = "hsl(30, 100%, 40%)";
       ctx.lineWidth = 2;
       ctx.strokeRect(this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
     }
