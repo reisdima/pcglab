@@ -23,13 +23,19 @@ export default class Inimigo extends Personagem {
 
         this.ctx.fillText(this.vidaAtual + "/" + this.vidaMaxima, x, y);
 
-        // Barra de cooldown
+
         x = 0.925 * this.canvas.width - (0.25 * this.canvas.width);
+        // Barra de Vida
         y = 0.65 * this.canvas.height;
-        this.desenharBarraDeVida(x, y);
-        // x = 0.925 * this.canvas.width;
+        let sr = this.vidaAtual / this.vidaMaxima;
+        const h = 0.02 * this.canvas.height;
+        this.desenharBarra(x, y, "#2BDC36", sr, null, h);
+
+
+        // Barra de ataque
         y = 0.7 * this.canvas.height;
-        this.desenhaBarraDeAtaque(x, y);
+        sr = (this.cooldown - this.contador) / this.cooldown;
+        this.desenharBarra(x, y, "red", sr);
     }
 
     resetar() {
@@ -58,8 +64,10 @@ export default class Inimigo extends Personagem {
     }
 
     atacar() {
-        this.cena.jogador.sofrerDano(1);
-        console.log("inimigo atacou");
+        if (!this.cena.jogador.stunned) {
+            this.cena.jogador.sofrerDano(1);
+            console.log("inimigo atacou");
+        }
     }
 
 

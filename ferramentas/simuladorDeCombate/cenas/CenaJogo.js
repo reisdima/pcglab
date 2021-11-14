@@ -79,7 +79,7 @@ export default class CenaJogo extends Cena {
 
 
     createAreas() {
-        this.botaoProximaFase = this.adicionarBotao(new Button(
+        this.botaoFaseAnterior = this.adicionarBotao(new Button(
             0.35 * this.canvas.width,
             0.3 * this.canvas.height,
             0.035 * this.canvas.width,
@@ -198,6 +198,13 @@ export default class CenaJogo extends Cena {
         if (this.botaoVelocidade.hasPoint({ x, y })) {
             this.upgrade('velocidade');
         }
+        if (this.botaoProximaFase.hasPoint({ x, y })) {
+            this.nivelAtual++;
+        }
+        if (this.botaoFaseAnterior.hasPoint({ x, y })) {
+            this.nivelAtual = this.nivelAtual > 1 ? this.nivelAtual - 1 : this.nivelAtual;
+        }
+
     }
 
 

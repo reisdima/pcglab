@@ -9,7 +9,7 @@ export default class Jogador extends Personagem {
                 quantidade: 1,
                 custoAtual: 15,
                 custoInicial: 15,
-                valor: 5,
+                valor: 2,
                 fator: 1,
             },
             forca: {
@@ -38,17 +38,29 @@ export default class Jogador extends Personagem {
             }
         }
         this.vidaMaxima = this.atributos['vida'].valor;
+        this.vidaAtual = this.vidaMaxima;
         this.experienciaAtual = 10;
         this.experienciaNivel = 10;
         this.nivel = 1;
         this.pontosAtributos = 0;
+        this.stunned = false;
+        this.stunCooldown = 4;
         this.cooldown = 0.2 + ((3 - this.atributos['velocidade'].valor) < 0 ? 0 : 3 - this.atributos['velocidade'].valor)
     }
 
 
 
     controle() {
-        super.controle();
+        if (this.stunned) {
+            this.contador -= this.cena.dt;
+            if (this.contador <= 0) {
+                this.stunned = false;
+                this.vidaAtual = this.vidaMaxima;
+                this.contador = this.cooldown;
+            }
+        } else {
+            super.controle();
+        }
     }
 
     atacar() {
@@ -66,12 +78,23 @@ export default class Jogador extends Personagem {
         x = 0.18 * this.canvas.width;
         y = 0.63 * this.canvas.height;
         this.ctx.fillText(this.vidaAtual + "/" + this.atributos['vida'].valor, x, y);
-        // Barra de cooldown
+
         x = 0.075 * this.canvas.width;
         y = 0.65 * this.canvas.height;
-        this.desenharBarraDeVida(x, y);
+
+        // Barra de Vida
+        let sr = this.vidaAtual / this.vidaMaxima;
+        const h = 0.02 * this.canvas.height;
+        this.desenharBarra(x, y, "#2BDC36", sr, null, h);
+
+        // Barra de cooldown
         y = 0.7 * this.canvas.height;
-        this.desenhaBarraDeAtaque(x, y);
+        if (this.stunned) {
+            sr = (this.stunCooldown - this.contador) / this.stunCooldown;
+        } else {
+            sr = (this.cooldown - this.contador) / this.cooldown;
+        }
+        this.desenharBarra(x, y, "red", sr);
     }
 
 
@@ -121,6 +144,10 @@ export default class Jogador extends Personagem {
             this.vidaAtual = 0;
         } else {
             super.sofrerDano(dano);
+        }
+        if (this.vidaAtual == 0) {
+            this.stunned = true;
+            this.contador = this.stunCooldown;
         }
     }
 
