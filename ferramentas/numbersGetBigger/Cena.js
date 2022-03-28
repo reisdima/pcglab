@@ -163,7 +163,7 @@ export default class Cena {
 
   desenharBotoes() {
     this.botoes.forEach(botao => {
-      botao.desenhar(this.ctx);
+      botao.desenhar(this.ctx, this.assets);
     });
   }
 

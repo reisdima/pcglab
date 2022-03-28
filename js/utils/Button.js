@@ -1,5 +1,4 @@
 import Sprite from "../../progression/Sprite.js";
-import { assets } from "../../ferramentas/simuladorDeCombate/Main.js";
 
 export default class Button extends Sprite {
   constructor(x, y, w, h, text, useImage = false, imageName = "button") {
@@ -14,7 +13,7 @@ export default class Button extends Sprite {
     this.imageName = imageName;
   }
 
-  desenhar(ctx) {
+  desenhar(ctx, assets) {
     if (this.esconder)
       return;
     ctx.beginPath();
