@@ -41,7 +41,7 @@ FireZone.prototype.criarAnimacoes = function(){
         }
     }
 
-    this.pose = seedGen.getRandomIntMethod_1(0,20);             // Sorteia uma posição inicial para que os 
+    this.pose = seedGen.nextRandInt(0,20);             // Sorteia uma posição inicial para que os 
                                                                 // Firezones não fiquem sincronizados
 }
 

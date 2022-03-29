@@ -3,14 +3,15 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <script type="text/javascript" src="classes/SeedGenerator.js"></script>
+    <script src="../classes/SeedGenerator.js" type="module"></script>
     <title>Gerador de Seed</title>
 </head>
 <body>
     <h1>Gerador de Seed:</h1>
 
-    <script type="text/javascript">
+    <script type="module">
         //  https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
+        import SeedGenerator from '../classes/SeedGenerator.js';
 
         var seedGen = new SeedGenerator({seed_1: 10, seed_2_string: "apples"});
 

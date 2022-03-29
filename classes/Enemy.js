@@ -82,7 +82,7 @@ Enemy.prototype.criarAnimacoes = function(){
         }
     }
 
-    this.pose = seedGen.getRandomIntMethod_1(0, 50);             // Sorteia uma posição inicial para que os 
+    this.pose = seedGen.nextRandInt(0, 50);             // Sorteia uma posição inicial para que os 
                                                                  // inimigos não fiquem sincronizados
 }
 
