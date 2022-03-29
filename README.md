@@ -5,7 +5,7 @@ O PGCLab foi desenvolvido durante 2020, como um projeto da disciplina DCC104 e D
 
 
 ##  Instruções de uso:
-Uma versão online pode ser acessada [diretamente pelo navegador](https://ufjf-pgclab.github.io/pgclab/MazeRunner.html)
+Uma versão online pode ser acessada [diretamente pelo navegador](https://ufjf-gamelab.github.io/pcglab/MazeRunner.html)
 
 - *Setas do teclado*: Movimentação do personagem;</p>
 - *P*: Ativa ou desativa o modo debug de modo que as colisões e detecção de grade não são verificadas;</p>

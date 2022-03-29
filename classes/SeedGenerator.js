@@ -1,118 +1,153 @@
-export default function SeedGenerator(params = {}){
-    let exemplo = {
-        seed_1: 1,
-        seed_2: 0,
-        seed_2_string: "apple"
+export default class SeedGenerator {
+    constructor(seedString = "pcglab", method = "sin") {
+      this.sinSeed = 1;
+      this.method = method;
+      // Create xmur3 state:
+      this.seed32 = this.xmur3(seedString);
     }
-
-    Object.assign(this, exemplo, params);
-
-    // Create xmur3 state:
-    this.seed_2 = this.xmur3(this.seed_2_string);
-}
-
-//SeedGenerator.prototype = SeedGenerator;
-//SeedGenerator.prototype.constructor = new SeedGenerator();
-
-//  https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
-
-/**
-*   randomMethod 1:
-*
-* A elegância dessa solução, vem da falta de números "mágicos" 
-* (além de 10000, que representa a quantidade mínima de dígitos que você deve jogar 
-* fora para evitar padrões estranhos - veja resultados com os valores 10, 100, 1000 ) 
-* Brevidade também é legal.
-*
-*   Antti Sykäri's algorithm
-*/
-
-SeedGenerator.prototype.getRandomMethod_1 = function(){
-    let x = Math.sin(this.seed_1++) * 10000;
-    return x - Math.floor(x);
-}
-
-SeedGenerator.prototype.getRandomIntMethod_1 = function(minimal, maximus){
-    let min = Math.ceil(minimal);
-    let max = Math.floor(maximus);
-    return Math.floor(this.getRandomMethod_1() * (max - min)) + min;
-}
-
-SeedGenerator.prototype.getRandomIntDefault = function(minimal, maximus){
-    let min = Math.ceil(minimal);
-    let max = Math.floor(maximus);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
-/**
-*   randomMethod 2:
-*   
-*   xmur3:
-*/
-
-SeedGenerator.prototype.xmur3 = function(str) {
-    let h;
-    for(let i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
-        h = Math.imul(h ^ str.charCodeAt(i), 3432918353),
-        h = h << 13 | h >>> 19;
-    return function() {
-        h = Math.imul(h ^ h >>> 16, 2246822507);
-        h = Math.imul(h ^ h >>> 13, 3266489909);
+  
+    /**
+     *  PRNG initialiazator with  xmur3:
+     *  @see https://stackoverflow.com/a/47593316/5141996
+     */
+    xmur3(str) {
+      let h = 1779033703 ^ str.length;
+      for (let i = 0; i < str.length; i++) {
+        (h = Math.imul(h ^ str.charCodeAt(i), 3432918353)),
+          (h = (h << 13) | (h >>> 19));
+      }
+      return function () {
+        h = Math.imul(h ^ (h >>> 16), 2246822507);
+        h = Math.imul(h ^ (h >>> 13), 3266489909);
         return (h ^= h >>> 16) >>> 0;
+      };
     }
-}
 
-/**
-*   sfc32: 
-*/
-
-SeedGenerator.prototype.sfc32 = function(a, b, c, d) {
-    return function() {
-        a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0; 
+    nextRandFloat(min, max) {
+        switch (this.method) {
+          case "math":
+            return this.getRandomFloatMethodMath(min, max);
+          case "sin":
+            return this.getRandomFloatMethodSin(min, max);
+          case "sfc32":
+            return this.getRandomFloatMethodSFC32(min, max);
+          case "mulberry32":
+            return this.getRandomFloatMethodMulberry32(min, max);
+          default:
+            return this.getRandomFloatMethodSin(min, max);
+        }
+      }
+  
+    /**
+     * Select next rand integer based on method
+     * 
+     */
+  
+    nextRandInt(min, max) {
+      switch (this.method) {
+        case "math":
+          return this.getRandomIntMethodMath(min, max);
+        case "sin":
+          return this.getRandomIntMethodSin(min, max);
+        case "sfc32":
+          return this.getRandomIntMethodSFC32(min, max);
+        case "mulberry32":
+          return this.getRandomIntMethodMulberry32(min, max);
+        default:
+          return this.getRandomIntMethodSin(min, max);
+      }
+    }
+  
+    /**
+     * Math Method
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+     */
+    getRandomFloatMethodMath() {
+      return Math.random();
+    }
+  
+    getRandomIntMethodMath(minimal, maximus) {
+      let min = Math.ceil(minimal);
+      let max = Math.floor(maximus);
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+  
+    /**
+     * Sin Method
+     * @see https://stackoverflow.com/a/19303725/5141996
+     */
+    getRandomFloatMethodSin() {
+      let x = Math.sin(this.sinSeed++) * 10000;
+      return x - Math.floor(x);
+    }
+  
+    getRandomIntMethodSin(minimal, maximus) {
+      let min = Math.ceil(minimal);
+      let max = Math.floor(maximus);
+      return Math.floor(this.getRandomFloatMethodSin() * (max - min)) + min;
+    }
+  
+    /**
+     *   sfc32:
+     *   @see http://pracrand.sourceforge.net/
+     */
+    sfc32(a, b, c, d) {
+      return function () {
+        a >>>= 0;
+        b >>>= 0;
+        c >>>= 0;
+        d >>>= 0;
         let t = (a + b) | 0;
-        a = b ^ b >>> 9;
-        b = c + (c << 3) | 0;
-        c = (c << 21 | c >>> 11);
-        d = d + 1 | 0;
-        t = t + d | 0;
-        c = c + t | 0;
+        a = b ^ (b >>> 9);
+        b = (c + (c << 3)) | 0;
+        c = (c << 21) | (c >>> 11);
+        d = (d + 1) | 0;
+        t = (t + d) | 0;
+        c = (c + t) | 0;
         return (t >>> 0) / 4294967296;
+      };
     }
-}
-
-/**
-*    Mulberry32:
-*/
-
-SeedGenerator.prototype.mulberry32 = function(a) {
-    return function() {
-        let t = a += 0x6D2B79F5;
-        t = Math.imul(t ^ t >>> 15, t | 1);
-        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    // Output four 32-bit hashes to provide the seed for sfc32.
+    getRandomFloatMethodSFC32() {
+      let func = this.sfc32(
+        this.seed32(),
+        this.seed32(),
+        this.seed32(),
+        this.seed32()
+      ); //Retorna uma função
+      return func(); //Retorna o valor
     }
-}
-
-// Output four 32-bit hashes to provide the seed for sfc32.
-SeedGenerator.prototype.getRandomMethod_2 = function(){
-    let func = this.sfc32(this.seed_2(), this.seed_2(), this.seed_2(), this.seed_2());  //Retorna uma função
-    return func();                                                                      //Retorna o valor
-}
-
-SeedGenerator.prototype.getRandomIntMethod_2 = function(minimal, maximus){
-    let min = Math.ceil(minimal);
-    let max = Math.floor(maximus);
-    return Math.floor(this.getRandomMethod_2() * (max - min)) + min;
-}
-
-// Output one 32-bit hash to provide the seed for mulberry32.
-SeedGenerator.prototype.getRandomMethod_3 = function(){
-    let func = this.mulberry32(this.seed_2());                      //Retorna uma função
-    return func();                                                  //Retorna o valor
-}
-
-SeedGenerator.prototype.getRandomIntMethod_3 = function(minimal, maximus){
-    let min = Math.ceil(minimal);
-    let max = Math.floor(maximus);
-    return Math.floor(this.getRandomMethod_3() * (max - min)) + min;
-}
+  
+    getRandomIntMethodSFC32(minimal, maximus) {
+      let min = Math.ceil(minimal);
+      let max = Math.floor(maximus);
+      return Math.floor(this.getRandomFloatMethodSFC32() * (max - min)) + min;
+    }
+  
+    /**
+     *    Mulberry32
+     *    @see http://gjrand.sourceforge.net/
+     */
+    mulberry32(a) {
+      return function () {
+        let t = (a += 0x6d2b79f5);
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+  
+    // Output one 32-bit hash to provide the seed for mulberry32.
+    getRandomFloatMethodMulberry32() {
+      let func = this.mulberry32(this.seed32()); //Retorna uma função
+      return func(); //Retorna o valor
+    }
+  
+    getRandomIntMethodMulberry32(minimal, maximus) {
+      let min = Math.ceil(minimal);
+      let max = Math.floor(maximus);
+      let result = Math.floor(this.getRandomFloatMethodMulberry32() * (max - min)) + min;
+      return result;
+    }
+  }
+  

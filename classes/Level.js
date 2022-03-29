@@ -124,7 +124,7 @@ Level.prototype.copiaSalasComReferencia = function(rooms){
  * Utiliza o gerador de seed como referencia pra escolha numerica
  */
 Level.prototype.getRandomInt = function(min, max){
-  return this.seedGen.getRandomIntMethod_1(min, max); 
+  return this.seedGen.nextRandInt(min, max); 
 }
 
 Level.prototype.caminhoColetaTesouros = function(){

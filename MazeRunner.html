@@ -80,7 +80,7 @@
       let minValue = 500000;
       seedValueURL = 4248372;//(Math.floor(Math.random() * (maxValue - minValue)) + minValue);
     }
-    const seedGen = new SeedGenerator({seed_1: seedValueURL , seed_2_string: "teste"});
+    const seedGen = new SeedGenerator(seedValueURL.toString() , "sfc32");
 
     // Proporções do mapa
     
