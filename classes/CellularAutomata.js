@@ -1,4 +1,5 @@
 import Room from "./Room.js";
+import { UtilBenchmark } from "./Utils.js";
 
 export default class CellularAutomata {
     constructor(params = {}) {
@@ -50,19 +51,21 @@ export default class CellularAutomata {
         this.rooms = [];
         let auxMatrix = this.initMap(this.HS, this.WS, -1);
         let auxMatrixVisited = [];
-        let room = 0;
+        let roomId = 0;
         let roomFloors = 0;
-        let caveArea = 0;
+        let caveAreaCounter = 0;
+        let caveAreaIndex = -2;
+        let roomAreaIndex = -1;
         for (let i = 0; i < this.HS; i++) {
             auxMatrixVisited[i] = [];
             for (let j = 0; j < this.WS; j++) {
                 auxMatrixVisited[i][j] = false;
                 if (this.map[i][j] !== this.floorIndex) {
-                    auxMatrix[i][j] = -2;   //Cave area
-                    caveArea++;
+                    auxMatrix[i][j] = caveAreaIndex;   //Cave area
+                    caveAreaCounter++;
                 }
                 else {
-                    auxMatrix[i][j] = -1;   //rooms area
+                    auxMatrix[i][j] = roomAreaIndex;   //rooms area
                     roomFloors++;
                 }
             }
@@ -70,19 +73,17 @@ export default class CellularAutomata {
 
         for (let i = 0; i < this.HS; i++) {
             for (let j = 0; j < this.WS; j++) {
-                if (auxMatrix[i][j] === -1) {
-                    room++;
-                    this.visitCells(auxMatrix, this.map, i, j, this.floorIndex, 1, room);
+                if (auxMatrix[i][j] === roomAreaIndex) {
+                    roomId++;
+                    this.visitCells(auxMatrix, this.map, i, j, this.floorIndex, 1, roomId)
+                    let newRoom = new Room(roomId);
+                    this.rooms.push(newRoom);
                 }
             }
         }
 
-        for (let i = 0; i < room; i++) {                  //Cria o numero de salas correspondentes
-            let aux = new Room(i + 1);
-            this.rooms.push(aux);
-        }
 
-        for (let i = 0; i < this.HS; i++) {               //Incrementa os contadores
+        for (let i = 0; i < this.HS; i++) {               // Adiciona blocos às salas
             for (let j = 0; j < this.WS; j++) {
                 if (auxMatrix[i][j] > 0) {
                     this.rooms[auxMatrix[i][j] - 1].addBlock(i, j);
@@ -101,7 +102,7 @@ export default class CellularAutomata {
         //console.log(text);
         console.log("Number of rooms: " + this.rooms.length);
         console.log("Number of roomFloors: " + roomFloors);
-        console.log("Number of caveArea: " + caveArea);
+        console.log("Number of caveArea: " + caveAreaCounter);
         console.log("Total blocks: " + this.HS * this.WS);
         //console.log(this.rooms);
         /*let text = "";
@@ -271,7 +272,7 @@ export default class CellularAutomata {
         }
     }*/
 
-    visitCells(auxMatrix, mapx, y, x, tp, d = 1, indexArea) {   //visita as celulas visinhas de maneira recursiva e atribui o código da sala correspondente 
+    visitCells(auxMatrix, mapx, y, x, tp, d = 1, indexArea) {   //visita as celulas vizinhas de maneira recursiva e atribui o código da sala correspondente 
         /*********************************************
          * 
          * Algoritmo Flood fill:
@@ -511,11 +512,13 @@ export default class CellularAutomata {
                 matrix.push([l, c]);
             }
         }
-        let rockInMap = (this.r * this.HS * this.WS);
+        let rockInMap = (this.r * this.HS * this.WS); // Porcentagem de blocos de caverna que o mapa têm
         for (let i = 0; i < rockInMap; i++) {
             let matrixIndexRandom = this.seedGen.nextRandInt(0, matrix.length);
-            this.map[matrix[matrixIndexRandom][0]][matrix[matrixIndexRandom][1]] = this.rockIndex;
-            this.map2[matrix[matrixIndexRandom][0]][matrix[matrixIndexRandom][1]] = this.rockIndex;
+            let linha = matrix[matrixIndexRandom][0];
+            let coluna = matrix[matrixIndexRandom][1];
+            this.map[linha][coluna] = this.rockIndex;
+            this.map2[linha][coluna] = this.rockIndex;
             matrix.splice(matrixIndexRandom, 1);
         }
     }

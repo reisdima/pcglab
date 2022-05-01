@@ -1,6 +1,6 @@
 import Map from "./Map.js";
 import Room from "./Room.js";
-import Teleporter from "./Teleporter.js";
+import Teleporter, { TeleporterType } from "./Teleporter.js";
 import FireZone from "./FireZone.js";
 import Enemy from "./Enemy.js";
 import Treasure from "./Treasure.js";
@@ -20,8 +20,8 @@ export default class Level {
     this.tempo = undefined;
     this.tamanhoSalasMinimo = 25;
     this.larguraBarra = 127;
-    this.teleporteInicioLevel = new Teleporter(0);         //(Inicio) mapa
-    this.teleporteFinalLevel = new Teleporter(1);        //(Final) mapa
+    this.teleporteInicioLevel = new Teleporter(TeleporterType.InicioLevel);         //(Inicio) mapa
+    this.teleporteFinalLevel = new Teleporter(TeleporterType.FimLevel);        //(Final) mapa
     this.player = undefined;
     this.hud = hud;
     this.seedGen = seedGen;
@@ -159,46 +159,47 @@ export default class Level {
 
   posicionarTeleportes(params) {
     if (this.rooms.length > 1) {          //Only will have teleporters if there are more than one room
-      let indAvaliableRoom;
+      let indAvailableRoom;
       let indFinishRoom;
-      let roomsAvaliable = [];            //Rooms disponiveis para escolher o teleporte inicial
+      let roomsAvailable = [];            //Rooms disponiveis para escolher o teleporte inicial
       let roomsClosed = [];               //Rooms que o teleporte inicial foi conectado
       let sortPosition;
       //let blocks = [];
 
       // posicionando todos os teleportes de inicio de sala
       for (let i = 0; i < this.rooms.length; i++) {
+        const roomAtual = this.rooms[i];
         // Prepocessamento -- Pega o bloco do meio da sala, calcula a distancia, pega o bloco
         // da maior, zera a distancia, posiciona o bloco e calcula a distancia de novo
 
-        let blocoMedio = Math.floor(this.rooms[i].blocks.length / 2) - 1;
-        this.mapa.atualizaDist(this.rooms[i].blocks[blocoMedio].linha, this.rooms[i].blocks[blocoMedio].coluna, 0, 0);     // Atualiza distancia dos teleportes
-        let maxDist = this.rooms[i].getMaxDist(0);
-        let celulas = this.rooms[i].getCellsByDist(maxDist, 0);
+        let blocoMedio = Math.floor(roomAtual.blocks.length / 2) - 1;
+        this.mapa.atualizaDist(roomAtual.blocks[blocoMedio].linha, roomAtual.blocks[blocoMedio].coluna, 0, 0);     // Atualiza distancia dos teleportes
+        let maxDist = roomAtual.getMaxDist(0);
+        let celulas = roomAtual.getCellsByDist(maxDist, 0);
         sortPosition = this.getRandomInt(0, (celulas.length - 1));
-        this.rooms[i].resetDistancia(0);
+        roomAtual.resetDistancia(0);
 
         // Posicionamento teleporte de inicio de sala
-        this.rooms[i].teleporterInitial.setPosition(celulas[sortPosition]);
-        this.rooms[i].teleporterInitial.roomNumber = celulas[sortPosition].room;
-        this.rooms[i].teleporterInitial.gy = celulas[sortPosition].linha;
-        this.rooms[i].teleporterInitial.gx = celulas[sortPosition].coluna;
-        this.rooms[i].teleporterInitial.map = this.mapa;
-        this.mapa.atualizaDist(this.rooms[i].teleporterInitial.gy, this.rooms[i].teleporterInitial.gx, 0, 0);     // Atualiza distancia dos teleportes
-        roomsAvaliable.push(this.rooms[i].number);                                                                // Vetor de salas disponíveis na hora realizar a ligação entre elas
+        roomAtual.teleporterInitial.setPosition(celulas[sortPosition]);
+        roomAtual.teleporterInitial.roomNumber = celulas[sortPosition].room;
+        roomAtual.teleporterInitial.gy = celulas[sortPosition].linha;
+        roomAtual.teleporterInitial.gx = celulas[sortPosition].coluna;
+        roomAtual.teleporterInitial.map = this.mapa;
+        this.mapa.atualizaDist(roomAtual.teleporterInitial.gy, roomAtual.teleporterInitial.gx, 0, 0);     // Atualiza distancia dos teleportes
+        roomsAvailable.push(roomAtual.number);                                                                // Vetor de salas disponíveis na hora realizar a ligação entre elas
 
         // Posicionamento de final de sala
         celulas = [];
-        maxDist = this.rooms[i].getMaxDist(0);                       // Maxima distancia dos teleportes
+        maxDist = roomAtual.getMaxDist(0);                       // Maxima distancia dos teleportes
         let criterio = Math.floor((params.porcentagem * maxDist) / 100);   // Porcentagem da distancia maxima
-        celulas = this.rooms[i].getCellsByDist(criterio, 0);    // Listagem de celulas dentro do criterio de escolha para o teleporte
+        celulas = roomAtual.getCellsByDist(criterio, 0);    // Listagem de celulas dentro do criterio de escolha para o teleporte
         sortPosition = this.getRandomInt(0, (celulas.length - 1));
 
-        this.rooms[i].teleporterFinal.setPosition(celulas[sortPosition]);
-        this.rooms[i].teleporterFinal.roomNumber = celulas[sortPosition].room;
-        this.rooms[i].teleporterFinal.gy = celulas[sortPosition].linha;
-        this.rooms[i].teleporterFinal.gx = celulas[sortPosition].coluna;
-        this.rooms[i].teleporterFinal.map = this.mapa;
+        roomAtual.teleporterFinal.setPosition(celulas[sortPosition]);
+        roomAtual.teleporterFinal.roomNumber = celulas[sortPosition].room;
+        roomAtual.teleporterFinal.gy = celulas[sortPosition].linha;
+        roomAtual.teleporterFinal.gx = celulas[sortPosition].coluna;
+        roomAtual.teleporterFinal.map = this.mapa;
         this.mapa.atualizaDist(this.rooms[i].teleporterFinal.gy, this.rooms[i].teleporterFinal.gx, 0, 0);     // Atualiza distancia dos teleportes
       }
 
@@ -285,32 +286,32 @@ export default class Level {
        * LIGANDO OS TELEPORTES ENTRE AS SALAR DE MANEIRA CIRCULAR   *
        **************************************************************/
 
-      indAvaliableRoom = this.getRandomInt(0, (roomsAvaliable.length - 1));                 //Begin teleporter room
-      indFinishRoom = this.getRandomInt(0, (roomsAvaliable.length - 1));
-      while (indAvaliableRoom === indFinishRoom) {
-        indFinishRoom = this.getRandomInt(0, (roomsAvaliable.length - 1));
+      indAvailableRoom = this.getRandomInt(0, (roomsAvailable.length - 1));                 //Begin teleporter room
+      indFinishRoom = this.getRandomInt(0, (roomsAvailable.length - 1));
+      while (indAvailableRoom === indFinishRoom) {
+        indFinishRoom = this.getRandomInt(0, (roomsAvailable.length - 1));
       }
-      let currentRoom = this.rooms[roomsAvaliable[indFinishRoom] - 1].number;
+      let currentRoom = this.rooms[roomsAvailable[indFinishRoom] - 1].number;
 
-      this.rooms[roomsAvaliable[indAvaliableRoom] - 1].teleporterInitial.proximoTeleporte = this.rooms[roomsAvaliable[indFinishRoom] - 1].teleporterFinal;
-      this.rooms[roomsAvaliable[indFinishRoom] - 1].teleporterFinal.proximoTeleporte = this.rooms[roomsAvaliable[indAvaliableRoom] - 1].teleporterInitial;
+      this.rooms[roomsAvailable[indAvailableRoom] - 1].teleporterInitial.proximoTeleporte = this.rooms[roomsAvailable[indFinishRoom] - 1].teleporterFinal;
+      this.rooms[roomsAvailable[indFinishRoom] - 1].teleporterFinal.proximoTeleporte = this.rooms[roomsAvailable[indAvailableRoom] - 1].teleporterInitial;
 
-      roomsClosed.push(roomsAvaliable[indAvaliableRoom]);           //roomsClosed.push(this.rooms[roomsAvaliable[indAvaliableRoom] - 1].number);
-      roomsAvaliable.splice(indAvaliableRoom, 1);
+      roomsClosed.push(roomsAvailable[indAvailableRoom]);           //roomsClosed.push(this.rooms[roomsAvailable[indAvailableRoom] - 1].number);
+      roomsAvailable.splice(indAvailableRoom, 1);
 
-      while (roomsAvaliable.length > 1) {
+      while (roomsAvailable.length > 1) {
         for (let i = 0; i < this.rooms.length; i++) {
-          if (roomsAvaliable[i] === currentRoom) {                       //Room's number was found
-            indAvaliableRoom = i;
+          if (roomsAvailable[i] === currentRoom) {                       //Room's number was found
+            indAvailableRoom = i;
             break;
           }
         }
 
-        indFinishRoom = this.getRandomInt(0, (roomsAvaliable.length - 1));
-        while (indAvaliableRoom === indFinishRoom) {
-          indFinishRoom = this.getRandomInt(0, (roomsAvaliable.length - 1));
-          if (roomsAvaliable.length === 2) {
-            if (indAvaliableRoom === 0) {
+        indFinishRoom = this.getRandomInt(0, (roomsAvailable.length - 1));
+        while (indAvailableRoom === indFinishRoom) {
+          indFinishRoom = this.getRandomInt(0, (roomsAvailable.length - 1));
+          if (roomsAvailable.length === 2) {
+            if (indAvailableRoom === 0) {
               indFinishRoom = 1;
               break;
             }
@@ -320,21 +321,21 @@ export default class Level {
             }
           }
         }
-        currentRoom = roomsAvaliable[indFinishRoom];//this.rooms[roomsAvaliable[indFinishRoom] - 1].number;
+        currentRoom = roomsAvailable[indFinishRoom];//this.rooms[roomsAvailable[indFinishRoom] - 1].number;
 
-        this.rooms[roomsAvaliable[indAvaliableRoom] - 1].teleporterInitial.proximoTeleporte = this.rooms[roomsAvaliable[indFinishRoom] - 1].teleporterFinal;
-        this.rooms[roomsAvaliable[indFinishRoom] - 1].teleporterFinal.proximoTeleporte = this.rooms[roomsAvaliable[indAvaliableRoom] - 1].teleporterInitial;
+        this.rooms[roomsAvailable[indAvailableRoom] - 1].teleporterInitial.proximoTeleporte = this.rooms[roomsAvailable[indFinishRoom] - 1].teleporterFinal;
+        this.rooms[roomsAvailable[indFinishRoom] - 1].teleporterFinal.proximoTeleporte = this.rooms[roomsAvailable[indAvailableRoom] - 1].teleporterInitial;
 
-        roomsClosed.push(this.rooms[roomsAvaliable[indAvaliableRoom] - 1].number);
-        roomsAvaliable.splice(indAvaliableRoom, 1);
+        roomsClosed.push(this.rooms[roomsAvailable[indAvailableRoom] - 1].number);
+        roomsAvailable.splice(indAvailableRoom, 1);
       }
       //Connecting last room => to create a cycle on the rooms connections
 
-      this.rooms[roomsAvaliable[0] - 1].teleporterInitial.proximoTeleporte = this.rooms[roomsClosed[0] - 1].teleporterFinal;
-      this.rooms[roomsClosed[0] - 1].teleporterFinal.proximoTeleporte = this.rooms[roomsAvaliable[0] - 1].teleporterInitial;
+      this.rooms[roomsAvailable[0] - 1].teleporterInitial.proximoTeleporte = this.rooms[roomsClosed[0] - 1].teleporterFinal;
+      this.rooms[roomsClosed[0] - 1].teleporterFinal.proximoTeleporte = this.rooms[roomsAvailable[0] - 1].teleporterInitial;
 
-      roomsClosed.push(this.rooms[roomsAvaliable[0] - 1].number);
-      roomsAvaliable.splice(indAvaliableRoom, 1);
+      roomsClosed.push(this.rooms[roomsAvailable[0] - 1].number);
+      roomsAvailable.splice(indAvailableRoom, 1);
     }
     else {
       console.log("Level with only one room !!!");
@@ -679,7 +680,7 @@ export default class Level {
        *  0 => Posicionamento na SALA 1;  1 => Posicionamento Aleatório;    *
        *                                                                    *
        * opcaoTeleporteFinal:                                               *
-       *  0 => Final poder ficar na mesma sala do teleporte inicial;        *
+       *  0 => Final pode ficar na mesma sala do teleporte inicial;        *
        *  1 => Final na sala diferente do teleporte inicial;                *
        *********************************************************************/
     });
