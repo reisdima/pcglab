@@ -2,7 +2,7 @@ import Teleporter, { TeleporterType } from "./Teleporter.js";
 import Cell from "./Cell.js";
 import FireZone from "./FireZone.js";
 import Treasure from "./Treasure.js";
-import Enemy from "./Enemy.js";
+import Enemy from "./Entities/Enemy.js";
 import { setDebugMode, getDebugMode } from "./DebugMode.js";
 import Path from "./Path.js";
 import { converteTelaCheia, escreveTexto } from "./Utils.js";

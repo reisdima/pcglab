@@ -1,7 +1,7 @@
 import AssetsManager from "./AssetsManager.js";
 import SeedGenerator from "./SeedGenerator.js";
 import Sprite from "./Sprite.js";
-import Player, { setPlayer, getPlayer } from "./Player.js";
+import Player, { setPlayer, getPlayer } from "./Entities/Player.js";
 import Level from "./Level.js";
 import Room from "./Room.js";
 import Map from "./Map.js";
@@ -101,18 +101,18 @@ const K = 1;
 const debugModeBegin = 0;
 const debugModeEnd = 18;
 setDebugMode(debugModeBegin);    // 0
-const player = new Player({
-    s: 27, w: 27, h: 11,
-    hitBox: {
-        x: 0,
-        y: 0,
-        w: 27,
-        h: 11,
-        wDefault: 27,
-        hDefault: 11
-    }
-});
-setPlayer(player);
+// const player = new Player({
+//     s: 27, w: 27, h: 11,
+//     hitBox: {
+//         x: 0,
+//         y: 0,
+//         w: 27,
+//         h: 11,
+//         wDefault: 27,
+//         hDefault: 11
+//     }
+// });
+// setPlayer(player);
 
 // const hud = getHud();
 // hud.init(tela);

@@ -2,7 +2,7 @@ import Map from "./Map.js";
 import Room from "./Room.js";
 import Teleporter, { TeleporterType } from "./Teleporter.js";
 import FireZone from "./FireZone.js";
-import Enemy from "./Enemy.js";
+import Enemy from "./Entities/Enemy.js";
 import Treasure from "./Treasure.js";
 import Ordenacao from "./Ordenacao.js";
 import { setDebugMode, getDebugMode } from "./DebugMode.js";
@@ -653,8 +653,8 @@ export default class Level {
     }
   }
 
-  movimento(dt) {
-    this.player.moverCompleto(dt);
+  quadro(dt) {
+    this.player.quadro(dt);
     this.colisaoTeleportes(this.player, this);
     this.colisaoFireZones(this.player);
     //this.colisaoInimigos(this.player);

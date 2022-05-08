@@ -1,5 +1,5 @@
 import { converteTelaCheia, escreveTexto } from "./Utils.js";
-import { getPlayer } from "./Player.js";
+import { getPlayer } from "./Entities/Player.js";
 
 // Main Menu campos
 const fontMainMenu = "30px Arial Black";

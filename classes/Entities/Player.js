@@ -1,6 +1,6 @@
-import Sprite from "./Sprite.js";
-import assetsMng from "./AssetsMng.js";
-import { setDebugMode, getDebugMode } from "./DebugMode.js";
+import Sprite from "../Sprite.js";
+import assetsMng from "../AssetsMng.js";
+import { setDebugMode, getDebugMode } from "../DebugMode.js";
 
 let _player = null;
 
@@ -79,6 +79,7 @@ export default class Player extends Sprite {
   }
 
   setRoom() {
+    console.log('Chamou setRoom');
     this.room = this.map.cell[this.gy][this.gx].room;
   }
 
@@ -493,9 +494,8 @@ export default class Player extends Sprite {
       for (let i = 0; i < this.tiro.length; i++) {
         if (this.tiro[i].colidiuCom3(alvo)) {
           if (!alvo.imune) {
-            alvo.hp = alvo.hp - this.hitpoint;
+            alvo.sofrerAtaque(this.hitpoint);
             alvo.ativarInvencibilidade();
-
           }
           /*
           let taxaRecuo = 15;

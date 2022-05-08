@@ -18,7 +18,7 @@ export default class InputManager {
             if (comando) {
                 that.comandos[comando] = true;
             }
-            //console.log(e.key, comando, that.comandos.get(comando));
+            // console.log(e.key, comando, that.comandos[comando]);
         });
         addEventListener("keyup", function (e) {
             const comando = that.teclas[e.key];
@@ -26,7 +26,7 @@ export default class InputManager {
                 that.mapaPressionado[comando] = false;
                 that.comandos[comando] = false;
             }
-            //console.log(e.key, comando, that.comandos.get(comando));
+            // console.log(e.key, comando, that.comandos[comando]);
         });
     }
 
@@ -49,26 +49,4 @@ export default class InputManager {
     }
 
 
-    // configurarTeclado(acoes) {
-    //     for (const tecla in acoes) {
-    //         const comando = acoes[tecla];
-    //         this.comandos.set(comando, false);
-    //         this.teclas.set(tecla, comando);
-    //     }
-    //     const that = this;
-    //     addEventListener("keydown", function (e) {
-    //         const comando = that.teclas.get(e.key);
-    //         if (comando) {
-    //             that.comandos.set(comando, true);
-    //         }
-    //         //console.log(e.key, comando, that.comandos.get(comando));
-    //     });
-    //     addEventListener("keyup", function (e) {
-    //         const comando = that.teclas.get(e.key);
-    //         if (comando) {
-    //             that.comandos.set(comando, false);
-    //         }
-    //         //console.log(e.key, comando, that.comandos.get(comando));
-    //     });
-    // }
 }

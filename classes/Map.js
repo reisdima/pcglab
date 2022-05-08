@@ -1,7 +1,7 @@
 import Cell from "./Cell.js";
 import { getMapArea, setMapArea } from "./MAPA_AREA.js";
 import { setDebugMode, getDebugMode } from "./DebugMode.js";
-import { getPlayer } from "./Player.js";
+import { getPlayer } from "./Entities/Player.js";
 
 export default class Map {
   constructor(w, h, s, assetsMng) {

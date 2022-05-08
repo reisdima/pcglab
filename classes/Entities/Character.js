@@ -1,16 +1,18 @@
-import Sprite from "./Sprite.js";
-import seedGen from "./SeedGen.js";
-import assetsMng from "./AssetsMng.js";
-import { setDebugMode, getDebugMode } from "./DebugMode.js";
+import Sprite from "../Sprite.js";
+import seedGen from "../SeedGen.js";
+import assetsMng from "../AssetsMng.js";
+import { setDebugMode, getDebugMode } from "../DebugMode.js";
 
-
-export default class Enemy extends Sprite {
+export default class Character extends Sprite {
     constructor() {
         super({ s: 22, w: 22, h: 10, nomeImagem: "slime", sizeImagem: 22 });
         this.alvo = null;
+        this.atributos = {
+
+        }
         this.roomNumber = -1;
-        this.maxHp = 200;
-        this.hp = 200;
+        this.hpMax = 200;
+        this.hpAtual = 200;
         this.animation = [];
         this.hitpoint = 40;
         this.qtdAnimacoes = { types: 2, lines: [1, 0], qtd: [3, 9] /* atacking: 9, normal: 3*/ };
@@ -136,8 +138,8 @@ export default class Enemy extends Sprite {
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
         ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w, 4);         // Fundo
-        ctx.fillStyle = `hsl(${120 * this.hp / this.maxHp}, 100%, 50%)`;
-        ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w * (Math.max(0, this.hp) / this.maxHp), 4);         // Quantidade de HP
+        ctx.fillStyle = `hsl(${120 * this.hpAtual / this.hpMax}, 100%, 50%)`;
+        ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w * (Math.max(0, this.hpAtual) / this.hpMax), 4);         // Quantidade de HP
         ctx.strokeRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w, 4);       // Borda
     }
 
@@ -177,5 +179,17 @@ export default class Enemy extends Sprite {
                 }
             }
         }
+    }
+
+    sofrerAtaque(dano) {
+        console.log("Sofrer ataque");
+        this.hpAtual -= dano;
+        if (this.hpAtual <= 0) {
+            this.morrer();
+        }
+    }
+
+    morrer() {
+        console.log('Morrer do Character');
     }
 }
