@@ -1,5 +1,5 @@
-import {converteTelaCheia, escreveTexto} from "./Utils.js";
-import {getPlayer} from "./Player.js";
+import { converteTelaCheia, escreveTexto } from "./Utils.js";
+import { getPlayer } from "./Player.js";
 
 // Main Menu campos
 const fontMainMenu = "30px Arial Black";
@@ -60,7 +60,7 @@ const hud = {
               };
               vetorUnitario.modulo = Math.sqrt(
                 vetorUnitario.x * vetorUnitario.x +
-                  vetorUnitario.y * vetorUnitario.y
+                vetorUnitario.y * vetorUnitario.y
               );
               vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
               vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
@@ -88,7 +88,7 @@ const hud = {
               };
               vetorUnitario.modulo = Math.sqrt(
                 vetorUnitario.x * vetorUnitario.x +
-                  vetorUnitario.y * vetorUnitario.y
+                vetorUnitario.y * vetorUnitario.y
               );
               vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
               vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
@@ -114,7 +114,7 @@ const hud = {
             };
             vetorUnitario.modulo = Math.sqrt(
               vetorUnitario.x * vetorUnitario.x +
-                vetorUnitario.y * vetorUnitario.y
+              vetorUnitario.y * vetorUnitario.y
             );
             vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
             vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
@@ -139,7 +139,7 @@ const hud = {
             };
             vetorUnitario.modulo = Math.sqrt(
               vetorUnitario.x * vetorUnitario.x +
-                vetorUnitario.y * vetorUnitario.y
+              vetorUnitario.y * vetorUnitario.y
             );
             vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
             vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
@@ -168,7 +168,7 @@ const hud = {
             };
             vetorUnitario.modulo = Math.sqrt(
               vetorUnitario.x * vetorUnitario.x +
-                vetorUnitario.y * vetorUnitario.y
+              vetorUnitario.y * vetorUnitario.y
             );
             vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
             vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
@@ -193,7 +193,7 @@ const hud = {
             };
             vetorUnitario.modulo = Math.sqrt(
               vetorUnitario.x * vetorUnitario.x +
-                vetorUnitario.y * vetorUnitario.y
+              vetorUnitario.y * vetorUnitario.y
             );
             vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
             vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
@@ -224,7 +224,7 @@ const hud = {
               };
               vetorUnitario.modulo = Math.sqrt(
                 vetorUnitario.x * vetorUnitario.x +
-                  vetorUnitario.y * vetorUnitario.y
+                vetorUnitario.y * vetorUnitario.y
               );
               vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
               vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
@@ -254,7 +254,7 @@ const hud = {
               };
               vetorUnitario.modulo = Math.sqrt(
                 vetorUnitario.x * vetorUnitario.x +
-                  vetorUnitario.y * vetorUnitario.y
+                vetorUnitario.y * vetorUnitario.y
               );
               vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
               vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;

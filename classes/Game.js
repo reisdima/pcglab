@@ -1,43 +1,59 @@
-export default class Game{
-    constructor(canvas, assets, input){
+import CenaJogo from "./Cenas/CenaJogo.js";
+import CenaMenu from "./Cenas/CenaMenu.js";
+
+export default class Game {
+
+    constructor(canvas, assetsMng, input) {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
-        this.assets = assets;
+        this.assetsMng = assetsMng;
         this.input = input;
         this.cenas = new Map();
-        this.cena = null;
-        this.moedas = 0;
+        this.cenaAtual = null;
         this.pause = "false";
+
+        this.widthMap = 120;
+        this.heightMap = 120;
+        this.sizeMap = 32;
+        this.escala = 1.8;
+
+        this.adicionarCena('jogo', new CenaJogo());
+        this.adicionarCena('menuInicial', new CenaMenu());
+        this.selecionarCena('menuInicial');
+        this.moedas = 0;
     }
 
-    adicionarCena(chave, cena){
+    adicionarCena(chave, cena) {
         this.cenas.set(chave, cena);
         cena.game = this;
         cena.canvas = this.canvas;
 
         cena.ctx = this.ctx;
-        cena.assets = this.assets;
+        cena.assetsMng = this.assetsMng;
         cena.input = this.input;
-        if(this.cena === null){
-            this.cena = cena;
+        if (this.cenaAtual === null) {
+            this.cenaAtual = cena;
         }
     }
 
-    selecionaCena(chave){
-        if(this.cenas.has(chave)){
-            //console.log(chave);
+    selecionarCena(chave) {
+        if (this.cenas.has(chave)) {
             this.parar();
-            this.cena = this.cenas.get(chave);
-            this.cena.preparar();
+            this.cenaAtual = this.cenas.get(chave);
+            this.preparar();
             this.iniciar();
         }
     }
 
-    iniciar(){
-        this.cena?.iniciar();
+    preparar() {
+        this.cenaAtual?.preparar();
     }
 
-    parar(){
-        this.cena?.parar();
+    iniciar() {
+        this.cenaAtual?.iniciar();
+    }
+
+    parar() {
+        this.cenaAtual?.parar();
     }
 }

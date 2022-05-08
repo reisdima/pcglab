@@ -12,16 +12,35 @@ import { setMapArea, getMapArea } from "./MAPA_AREA.js";
 import { setDebugMode, getDebugMode } from "./DebugMode.js";
 import { setHud, getHud } from "./Hud.js";
 import { converteTelaCheia, escreveTexto } from "./Utils.js";
+import Game from "./Game.js";
 
 // import AssetsManager from "./AssetsManager.js";
 // // import Mixer from "./Mixer.js";
-// import InputManager from "./InputManager.js";
+import InputManager from "./InputManager.js";
 // import Game from "./Game.js";
 // import CenaJogo from './Cenas/CenaJogo.js'
 // import CenaMenu from './Cenas/CenaMenu.js'
 
 const tela = document.getElementById("canvas");
+const input = new InputManager();
+input.configurarTeclado({
+    ArrowLeft: "SETA_ESQUERDA",
+    ArrowRight: "SETA_DIREITA",
+    ArrowUp: "SETA_CIMA",
+    ArrowDown: "SETA_BAIXO",
+    " ": "SPACE",
+    Enter: "ENTER",
+    Control: "CONTROL",
+    Shift: "Shift",
+    m: "m",
+    Escape: "ESC",
+    p: "p",
+    o: "o",
+    Add: "+",
+    Subtract: "-"
 
+
+});
 // Ocupa a janela toda
 tela.width = window.innerWidth;
 tela.height = window.innerHeight;
@@ -77,6 +96,7 @@ const heightMap = 120;
 const sizeMap = 32;
 //setMapArea(14);  //20
 let escala = 1.8;
+// let escala = 3;
 const K = 1;
 const debugModeBegin = 0;
 const debugModeEnd = 18;
@@ -94,12 +114,12 @@ const player = new Player({
 });
 setPlayer(player);
 
-const hud = getHud();
-hud.init(tela);
+// const hud = getHud();
+// hud.init(tela);
 
-const levelAtual = new Level(widthMap, heightMap, sizeMap, { hud, seedGen, assetsMng });
-let levels = [];
-levels.push(new Level(widthMap, heightMap, sizeMap, { hud, seedGen, assetsMng }));
+// const levelAtual = new Level(widthMap, heightMap, sizeMap, { hud, seedGen, assetsMng });
+// let levels = [];
+// levels.push(new Level(widthMap, heightMap, sizeMap, { hud, seedGen, assetsMng }));
 
 /**
   METODO DE SUBMATRIZES
@@ -126,78 +146,79 @@ for(var k = 0; k<K; k++){
 /**
   METODO DA MATRIZ TOTAL
 */
-const geraFase = new CellularAutomata({
-    HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5,
-    totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1, seedGen
-});   //new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
+// const geraFase = new CellularAutomata({
+//     HS: heightMap, WS: widthMap, MOORE: 1, r: 0.5,
+//     totalRock: 4, floorIndex: 0, rockIndex: 2, wallIndex: 1, seedGen
+// });   
+//new CellularAutomata(heightMap, widthMap, 2, 0.5, 13, 0, 5, 1);
 // 0 => floor
 // 2 => rock
 // 1 => wall
 
-geraFase.scenarioRandomWall();
-geraFase.fullstep(2);
-geraFase.countRooms();
-geraFase.filterRooms(25);
+// geraFase.scenarioRandomWall();
+// geraFase.fullstep(2);
+// geraFase.countRooms();
+// geraFase.filterRooms(25);
 
-levels[0].setMatrixMap(geraFase.map);       // Copia a matriz de tipos dentro do gerador
-levels[0].copiaSalas(geraFase.rooms);       // Copia os dados em que os blocos da sala são apenas as posições linha e coluna da matriz
-levels[0].montarLevel({
-    dt: dt,
-    geraFase: geraFase,
-    player: getPlayer(),
-});
-levels[0].setTempo(20);                // 20 segundos
+// levels[0].setMatrixMap(geraFase.map);       // Copia a matriz de tipos dentro do gerador
+// levels[0].copiaSalas(geraFase.rooms);       // Copia os dados em que os blocos da sala são apenas as posições linha e coluna da matriz
+// levels[0].montarLevel({
+//     dt: dt,
+//     geraFase: geraFase,
+//     player: getPlayer(),
+// });
+// levels[0].setTempo(20);                // 20 segundos
 
 let tempoGameOver = 2;
 
-levelAtual.clonarLevel(levels[0]);
-getPlayer().map = levelAtual.mapa;
+// levelAtual.clonarLevel(levels[0]);
+// getPlayer().map = levelAtual.mapa;
 
-let teasuresCollected = 0;
+// let teasuresCollected = 0;
 
 // Tempo
-const barraTempo = {
-    externa: new Sprite(),
-    interna: new Sprite(),
-    desenhar: function (ctx) {
-        this.externa.desenharTempo(ctx);
-        this.interna.desenharTempo(ctx);
-    },
-    init: function () {
-        this.externa.w = 127;
-        this.externa.h = 15;
-        this.externa.colorBG = "black";
-        this.externa.colorBorder = "white";
-        this.externa.x = 95;
-        this.externa.y = 7;
-        this.interna.w = 127;
-        this.interna.h = 15;
-        this.interna.x = 96;
-        this.interna.y = 8;
-        this.interna.colorBG = "rgb(170, 120, 0)";
-        this.interna.borderSize = 0;
-    }
-};
+// const barraTempo = {
+//     externa: new Sprite(),
+//     interna: new Sprite(),
+//     desenhar: function (ctx) {
+//         this.externa.desenharTempo(ctx);
+//         this.interna.desenharTempo(ctx);
+//     },
+//     init: function () {
+//         this.externa.w = 127;
+//         this.externa.h = 15;
+//         this.externa.colorBG = "black";
+//         this.externa.colorBorder = "white";
+//         this.externa.x = 95;
+//         this.externa.y = 7;
+//         this.interna.w = 127;
+//         this.interna.h = 15;
+//         this.interna.x = 96;
+//         this.interna.y = 8;
+//         this.interna.colorBG = "rgb(170, 120, 0)";
+//         this.interna.borderSize = 0;
+//     }
+// };
 
-barraTempo.init();
+// barraTempo.init();
 
 // Energia === Player
-const barraEnergia = {
-    sprite: new Sprite(),
-    desenhar: function (ctx) {
-        this.sprite.desenharBarraEnergiaHUD(ctx, getPlayer());
-    },
-    init: function () {
-        this.sprite.w = 127;
-        this.sprite.h = 15;
-        this.sprite.colorBG = "black";
-        this.sprite.colorBorder = "white";
-        this.sprite.x = 95;
-        this.sprite.y = 7;
-    }
-};
+// const barraEnergia = {
+//     sprite: new Sprite(),
+//     desenhar: function (ctx) {
+//         this.sprite.desenharBarraEnergiaHUD(ctx, getPlayer());
+//     },
+//     init: function () {
+//         this.sprite.w = 127;
+//         this.sprite.h = 15;
+//         this.sprite.colorBG = "black";
+//         this.sprite.colorBorder = "white";
+//         this.sprite.x = 95;
+//         this.sprite.y = 7;
+//     }
+// };
 
-barraEnergia.init();
+// barraEnergia.init();
 
 // Main Menu campos
 const fontMainMenu = "30px Arial Black";
@@ -237,109 +258,112 @@ let stateMainMenu = 0;
 *       5 => Reiniciar fase;        *
 *                                   *
 *************************************/
+const game = new Game(tela, assetsMng, input);
+game.preparar();
+game.iniciar();
+// requestAnimationFrame(passo);
+// function passo(t) {
+//     dt = (t - anterior) / 1000;
+//     if (assetsMng.progresso() === 100) {       // Verifica se carregou todos os arquivos do jogo
+//         switch (estado) {
+//             case 0:     // Jogando
+//                 limparTela();
+//                 /*if(audioLibrary.isPlaying("BGM")==false){
+//                   audioLibrary.play("BGM");
+//                 }*/
+// levelAtual.movimento(dt);
+//                 controleTempo();
+//                 ctx.save();
+//                 ctx.scale(escala, escala);
+//                 ctx.translate(-getPlayer().x + tela.width / 4, - getPlayer().y + tela.height / 4);
+//                 // ctx.translate(-getPlayer().x, - getPlayer().y);
+//                 levelAtual.desenhar(ctx);
+//                 ctx.restore();
+//                 desenharHUD(ctx);
+//                 if (!getPlayer().vivo) {
+//                     estado = 5;
+//                 }
+//                 break;
+//             case 1:         // Main menu
+//                 limparTela();
+//                 //imageLibrary.drawSize(ctx, "BG", 0, 0, tela.width, tela.height); // Imagem do fundo
+//                 //if(audioLibrary.isPlaying("BGM")==false){
+//                 //audioLibrary.play("BGM");
+//                 //}
+//                 ctx.fillStyle = wordsColor;
+//                 ctx.textAlign = alignMainMenu;
+//                 ctx.lineWidth = 2;
+//                 ctx.strokeStyle = "black";
+//                 ctx.font = "40px Arial Black";
+//                 ctx.strokeText("Maze Runner", tela.width / 2, tela.height / 3 - 50);
+//                 ctx.fillText("Maze Runner", tela.width / 2, tela.height / 3 - 50);
+//                 ctx.font = "15px Arial Black";
+//                 ctx.font = fontMainMenu;
+//                 if (stateMainMenu == 0) {
+//                     ctx.fillStyle = "yellow";
+//                     ctx.strokeText("New Game", tela.width / 2, tela.height / 2 - 60);
+//                     ctx.fillText("New Game", tela.width / 2, tela.height / 2 - 60);
+//                     ctx.fillStyle = wordsColor;
+//                     ctx.strokeText("Quit", tela.width / 2, tela.height / 2 - 10);
+//                     ctx.fillText("Quit", tela.width / 2, tela.height / 2 - 10);
+//                 }
+//                 else {
+//                     ctx.fillStyle = wordsColor;
+//                     ctx.strokeText("New Game", tela.width / 2, tela.height / 2 - 60);
+//                     ctx.fillText("New Game", tela.width / 2, tela.height / 2 - 60);
+//                     ctx.fillStyle = "yellow";
+//                     ctx.strokeText("Quit", tela.width / 2, tela.height / 2 - 10);
+//                     ctx.fillText("Quit", tela.width / 2, tela.height / 2 - 10);
+//                 }
+//                 break;
+//             case 2:     // Game Over
+//                 limparTela();
+//                 //audioLibrary.stop("BGM");
+//                 ctx.fillStyle = "white";
+//                 ctx.textAlign = alignMainMenu;
+//                 ctx.font = "40px Arial Black";
+//                 ctx.lineWidth = 2;
+//                 ctx.strokeStyle = "black";
+//                 ctx.strokeText("GAME OVER", tela.width / 2, tela.height / 2);
+//                 ctx.fillText("GAME OVER", tela.width / 2, tela.height / 2);
 
-requestAnimationFrame(passo);
-function passo(t) {
-    dt = (t - anterior) / 1000;
-    if (assetsMng.progresso() === 100) {       // Verifica se carregou todos os arquivos do jogo
-        switch (estado) {
-            case 0:     // Jogando
-                limparTela();
-                /*if(audioLibrary.isPlaying("BGM")==false){
-                  audioLibrary.play("BGM");
-                }*/
-                levelAtual.movimento(dt);
-                controleTempo();
-                ctx.save();
-                ctx.scale(escala, escala);
-                ctx.translate(-getPlayer().x + tela.width / 4, - getPlayer().y + tela.height / 4);
-                levelAtual.desenhar(ctx);
-                ctx.restore();
-                desenharHUD(ctx);
-                if (!getPlayer().vivo) {
-                    estado = 5;
-                }
-                break;
-            case 1:         // Main menu
-                limparTela();
-                //imageLibrary.drawSize(ctx, "BG", 0, 0, tela.width, tela.height); // Imagem do fundo
-                //if(audioLibrary.isPlaying("BGM")==false){
-                //audioLibrary.play("BGM");
-                //}
-                ctx.fillStyle = wordsColor;
-                ctx.textAlign = alignMainMenu;
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = "black";
-                ctx.font = "40px Arial Black";
-                ctx.strokeText("Maze Runner", tela.width / 2, tela.height / 3 - 50);
-                ctx.fillText("Maze Runner", tela.width / 2, tela.height / 3 - 50);
-                ctx.font = "15px Arial Black";
-                ctx.font = fontMainMenu;
-                if (stateMainMenu == 0) {
-                    ctx.fillStyle = "yellow";
-                    ctx.strokeText("New Game", tela.width / 2, tela.height / 2 - 60);
-                    ctx.fillText("New Game", tela.width / 2, tela.height / 2 - 60);
-                    ctx.fillStyle = wordsColor;
-                    ctx.strokeText("Quit", tela.width / 2, tela.height / 2 - 10);
-                    ctx.fillText("Quit", tela.width / 2, tela.height / 2 - 10);
-                }
-                else {
-                    ctx.fillStyle = wordsColor;
-                    ctx.strokeText("New Game", tela.width / 2, tela.height / 2 - 60);
-                    ctx.fillText("New Game", tela.width / 2, tela.height / 2 - 60);
-                    ctx.fillStyle = "yellow";
-                    ctx.strokeText("Quit", tela.width / 2, tela.height / 2 - 10);
-                    ctx.fillText("Quit", tela.width / 2, tela.height / 2 - 10);
-                }
-                break;
-            case 2:     // Game Over
-                limparTela();
-                //audioLibrary.stop("BGM");
-                ctx.fillStyle = "white";
-                ctx.textAlign = alignMainMenu;
-                ctx.font = "40px Arial Black";
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = "black";
-                ctx.strokeText("GAME OVER", tela.width / 2, tela.height / 2);
-                ctx.fillText("GAME OVER", tela.width / 2, tela.height / 2);
-
-                if (tempoGameOver >= 0) {
-                    tempoGameOver = tempoGameOver - 0.7 * dt;
-                }
-                else {
-                    limparDados();
-                    estado = 1;
-                }
-                break;
-            case 3:       // Tela preta == Jogo finalizado
-                limparTela();
-                break;
-            case 4:       // Passou de fase
-                barraTempo.interna.w = 127;
-                /*treasuresCount = 0;
-                teasuresCollected = 0;*/
-                getPlayer().levelNumber = getPlayer().levelNumber + 1;
-                loadLevel(0);       // Load new level
-                break;
-            case 5:     // Recarregar fase
-                barraTempo.interna.w = 127;
-                /*treasuresCount = 0;
-                teasuresCollected = 0;*/
-                getPlayer().vidas--;
-                if (getPlayer().vidas < 1) {       // Game over
-                    estado = 2;
-                    tempoGameOver = 2;
-                }
-                else {
-                    loadLevel(1);   // Reload Level
-                }
-                break;
-            default:
-        }
-    }
-    anterior = t;
-    requestAnimationFrame(passo);
-}
+//                 if (tempoGameOver >= 0) {
+//                     tempoGameOver = tempoGameOver - 0.7 * dt;
+//                 }
+//                 else {
+//                     limparDados();
+//                     estado = 1;
+//                 }
+//                 break;
+//             case 3:       // Tela preta == Jogo finalizado
+//                 limparTela();
+//                 break;
+//             case 4:       // Passou de fase
+//                 barraTempo.interna.w = 127;
+//                 /*treasuresCount = 0;
+//                 teasuresCollected = 0;*/
+//                 getPlayer().levelNumber = getPlayer().levelNumber + 1;
+//                 loadLevel(0);       // Load new level
+//                 break;
+//             case 5:     // Recarregar fase
+//                 barraTempo.interna.w = 127;
+//                 /*treasuresCount = 0;
+//                 teasuresCollected = 0;*/
+//                 getPlayer().vidas--;
+//                 if (getPlayer().vidas < 1) {       // Game over
+//                     estado = 2;
+//                     tempoGameOver = 2;
+//                 }
+//                 else {
+//                     loadLevel(1);   // Reload Level
+//                 }
+//                 break;
+//             default:
+//         }
+//     }
+//     anterior = t;
+//     requestAnimationFrame(passo);
+// }
 
 // A cada 1 segundo ele executa uma diminuição na barra de tempo
 function controleTempo() {
@@ -356,6 +380,7 @@ function controleTempo() {
     }
 }
 
+/*
 function desenharHUD() {
     barraTempo.desenhar(ctx);
     barraEnergia.desenhar(ctx);
@@ -394,11 +419,13 @@ function desenharHUD() {
         escreveTexto(ctx, "Teleporte Final Level: [" + (levelAtual.teleporteFinalLevel.gy) + "][" + (levelAtual.teleporteFinalLevel.gx) + "]", converteTelaCheia(tela.widthOld / 2, tela.widthOld, tela.width), converteTelaCheia(343, tela.heightOld, tela.height));
         escreveTexto(ctx, "Escala mapa: " + escala.toFixed(4), converteTelaCheia(500, tela.widthOld, tela.width), converteTelaCheia(321, tela.heightOld, tela.height));
         escreveTexto(ctx, "Grade Player: [" + (getPlayer().gy) + "][" + (getPlayer().gx) + "]", converteTelaCheia(500, tela.widthOld, tela.width), converteTelaCheia(332, tela.heightOld, tela.height));
+        // escreveTexto(ctx, "Grade Player: [" + tela.width + "][" + tela.height + "]", converteTelaCheia(400, tela.widthOld, tela.width), converteTelaCheia(332, tela.heightOld, tela.height));
         escreveTexto(ctx, "Seed: " + seedValueURL, converteTelaCheia(500, tela.widthOld, tela.width), converteTelaCheia(343, tela.heightOld, tela.height));
     }
 }
+*/
 
-
+/*
 // Atualiza o formato do convas ao mudar o formato da janela ou ser redimensionada
 function onResize(tela) {
     tela.width = window.innerWidth;
@@ -425,6 +452,7 @@ function updateTamanhoElementos(tela) {
 }
 
 updateTamanhoElementos(tela);
+*/
 
 function limparDados() {
     levelAtual = new Level(widthMap, heightMap, sizeMap, { hud, seedGen, assetsMng });
@@ -609,6 +637,7 @@ function mapeamentoTecladoNoEstadoJogando(keyCode) {
  * Mapeamento de teclas pressionadas 
  */
 
+/*
 addEventListener("keydown", function (e) {
     //console.log(e.keyCode);
     e.preventDefault();                         //Evento padrao do navegador
@@ -631,12 +660,12 @@ addEventListener("keydown", function (e) {
                 if (estado != 2) {
                     if (stateMainMenu == 0) {
                         loadLevel(0);               //Carregamento de level
-                        /*for (let i = 0; i < levels.length; i++) {
-                          if(!levels[i].roomIniciado){
-                            levels[i].iniciaRooms();
-                            levels[i].roomIniciado = true;
-                          }
-                        }*/
+                        // for (let i = 0; i < levels.length; i++) {
+                        //   if(!levels[i].roomIniciado){
+                        //     levels[i].iniciaRooms();
+                        //     levels[i].roomIniciado = true;
+                        //   }
+                        // }
                         estado = 0;
                     }
                     else {
@@ -663,6 +692,7 @@ addEventListener("keydown", function (e) {
         }
     }
 });
+*/
 
 /**
  * Mapeamento de teclas SOLTAS 

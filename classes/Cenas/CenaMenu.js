@@ -1,61 +1,48 @@
-import Cena, {fontMainMenu, wordsColor, alignMainMenu} from './Cena.js';
-let stateMainMenu = 0;
-export default class CenaMenu extends Cena{
+import Cena, { fontMainMenu, wordsColor, alignMainMenu } from './Cena.js';
+// let stateMainMenu = 0;
+export default class CenaMenu extends Cena {
 
-    desenhar(){
+    desenhar() {
         this.limparTela();
         this.ctx.fillStyle = wordsColor;
         this.ctx.textAlign = alignMainMenu;
         this.ctx.lineWidth = 2;
         this.ctx.strokeStyle = "black";
         this.ctx.font = "40px Arial Black";
-        this.ctx.strokeText("Maze Runner", this.canvas.width/2, this.canvas.height/3 - 50);
-        this.ctx.fillText("Maze Runner", this.canvas.width/2, this.canvas.height/3 - 50);
+        this.ctx.strokeText("Maze Runner", this.canvas.width / 2, this.canvas.height / 3 - 50);
+        this.ctx.fillText("Maze Runner", this.canvas.width / 2, this.canvas.height / 3 - 50);
         this.ctx.font = "15px Arial Black";
         this.ctx.font = fontMainMenu;
-        
-        if (stateMainMenu == 0) {
-            this.ctx.fillStyle = "yellow";
-            this.ctx.strokeText("New Game", this.canvas.width / 2, this.canvas.height / 2 - 60);
-            this.ctx.fillText("New Game", this.canvas.width / 2, this.canvas.height / 2 - 60);
-            this.ctx.fillStyle = wordsColor;
-            this.ctx.strokeText("Quit", this.canvas.width / 2, this.canvas.height / 2 - 10);
-            this.ctx.fillText("Quit", this.canvas.width / 2, this.canvas.height / 2 - 10);
-        } else {
-            this.ctx.fillStyle = wordsColor;
-            this.ctx.strokeText("New Game", this.canvas.width / 2, this.canvas.height / 2 - 60);
-            this.ctx.fillText("New Game", this.canvas.width / 2, this.canvas.height / 2 - 60);
-            this.ctx.fillStyle = "yellow";
-            this.ctx.strokeText("Quit", this.canvas.width / 2, this.canvas.height / 2 - 10);
-            this.ctx.fillText("Quit", this.canvas.width / 2, this.canvas.height / 2 - 10);
-        }
 
-        // this.ctx.fillStyle = "yellow";
-        // this.ctx.strokeText("New Game", this.canvas.width / 2, this.canvas.height / 2 - 60);
-        // this.ctx.fillText("New Game", this.canvas.width / 2, this.canvas.height / 2 - 60);
-        // this.ctx.fillStyle = wordsColor;
-        // this.ctx.strokeText("Quit", this.canvas.width / 2, this.canvas.height / 2 - 10);
-        // this.ctx.fillText("Quit", this.canvas.width / 2, this.canvas.height / 2 - 10);
-
-
+        this.ctx.fillStyle = this.estadoMenu == 0 ? 'yellow' : wordsColor;
+        this.ctx.strokeText("New Game", this.canvas.width / 2, this.canvas.height / 2 - 60);
+        this.ctx.fillText("New Game", this.canvas.width / 2, this.canvas.height / 2 - 60);
+        this.ctx.fillStyle = this.estadoMenu == 0 ? wordsColor : 'yellow';
+        this.ctx.strokeText("Quit", this.canvas.width / 2, this.canvas.height / 2 - 10);
+        this.ctx.fillText("Quit", this.canvas.width / 2, this.canvas.height / 2 - 10);
     }
 
     quadro(t) {
-        this.t0 = this.t0 ?? t;
-        this.dt = (t - this.t0) / 1000;
-        if(stateMainMenu === 0){
-            if(this.input.comandos.get("ENTER")){
-                this.game.selecionaCena("jogo");
+        super.quadro(t);
+        if (this.estadoMenu === 0) {
+            if (this.input.foiPressionado("ENTER")) {
+                this.game.selecionarCena("jogo");
                 return;
             }
-            
-        } else {
-
         }
-        this.desenhar();
-        this.iniciar();
-        this.t0 = t;
+        if (this.input.foiPressionado("SETA_BAIXO")) {
+            this.estadoMenu = 1;
+        } else if (this.input.foiPressionado("SETA_CIMA")) {
+            this.estadoMenu = 0;
+        }
     }
 
+    iniciar() {
+        super.iniciar();
+    }
+
+    preparar() {
+        this.estadoMenu = 0;
+    }
 
 }
