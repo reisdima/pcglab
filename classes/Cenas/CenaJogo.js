@@ -34,7 +34,7 @@ export default class CenaJogo extends Cena {
     quadro(t) {
         super.quadro(t);
         this.capturarInput();
-        this.levelAtual.quadro(this.dt);
+        this.levelAtual.passo(this.dt);
     }
 
     preparar() {

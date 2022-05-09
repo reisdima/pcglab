@@ -654,8 +654,8 @@ export default class Level {
     }
   }
 
-  quadro(dt) {
-    this.player.quadro(dt);
+  passo(dt) {
+    this.player.passo(dt);
     this.colisaoTeleportes(this.player, this);
     this.colisaoFireZones(this.player);
     //this.colisaoInimigos(this.player);

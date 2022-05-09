@@ -83,7 +83,7 @@ export default class Player extends Sprite {
         this.room = this.map.cell[this.gy][this.gx].room;
     }
 
-    quadro(dt) {
+    passo(dt) {
         this.cooldownTeleporte = this.cooldownTeleporte - dt;         // Cooldown de teleporte pra não teleportar direto
         this.cooldownImune = this.cooldownImune - dt;
         this.tratarAnimacao();
