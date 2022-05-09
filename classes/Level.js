@@ -639,12 +639,13 @@ export default class Level {
 
         if (listaCelulasFinal.length > 0) {
           let celula = listaCelulasFinal[this.getRandomInt(0, listaCelulasFinal.length - 1)];
-          let auxEnemy = new Enemy();
+          let auxEnemy = new Enemy(auxRoom);
           auxEnemy.gx = celula.coluna;
           auxEnemy.gy = celula.linha;
           auxEnemy.x = celula.coluna * this.mapa.s + this.mapa.s / 2;
           auxEnemy.y = celula.linha * this.mapa.s + this.mapa.s / 2;
           auxEnemy.map = this.mapa;
+          auxEnemy.indexNaSala = auxRoom.enemies.length;
           auxRoom.enemies.push(auxEnemy);
           this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 2);     // Recalcula
         }
@@ -666,7 +667,7 @@ export default class Level {
     for (let i = 0; i < this.rooms.length; i++) {
       this.rooms[i].move(dt, this.player);
     }
-    this.removerInimigos();
+    // this.removerInimigos();
     this.criarFilaDesenho();
   }
 

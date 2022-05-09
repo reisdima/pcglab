@@ -790,7 +790,8 @@ export default class Room {
 	copyEnemies(room) {
 		for (let i = 0; i < room.enemies.length; i++) {
 			let aux = room.enemies[i];
-			let newEnemy = new Enemy();
+			let newEnemy = new Enemy(this);
+			newEnemy.indexNaSala = i;
 			newEnemy.copy(aux);
 			this.enemies.push(newEnemy);
 		}
