@@ -131,6 +131,7 @@ export default class Character extends Sprite {
         });
         ctx.restore();
         this.desenharHP(ctx);
+        this.desenharNivel(ctx);
         if (getDebugMode() == 3) {
             this.desenharCentro(ctx);
         }
@@ -145,10 +146,25 @@ export default class Character extends Sprite {
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
         ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w, 4);         // Fundo
-        ctx.fillStyle = `hsl(${120 * this.atributos.hpAtual / this.atributos.hpMax}, 100%, 50%)`;
-        ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w * (Math.max(0, this.atributos.hpAtual) / this.atributos.hpMax), 4);         // Quantidade de HP
+        ctx.fillStyle = `hsl(${120 * this.hpAtual / this.atributos.hpMax}, 100%, 50%)`;
+        ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w * (Math.max(0, this.hpAtual) / this.atributos.hpMax), 4);         // Quantidade de HP
         ctx.strokeRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w, 4);       // Borda
     }
+
+    desenharNivel(ctx) {
+        if (this.nivel) {
+            ctx.fillStyle = 'yellow';
+            ctx.lineWidth = 2;
+            ctx.textAlign = 'center';
+            ctx.strokeStyle = "black";
+            ctx.font = "10px Arial Black";
+            ctx.strokeText(this.nivel, this.x, this.y - this.h * 2.7);
+            ctx.fillText(this.nivel, this.x, this.y - this.h * 2.7);
+        }
+
+    }
+
+
 
     persegue(alvo) {
         if (this.alvo === null) {
@@ -169,7 +185,7 @@ export default class Character extends Sprite {
         }
     }
 
-    atackPlayer(player) {
+    attackPlayer(player) {
         if (this.colidiuCom3(player) && this.type === 0) {    // Detecta o player e não ta atacando
             this.type = 1;
             this.atributos.cooldownAtaque = 1;
@@ -190,8 +206,8 @@ export default class Character extends Sprite {
 
     sofrerAtaque(dano) {
         console.log("Sofrer ataque Character");
-        this.atributos.hpAtual -= dano;
-        if (this.atributos.hpAtual <= 0) {
+        this.hpAtual -= dano;
+        if (this.hpAtual <= 0) {
             this.morrer();
         }
     }

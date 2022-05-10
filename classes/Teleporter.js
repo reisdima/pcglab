@@ -48,7 +48,7 @@ export default class Teleporter extends Sprite {
 		// Copiando o proximo teleporte
 		if (teleporter.proximoTeleporte != undefined) {
 			let aux = rooms[teleporter.proximoTeleporte.roomNumber - 1];
-			if (this.type === 2) {
+			if (this.type === TeleporterType.InicioSala) {
 				this.proximoTeleporte = aux.teleporterFinal;
 			}
 			else {

@@ -675,10 +675,10 @@ export default class Room {
 	 * Ataque dos inimigos *
 	 **********************/
 
-	atackEnemiesPlayer(player) {
+	attackEnemiesPlayer(player) {
 		for (const indiceInimigo in this.enemies) {
 			const enemy = this.enemies[indiceInimigo];
-			enemy.atackPlayer(player);
+			enemy.attackPlayer(player);
 		}
 	};
 
@@ -793,7 +793,7 @@ export default class Room {
 	copyEnemies(room) {
 		for (const indiceInimigo in room.enemies) {
 			const enemy = room.enemies[indiceInimigo];
-			const newEnemy = new Enemy();
+			const newEnemy = new Enemy(2);
 			newEnemy.room = this;
 			newEnemy.indexNaSala = Object.keys(this.enemies).length;
 			newEnemy.copy(enemy);
