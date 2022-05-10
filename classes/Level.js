@@ -663,7 +663,7 @@ export default class Level {
     this.colisaoTesouros(this.player);
     this.validaAtaquePlayerInimigo(this.player);
     if (!this.player.imune) {
-      this.rooms[this.player.room - 1].atackEnemiesPlayer(this.player);      // Ataque somente na sala do player
+      this.rooms[this.player.room - 1].attackEnemiesPlayer(this.player);      // Ataque somente na sala do player
     }
     for (let i = 0; i < this.rooms.length; i++) {
       this.rooms[i].move(dt, this.player);

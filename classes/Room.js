@@ -675,10 +675,10 @@ export default class Room {
 	 * Ataque dos inimigos *
 	 **********************/
 
-	atackEnemiesPlayer(player) {
+	attackEnemiesPlayer(player) {
 		for (const indiceInimigo in this.enemies) {
 			const enemy = this.enemies[indiceInimigo];
-			enemy.atackPlayer(player);
+			enemy.attackPlayer(player);
 		}
 	};
 

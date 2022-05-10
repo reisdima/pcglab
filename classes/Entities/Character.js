@@ -185,7 +185,7 @@ export default class Character extends Sprite {
         }
     }
 
-    atackPlayer(player) {
+    attackPlayer(player) {
         if (this.colidiuCom3(player) && this.type === 0) {    // Detecta o player e não ta atacando
             this.type = 1;
             this.atributos.cooldownAtaque = 1;
