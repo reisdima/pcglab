@@ -14,8 +14,6 @@ export default class Enemy extends Character {
         this.nivel = nivel;
         this.roomNumber = -1;
         this.indexNaSala = -1;
-        this.maxHp = 200;
-        this.hp = 200;
         this.animation = [];
         this.room = null;
         this.hitpoint = 40;
@@ -142,26 +140,16 @@ export default class Enemy extends Character {
         super.morrer();
         console.log('Morrer enemy');
         console.log(this.atributos);
+        console.log(this.roomNumber);
         delete this.room.enemies[this.indexNaSala];
     }
 
     balancearDificuldade() {
-        // {
-        //     hpMax: 200,
-        //     hpAtual: 200,
-        //     ataque: 40,
-        //     velocidade: 0,
-        //     raioAtaque: 5,
-        //     cooldownAtaque: 0,
-        //     cooldownImune: 0
-        // }
         for (const keyAtributo in this.atributos) {
             const valorBase = this.atributos[keyAtributo];
-            // let novoValor = valorBase + ((this.nivel - 1) * slime_crescimento_por_nivel[keyAtributo]);
             let novoValor = valorBase * Math.pow(slime_crescimento_por_nivel[keyAtributo], (this.nivel - 1));
             this.atributos[keyAtributo] = novoValor;
         }
-
-
+        this.hpAtual = this.atributos.hpMax;
     }
 }
