@@ -2,7 +2,7 @@ import Map from "./Map.js";
 import Room from "./Room.js";
 import Teleporter, { TeleporterType } from "./Teleporter.js";
 import FireZone from "./FireZone.js";
-import Enemy from "./Enemy.js";
+import Enemy from "./Entities/Enemy.js";
 import Treasure from "./Treasure.js";
 import Ordenacao from "./Ordenacao.js";
 import { setDebugMode, getDebugMode } from "./DebugMode.js";
@@ -640,12 +640,14 @@ export default class Level {
         if (listaCelulasFinal.length > 0) {
           let celula = listaCelulasFinal[this.getRandomInt(0, listaCelulasFinal.length - 1)];
           let auxEnemy = new Enemy();
+          auxEnemy.room = auxRoom;
           auxEnemy.gx = celula.coluna;
           auxEnemy.gy = celula.linha;
           auxEnemy.x = celula.coluna * this.mapa.s + this.mapa.s / 2;
           auxEnemy.y = celula.linha * this.mapa.s + this.mapa.s / 2;
           auxEnemy.map = this.mapa;
-          auxRoom.enemies.push(auxEnemy);
+          auxEnemy.indexNaSala = Object.keys(auxRoom.enemies).length;
+          auxRoom.enemies[auxEnemy.indexNaSala] = auxEnemy;
           this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 2);     // Recalcula
         }
       }
@@ -653,8 +655,8 @@ export default class Level {
     }
   }
 
-  movimento(dt) {
-    this.player.moverCompleto(dt);
+  passo(dt) {
+    this.player.passo(dt);
     this.colisaoTeleportes(this.player, this);
     this.colisaoFireZones(this.player);
     //this.colisaoInimigos(this.player);
@@ -666,7 +668,7 @@ export default class Level {
     for (let i = 0; i < this.rooms.length; i++) {
       this.rooms[i].move(dt, this.player);
     }
-    this.removerInimigos();
+    // this.removerInimigos();
     this.criarFilaDesenho();
   }
 
@@ -734,8 +736,9 @@ export default class Level {
     this.filaDesenho.push(this.player);
     for (let i = 0; i < this.rooms.length; i++) {
       let auxRoom = this.rooms[i];
-      for (let j = 0; j < auxRoom.enemies.length; j++) {
-        this.filaDesenho.push(auxRoom.enemies[j]);
+      for (const indiceInimigo in auxRoom.enemies) {
+        const enemy = auxRoom.enemies[indiceInimigo];
+        this.filaDesenho.push(enemy);
       }
       for (let j = 0; j < auxRoom.treasures.length; j++) {
         this.filaDesenho.push(auxRoom.treasures[j]);
@@ -907,12 +910,13 @@ export default class Level {
 
   validaAtaquePlayerInimigo(player) {
     //let auxRoom = this.rooms[player.room - 1];          // Checar somente a sala onde o player se encontra
-    let inimigos = this.rooms[player.room - 1].enemies;
+    const inimigos = this.rooms[player.room - 1].enemies;
     if (player.atacando === 1 && player.cooldownAtaque > 0) {
-      for (let i = 0; i < inimigos.length; i++) {
-        if (player.atacarModoPlayer(inimigos[i])) {
+      for (const indiceInimigo in inimigos) {
+        const inimigo = inimigos[indiceInimigo];
+        if (player.atacarModoPlayer(inimigo)) {
           console.log("Ataque Player no inimigo");
-          inimigos[i].hp -= 30;
+          inimigo.hp -= 30;
         }
       }
     }

@@ -51,12 +51,13 @@ export default class Cena {
         // this.passo(this.dt);
         this.desenhar();
         // this.checaColisao();
-        this.idAnim = requestAnimationFrame((t) => { this.quadro(t); });
+        if (this.rodando) {
+            this.idAnim = requestAnimationFrame((t) => { this.quadro(t); });
+        }
         this.t0 = t;
     }
 
     iniciar() {
-        console.log('Chamou iniciar');
         this.rodando = true;
         this.idAnim = requestAnimationFrame((t) => { this.quadro(t); });
     }

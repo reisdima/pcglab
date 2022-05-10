@@ -1,5 +1,4 @@
 import Room from "./Room.js";
-import { UtilBenchmark } from "./Utils.js";
 
 export default class CellularAutomata {
     constructor(params = {}) {

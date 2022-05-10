@@ -3,7 +3,7 @@ import { getDebugMode, setDebugMode } from '../DebugMode.js';
 import { getHud } from '../Hud.js';
 import Level from '../Level.js';
 import { setMapArea } from '../MAPA_AREA.js';
-import { getPlayer } from '../Player.js';
+import Player, { getPlayer, setPlayer } from '../Entities/Player.js';
 import SeedGenerator from '../SeedGenerator.js';
 import Sprite from '../Sprite.js';
 import { converteTelaCheia, escreveTexto } from '../Utils.js';
@@ -16,7 +16,6 @@ export default class CenaJogo extends Cena {
         /*if(audioLibrary.isPlaying("BGM")==false){
           audioLibrary.play("BGM");
         }*/
-        this.levelAtual.movimento(this.dt);
         this.controleTempo();
         this.ctx.save();
         this.ctx.scale(this.game.escala, this.game.escala);
@@ -35,6 +34,7 @@ export default class CenaJogo extends Cena {
     quadro(t) {
         super.quadro(t);
         this.capturarInput();
+        this.levelAtual.passo(this.dt);
     }
 
     preparar() {
@@ -44,6 +44,22 @@ export default class CenaJogo extends Cena {
         this.hud.init(this.canvas)
         const hud = this.hud;
         this.seedGen = this.getSeedGenerator();
+
+        const player = new Player({
+            s: 27, w: 27, h: 11,
+            hitBox: {
+                x: 0,
+                y: 0,
+                w: 27,
+                h: 11,
+                wDefault: 27,
+                hDefault: 11
+            }
+        });
+        player.cena = this;
+        setPlayer(player);
+
+
         this.levelAtual = new Level(
             this.game.widthMap,
             this.game.heightMap,
@@ -312,43 +328,18 @@ export default class CenaJogo extends Cena {
     }
 
     capturarInput() {
-        if (this.input.estaPressionado("SETA_DIREITA")) {
-            console.log('Seta direita');
-            getPlayer().setTeclas("right", true);
-            return;
-        }
-        if (this.input.estaPressionado("SETA_ESQUERDA")) {
-            getPlayer().setTeclas("left", true);
-            return;
-        }
-        if (this.input.estaPressionado("SETA_CIMA")) {
-            getPlayer().setTeclas("up", true);
-            return;
-        }
-        if (this.input.estaPressionado("SETA_BAIXO")) {
-            getPlayer().setTeclas("down", true);
-            return;
-        }
-        if (this.input.foiPressionado("SPACE")) {
+        if (this.inputManager.foiPressionado("SPACE")) {
             getPlayer().setTeclas("space", true);
             return;
         }
-        if (this.input.foiPressionado("CONTROL")) {
-            getPlayer().setTeclas("ctrl", true);
-            return;
-        }
-        if (this.input.foiPressionado("SHIFT")) {
-            getPlayer().setTeclas("shift", true);
-            return;
-        }
-        if (this.input.foiPressionado("M")) {
+        if (this.inputManager.foiPressionado("M")) {
             this.hud.bussola.mapMode = this.hud.bussola.mapMode + 1;
             if (this.hud.bussola.mapMode > 3) {
                 this.hud.bussola.mapMode = 0;
             }
             return;
         }
-        if (this.input.foiPressionado("ESC")) {
+        if (this.inputManager.foiPressionado("ESC")) {
             this.game.selecionarCena("menuInicial");
             this.limparDados();
             this.estado = 1;
@@ -356,7 +347,7 @@ export default class CenaJogo extends Cena {
         }
 
         // Debug mode
-        if (this.input.foiPressionado("p")) {
+        if (this.inputManager.foiPressionado("p")) {
             console.log("Clicou no P");
             setDebugMode(getDebugMode() + 1);
             if (getDebugMode() > this.debugModeEnd) {
@@ -366,7 +357,7 @@ export default class CenaJogo extends Cena {
             }
             return;
         }
-        if (this.input.foiPressionado("o")) {
+        if (this.inputManager.foiPressionado("o")) {
             setDebugMode(getDebugMode() - 1);
             if (getDebugMode() < this.debugModeBegin) {
                 setDebugMode(this.debugModeBegin);  //Padrão do jogo
@@ -375,7 +366,7 @@ export default class CenaJogo extends Cena {
             }
             return;
         }
-        if (this.input.foiPressionado("+")) {
+        if (this.inputManager.foiPressionado("+")) {
             if (getDebugMode() >= 1) {
                 this.game.escala = this.game.escala + 0.025;
                 if (this.game.escala >= 0.85)
@@ -393,7 +384,7 @@ export default class CenaJogo extends Cena {
             }
             return;
         }
-        if (this.input.foiPressionado("-")) {
+        if (this.inputManager.foiPressionado("-")) {
             if (getDebugMode() >= 1) {
                 this.game.escala = this.game.escala - 0.025;
                 if (this.game.escala >= 0.85)
