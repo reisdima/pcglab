@@ -639,7 +639,7 @@ export default class Level {
 
         if (listaCelulasFinal.length > 0) {
           let celula = listaCelulasFinal[this.getRandomInt(0, listaCelulasFinal.length - 1)];
-          let auxEnemy = new Enemy();
+          let auxEnemy = new Enemy(2);
           auxEnemy.room = auxRoom;
           auxEnemy.gx = celula.coluna;
           auxEnemy.gy = celula.linha;

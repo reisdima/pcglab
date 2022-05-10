@@ -3,14 +3,15 @@ import assetsMng from "../AssetsMng.js";
 import { setDebugMode, getDebugMode } from "../DebugMode.js";
 import Character from "./Character.js";
 import Sprite from "../Sprite.js";
-import { slime } from './EnemiesBaseAttributes.js';
+import { slime_atributos, slime_crescimento_por_nivel } from './EnemiesBaseAttributes.js';
 
 
 export default class Enemy extends Character {
 
-    constructor() {
+    constructor(nivel) {
         super({ s: 22, w: 22, h: 10, nomeImagem: "slime", sizeImagem: 22 });
         this.alvo = null;
+        this.nivel = nivel;
         this.roomNumber = -1;
         this.indexNaSala = -1;
         this.maxHp = 200;
@@ -32,7 +33,8 @@ export default class Enemy extends Character {
         this.cooldownAtaque = 1;                  //Tempo travado até terminar o ataque            
         this.cooldownImune = 0;
         this.imune = false;
-        this.atributos = Object.assign({}, slime);
+        this.atributos = Object.assign({}, slime_atributos);
+        this.balancearDificuldade();
         //this.status = 0;                        // 0 => Normal, 1 => Ataque
         this.criarAnimacoes();
     }
@@ -96,13 +98,6 @@ export default class Enemy extends Character {
 
     desenharHP(ctx) {
         super.desenharHP(ctx);
-        // ctx.fillStyle = "black";
-        // ctx.strokeStyle = "black";
-        // ctx.lineWidth = 1;
-        // ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w, 4);         // Fundo
-        // ctx.fillStyle = `hsl(${120 * this.hp / this.maxHp}, 100%, 50%)`;
-        // ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w * (Math.max(0, this.hp) / this.maxHp), 4);         // Quantidade de HP
-        // ctx.strokeRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w, 4);       // Borda
     }
 
     persegue(alvo) {
@@ -133,7 +128,7 @@ export default class Enemy extends Character {
             this.type = 0;
             if (this.colidiuCom3(player)) {
                 if (player.hp > 0) {
-                    player.hp = player.hp - this.hitpoint;
+                    player.hp = player.hp - this.atributos.ataque;
                     player.ativarInvencibilidade();
                 }
                 else {
@@ -145,10 +140,28 @@ export default class Enemy extends Character {
 
     morrer() {
         super.morrer();
+        console.log('Morrer enemy');
+        console.log(this.atributos);
         delete this.room.enemies[this.indexNaSala];
     }
 
     balancearDificuldade() {
+        // {
+        //     hpMax: 200,
+        //     hpAtual: 200,
+        //     ataque: 40,
+        //     velocidade: 0,
+        //     raioAtaque: 5,
+        //     cooldownAtaque: 0,
+        //     cooldownImune: 0
+        // }
+        for (const keyAtributo in this.atributos) {
+            const valorBase = this.atributos[keyAtributo];
+            // let novoValor = valorBase + ((this.nivel - 1) * slime_crescimento_por_nivel[keyAtributo]);
+            let novoValor = valorBase * Math.pow(slime_crescimento_por_nivel[keyAtributo], (this.nivel - 1));
+            this.atributos[keyAtributo] = novoValor;
+        }
+
 
     }
 }

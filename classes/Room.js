@@ -793,7 +793,7 @@ export default class Room {
 	copyEnemies(room) {
 		for (const indiceInimigo in room.enemies) {
 			const enemy = room.enemies[indiceInimigo];
-			const newEnemy = new Enemy();
+			const newEnemy = new Enemy(2);
 			newEnemy.room = this;
 			newEnemy.indexNaSala = Object.keys(this.enemies).length;
 			newEnemy.copy(enemy);
