@@ -27,7 +27,7 @@ export default class Room {
 		this.beginLevel; // Teleportador que Inicia a fase
 		this.fireZones = []; // Area para a recarga do tempo
 		this.treasures = []; // Lista de tesouros
-		this.enemies = []; // Lista de inimigos
+		this.enemies = {}; // Lista de inimigos
 		this.pathGPS = new Path(); // Path GPS até a saída
 		this.pathRoom = new Path(); // Path Teleporte - Teleporte
 		this.pathTesouros = new Path(); // Path passando por todos os tesouros
@@ -358,9 +358,10 @@ export default class Room {
 				this.treasures[i].mover(dt);
 			}
 
-			for (let i = 0; i < this.enemies.length; i++) {
-				this.enemies[i].persegue(player);
-				this.enemies[i].movimento(dt);
+			for (const indiceInimigo in this.enemies) {
+				const enemy = this.enemies[indiceInimigo]
+				enemy.persegue(player);
+				enemy.movimento(dt);
 			}
 		}
 	};
@@ -376,8 +377,9 @@ export default class Room {
 			this.treasures[i].desenhar(ctx);
 		}
 
-		for (let i = 0; i < this.enemies.length; i++) {
-			this.enemies[i].desenhar(ctx);
+		for (const indiceInimigo in this.enemies) {
+			const enemy = this.enemies[indiceInimigo];
+			enemy.desenhar(dt);
 		}
 	};
 
@@ -649,8 +651,9 @@ export default class Room {
 	};
 
 	collisionEnemies(player) {
-		for (let j = 0; j < this.enemies.length; j++) {
-			if (player.colidiuCom3(this.enemies[j])) {
+		for (const indiceInimigo in this.enemies) {
+			const enemy = this.enemies[indiceInimigo];
+			if (player.colidiuCom3(enemy)) {
 				return true;
 			}
 		}
@@ -673,9 +676,9 @@ export default class Room {
 	 **********************/
 
 	atackEnemiesPlayer(player) {
-		for (let i = 0; i < this.enemies.length; i++) {
-			let auxEnemy = this.enemies[i];
-			auxEnemy.atackPlayer(player);
+		for (const indiceInimigo in this.enemies) {
+			const enemy = this.enemies[indiceInimigo];
+			enemy.atackPlayer(player);
 		}
 	};
 
@@ -788,12 +791,13 @@ export default class Room {
 	};
 
 	copyEnemies(room) {
-		for (let i = 0; i < room.enemies.length; i++) {
-			let aux = room.enemies[i];
-			let newEnemy = new Enemy(this);
-			newEnemy.indexNaSala = i;
-			newEnemy.copy(aux);
-			this.enemies.push(newEnemy);
+		for (const indiceInimigo in room.enemies) {
+			const enemy = room.enemies[indiceInimigo];
+			const newEnemy = new Enemy();
+			newEnemy.room = this;
+			newEnemy.indexNaSala = Object.keys(this.enemies).length;
+			newEnemy.copy(enemy);
+			this.enemies[newEnemy.indexNaSala] = newEnemy;
 		}
 	};
 

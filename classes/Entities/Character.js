@@ -26,10 +26,17 @@ export default class Character extends Sprite {
             widthImagem: 22,
             heightImagem: 22
         };
-        this.cooldownAtaque = 1;                  //Tempo travado até terminar o ataque            
-        this.cooldownImune = 0;
         this.imune = false;
         //this.status = 0;                        // 0 => Normal, 1 => Ataque
+        this.atributos = {
+            hpMax: 200,
+            hpAtual: 200,
+            ataque: 40,
+            velocidade: 0,
+            raioAtaque: 5,
+            cooldownAtaque: 0,                  //Tempo travado até terminar o ataque
+            cooldownImune: 0
+        }
         this.criarAnimacoes();
     }
 
@@ -39,23 +46,23 @@ export default class Character extends Sprite {
         this.controleInvencibilidade();
         this.mover(dt);
         if (this.type === 1) {
-            this.cooldownAtaque = this.cooldownAtaque - 2 * dt;
+            this.atributos.cooldownAtaque = this.atributos.cooldownAtaque - 2 * dt;
         }
     }
 
     controleInvencibilidade(dt) {
-        this.cooldownImune = this.cooldownImune - dt;
-        if (this.cooldownImune < 0) {
+        this.atributos.cooldownImune = this.atributos.cooldownImune - dt;
+        if (this.atributos.cooldownImune < 0) {
             this.imune = false;
         }
         else {
-            //this.cooldownAtaque = 0;
+            //this.atributos.cooldownAtaque = 0;
             //this.type = 0;
         }
     }
 
     ativarInvencibilidade() {
-        this.cooldownImune = 1.2;
+        this.atributos.cooldownImune = 1.2;
         this.imune = true;
     }
 
@@ -108,7 +115,7 @@ export default class Character extends Sprite {
         ctx.fill();
         ctx.stroke();
         ctx.closePath();
-        if (this.cooldownImune > 0) {
+        if (this.atributos.cooldownImune > 0) {
             ctx.globalAlpha = 0.4;
             this.imune = true;
         }
@@ -138,8 +145,8 @@ export default class Character extends Sprite {
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
         ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w, 4);         // Fundo
-        ctx.fillStyle = `hsl(${120 * this.hpAtual / this.hpMax}, 100%, 50%)`;
-        ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w * (Math.max(0, this.hpAtual) / this.hpMax), 4);         // Quantidade de HP
+        ctx.fillStyle = `hsl(${120 * this.atributos.hpAtual / this.atributos.hpMax}, 100%, 50%)`;
+        ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w * (Math.max(0, this.atributos.hpAtual) / this.atributos.hpMax), 4);         // Quantidade de HP
         ctx.strokeRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w, 4);       // Borda
     }
 
@@ -148,7 +155,7 @@ export default class Character extends Sprite {
             const dx = Math.floor(alvo.x) - Math.floor(this.x);
             const dy = Math.floor(alvo.y) - Math.floor(this.y);
             const d = Math.sqrt(dx * dx + dy * dy);
-            if (Math.abs(d) < this.raioAtaque * (this.map.s / 2)) {       //(k * 16) ==> 16 tamanho do celula
+            if (Math.abs(d) < this.atributos.raioAtaque * (this.map.s / 2)) {       //(k * 16) ==> 16 tamanho do celula
                 this.alvo = alvo;
                 this.persegue();
                 return;
@@ -165,13 +172,13 @@ export default class Character extends Sprite {
     atackPlayer(player) {
         if (this.colidiuCom3(player) && this.type === 0) {    // Detecta o player e não ta atacando
             this.type = 1;
-            this.cooldownAtaque = 1;
+            this.atributos.cooldownAtaque = 1;
         }
-        if (this.cooldownAtaque < 0 && this.type === 1) {
+        if (this.atributos.cooldownAtaque < 0 && this.type === 1) {
             this.type = 0;
             if (this.colidiuCom3(player)) {
                 if (player.hp > 0) {
-                    player.hp = player.hp - this.hitpoint;
+                    player.hp = player.hp - this.atributos.ataque;
                     player.ativarInvencibilidade();
                 }
                 else {
@@ -182,9 +189,9 @@ export default class Character extends Sprite {
     }
 
     sofrerAtaque(dano) {
-        console.log("Sofrer ataque");
-        this.hpAtual -= dano;
-        if (this.hpAtual <= 0) {
+        console.log("Sofrer ataque Character");
+        this.atributos.hpAtual -= dano;
+        if (this.atributos.hpAtual <= 0) {
             this.morrer();
         }
     }

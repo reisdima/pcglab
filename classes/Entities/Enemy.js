@@ -3,11 +3,12 @@ import assetsMng from "../AssetsMng.js";
 import { setDebugMode, getDebugMode } from "../DebugMode.js";
 import Character from "./Character.js";
 import Sprite from "../Sprite.js";
+import { slime } from './EnemiesBaseAttributes.js';
 
 
 export default class Enemy extends Character {
 
-    constructor(room) {
+    constructor() {
         super({ s: 22, w: 22, h: 10, nomeImagem: "slime", sizeImagem: 22 });
         this.alvo = null;
         this.roomNumber = -1;
@@ -15,7 +16,7 @@ export default class Enemy extends Character {
         this.maxHp = 200;
         this.hp = 200;
         this.animation = [];
-        this.room = room;
+        this.room = null;
         this.hitpoint = 40;
         this.qtdAnimacoes = { types: 2, lines: [1, 0], qtd: [3, 9] /* atacking: 9, normal: 3*/ };
         this.speedAnimation = 11.49; //1.2;
@@ -31,6 +32,7 @@ export default class Enemy extends Character {
         this.cooldownAtaque = 1;                  //Tempo travado até terminar o ataque            
         this.cooldownImune = 0;
         this.imune = false;
+        this.atributos = Object.assign({}, slime);
         //this.status = 0;                        // 0 => Normal, 1 => Ataque
         this.criarAnimacoes();
     }
@@ -89,50 +91,7 @@ export default class Enemy extends Character {
     }
 
     desenhar(ctx) {
-        let elipse = {
-            x: 0,
-            y: 0,
-            radiusX: this.sizeImagem / 2 - 0.8,
-            radiusY: this.sizeImagem / 3 - 2.2,
-            rotation: 0,
-            startAngle: 0,
-            endAngle: 2 * Math.PI,
-            anticlockwise: false
-        }
-        ctx.linewidth = 1;
-        ctx.fillStyle = "rgba(10, 10, 10, 0.4)";
-        ctx.strokeStyle = "rgba(10, 10, 10, 0.4)";
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.beginPath();
-        ctx.ellipse(elipse.x, elipse.y, elipse.radiusX, elipse.radiusY, elipse.rotation, elipse.startAngle,
-            elipse.endAngle, elipse.anticlockwise);
-        ctx.fill();
-        ctx.stroke();
-        ctx.closePath();
-        if (this.cooldownImune > 0) {
-            ctx.globalAlpha = 0.4;
-            this.imune = true;
-        }
-        else {
-            this.imune = false;
-        }
-        assetsMng.drawClip({
-            ctx: ctx, key: this.nomeImagem,
-            sx: this.animation[this.type].animationFrame[Math.floor(this.pose) % this.animation[this.type].qtdFrames].sx,
-            sy: this.animation[this.type].animationFrame[Math.floor(this.pose) % this.animation[this.type].qtdFrames].sy,
-            w: this.matrizImagem.widthImagem, h: 22, dx: -this.matrizImagem.widthImagem / 2,
-            dy: -this.matrizImagem.heightImagem / 2 - 8/*- this.matrizImagem.heightImagem/2*/
-        });
-        ctx.restore();
-        this.desenharHP(ctx);
-        if (getDebugMode() == 3) {
-            this.desenharCentro(ctx);
-        }
-        else if (getDebugMode() == 4) {
-            this.desenharCaixaColisao(ctx);
-            this.desenharCentro(ctx);
-        }
+        super.desenhar(ctx);
     }
 
     desenharHP(ctx) {
@@ -186,7 +145,10 @@ export default class Enemy extends Character {
 
     morrer() {
         super.morrer();
-        console.log('Morrer do Enemy');
-        this.room.enemies.splice(this.indexNaSala, 1);
+        delete this.room.enemies[this.indexNaSala];
+    }
+
+    balancearDificuldade() {
+
     }
 }
