@@ -496,7 +496,7 @@ export default class Player extends Sprite {
     atacarModoPlayer(alvo) {
         if (this.atacar(alvo)) {
             for (let i = 0; i < this.tiro.length; i++) {
-                if (this.tiro[i].colidiuCom3(alvo)) {
+                if (this.tiro[i].colidiuComCentralWidthHeight(alvo)) {
                     if (!alvo.imune) {
                         alvo.sofrerAtaque(this.hitpoint);
                         alvo.ativarInvencibilidade();
