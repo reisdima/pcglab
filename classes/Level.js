@@ -879,11 +879,11 @@ export default class Level {
     let auxRoom = this.rooms[player.room - 1];          // Checar somente a sala onde o player se encontra
     if (player.teclas.space) {
       if (player.cooldownTeleporte < 0) {
-        if (auxRoom.teleporterInitial.colidiuCom2(player)) {
+        if (auxRoom.teleporterInitial.colidiuComCentralSize(player)) {
           auxRoom.teleporterInitial.teleportar(player, this);
           //this.hud.bussola.update();
         }
-        else if (auxRoom.teleporterFinal.colidiuCom2(player)) {
+        else if (auxRoom.teleporterFinal.colidiuComCentralSize(player)) {
           auxRoom.teleporterFinal.teleportar(player, this);
           //this.hud.bussola.update();
         }

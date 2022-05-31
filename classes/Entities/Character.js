@@ -186,13 +186,13 @@ export default class Character extends Sprite {
     }
 
     attackPlayer(player) {
-        if (this.colidiuCom3(player) && this.type === 0) {    // Detecta o player e não ta atacando
+        if (this.colidiuComCentralWidthHeight(player) && this.type === 0) {    // Detecta o player e não ta atacando
             this.type = 1;
             this.atributos.cooldownAtaque = 1;
         }
         if (this.atributos.cooldownAtaque < 0 && this.type === 1) {
             this.type = 0;
-            if (this.colidiuCom3(player)) {
+            if (this.colidiuComCentralWidthHeight(player)) {
                 if (player.hp > 0) {
                     player.hp = player.hp - this.atributos.ataque;
                     player.ativarInvencibilidade();
