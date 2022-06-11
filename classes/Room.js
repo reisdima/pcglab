@@ -645,7 +645,7 @@ export default class Room {
 
 	collisionFirezones(player) {
 		for (let j = 0; j < this.fireZones.length; j++) {
-			if (this.fireZones[j].colidiuCom3(player)) return true;
+			if (this.fireZones[j].colidiuComCentralWidthHeight(player)) return true;
 		}
 		return false;
 	};
@@ -653,7 +653,7 @@ export default class Room {
 	collisionEnemies(player) {
 		for (const indiceInimigo in this.enemies) {
 			const enemy = this.enemies[indiceInimigo];
-			if (player.colidiuCom3(enemy)) {
+			if (player.colidiuComCentralWidthHeight(enemy)) {
 				return true;
 			}
 		}
@@ -662,7 +662,7 @@ export default class Room {
 
 	collisionTreasures(player) {
 		for (let j = 0; j < this.treasures.length; j++) {
-			if (player.colidiuCom3(this.treasures[j])) {
+			if (player.colidiuComCentralWidthHeight(this.treasures[j])) {
 				player.tesourosColetados++;
 				this.treasures.splice(j, 1);
 				return true;
