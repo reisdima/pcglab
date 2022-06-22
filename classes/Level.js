@@ -153,8 +153,19 @@ export default class Level {
    * -> Atribui os teleportes dentro das salas e insere nos blocos A REFERENCIA PARA O MAPA
    * -> Posiciona de forma com base na DISTÂNCIA DOS TELEPORTES
    * 
+   *  params:{porcentagem, opcaoTeleporteInicio, opcaoTeleporteFinal, opcaoMapaCircular}
    *  porcentagem: Intervalo de distância
-   *  params:{porcentagem, opcaoTeleporteInicio, opcaoTeleporteFinal}
+   * 
+   *  opcaoTeleporteInicio:                                            
+   *  0 => Posicionamento na SALA 1;  1 => Posicionamento Aleatório;  
+   *    
+   *  opcaoTeleporteFinal:                                             
+   *  0 => Final pode ficar na mesma sala do teleporte inicial;       
+   *  1 => Final na sala diferente do teleporte inicial;              
+   *    
+   *  opcaoMapaCircular:                                               
+   *  false  => A última sala não possui um teleporte final;          
+   *  true => A última sala possui um teleporte final para a primeira;
    */
   posicionarTeleportes(params) {
     if (this.rooms.length <= 1) {
@@ -201,7 +212,12 @@ export default class Level {
     }
     this.teleporteFinalLevel = this.criaTeleporte(this.rooms[roomFinalLevel], params.porcentagem).setType(TeleporterType.FimLevel);
 
-    this.interligarTeleportes(roomsAvailable);
+    this.interligarTeleportes();
+
+    if (!params.opcaoMapaCircular) {
+      this.rooms[this.teleporteInicioLevel.roomNumber - 1].teleporterInitial.setAtivo(false);
+      this.rooms[this.teleporteInicioLevel.roomNumber - 1].teleporterInitial.proximoTeleporte.setAtivo(false);
+    }
   }
 
 
@@ -586,17 +602,8 @@ export default class Level {
 
   montarLevel(params) {
     this.posicionarTeleportes({
-      porcentagem: 100, opcaoTeleporteInicio: 1, opcaoTeleporteFinal: 1
-
-      /**********************************************************************
-       * Posiciona os teleportes com base na DISTANCIA entre eles           *
-       * opcaoTeleporteInicio:                                              *
-       *  0 => Posicionamento na SALA 1;  1 => Posicionamento Aleatório;    *
-       *                                                                    *
-       * opcaoTeleporteFinal:                                               *
-       *  0 => Final pode ficar na mesma sala do teleporte inicial;        *
-       *  1 => Final na sala diferente do teleporte inicial;                *
-       *********************************************************************/
+      porcentagem: 100, opcaoTeleporteInicio: 1, opcaoTeleporteFinal: 1,
+      opcaoMapaCircular: false
     });
     this.atualizaGradeTeleportes(params.dt);
     this.posicionarPlayer(params.player);

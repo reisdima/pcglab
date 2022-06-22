@@ -12,6 +12,7 @@ export default class Teleporter extends Sprite {
 		this.proximoTeleporte = undefined;
 		this.type = type;
 		this.roomNumber = -1;
+		this.ativo = true;
 	}
 
 	/**
@@ -42,10 +43,16 @@ export default class Teleporter extends Sprite {
 		return this;
 	}
 
+	setAtivo(ativo) {
+		this.ativo = ativo;
+		return this;
+	}
+
 	copyTeleporte(teleporter, rooms) {
 		//this.proximoTeleporte = teleporter.proximoTeleporte;
 		this.type = teleporter.type;
 		this.roomNumber = teleporter.roomNumber;
+		this.ativo = teleporter.ativo;
 		this.copy(teleporter);                              //Copia os dados do sprite
 	}
 
@@ -69,6 +76,10 @@ export default class Teleporter extends Sprite {
 	}
 
 	teleportar(player, levelAtual) {
+		if (!this.ativo) {
+			console.log('Teleporte inativo');
+			return;
+		}
 		if (this.proximoTeleporte != undefined) {
 			assetsMng.play("teleporte");
 			player.x = this.proximoTeleporte.x;
