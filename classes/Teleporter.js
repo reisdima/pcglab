@@ -6,7 +6,7 @@ const hud = getHud();
 
 export default class Teleporter extends Sprite {
 
-	constructor(type) {
+	constructor(type = null) {
 		super({ s: 32, w: 32, h: 32 });
 
 		this.proximoTeleporte = undefined;
@@ -35,6 +35,11 @@ export default class Teleporter extends Sprite {
 	setPosition(celula) {
 		this.x = celula.coluna * this.s + this.s / 2;
 		this.y = celula.linha * this.s + this.s / 2;
+	}
+
+	setType(type) {
+		this.type = type;
+		return this;
 	}
 
 	copyTeleporte(teleporter, rooms) {
@@ -133,10 +138,11 @@ export default class Teleporter extends Sprite {
 				}
 				break;
 			default:
-				console.log("Sprite type is wrong!!!");
+				console.log("Sprite type " + this.type + " is wrong!!!",);
 				break;
 		}
 	}
+
 }
 
 export class TeleporterType {
