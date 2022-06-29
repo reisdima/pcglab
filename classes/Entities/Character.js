@@ -50,6 +50,99 @@ export default class Character extends Sprite {
         }
     }
 
+    mover(dt) {
+        if (this.direcaoX == 0 && this.direcaoY == 0) {
+            return;
+        }
+        this.gx = Math.floor(this.x / this.map.s);
+        this.gy = Math.floor(this.y / this.map.s);
+
+        const vetorNormalizado = Math.sqrt(
+            (this.direcaoX * this.direcaoX) +
+            (this.direcaoY * this.direcaoY)
+        ) || 1; // se for 0, coloca 1 pra não dar exceção
+
+        let newX = this.x + (this.direcaoX / vetorNormalizado) * this.vx * dt;
+        let newY = this.y + (this.direcaoY / vetorNormalizado) * this.vy * dt
+        if (getDebugMode() === 0 || getDebugMode() === 4) {
+            newX = this.restricoesHorizontal(newX);
+            newY = this.restricoesVertical(newY);
+        }
+        this.x = newX;
+        this.y = newY;
+    }
+
+    restricoesHorizontal(newX) {
+        if (this.direcaoX == 0) {
+            return this.x;
+        }
+        // limite esquerdo é o pixel mais a esquerda do bloco atual
+        // limite direito é o pixel mais direita
+        const limite = (this.gx + (this.direcaoX == 1 ? 1 : 0)) * this.map.s - this.direcaoX;
+        // Se estiver na borda esquerda ou direita do mapa
+        if ((this.gx === 0 && this.direcaoX == -1) || (this.gx === (this.map.w - 1) && this.direcaoX == 1)) {
+            if (this.direcaoX == -1 && newX < limite) {
+                return this.x;
+            } else if (this.direcaoX == 1 && newX > limite) {
+                return this.x;
+            }
+        } else {
+
+            for (let i = -1; i <= 1; i++) {
+                if (this.gy + i < 0 || this.gy + i >= this.map.h) {
+                    continue;
+                }
+                if (this.map.cell[this.gy + i][this.gx + this.direcaoX].tipo === 1) {
+                    const celulaPlayer = { x: newX, y: this.y, w: this.w, h: this.h }
+                    const celula = {
+                        x: (this.gx + this.direcaoX) * this.map.s + this.map.s / 2,
+                        y: (this.gy + i) * this.map.s + this.map.s / 2,
+                        w: this.map.s, h: this.map.s
+                    }
+                    if (Sprite.verificaColisao(celulaPlayer, celula)) {
+                        return limite - (this.w / 2 * this.direcaoX);
+                    }
+                }
+            }
+        }
+        return newX;
+    }
+
+    restricoesVertical(newY) {
+        if (this.direcaoY == 0) {
+            return this.y;
+        }
+        // limite superior é o pixel mais acima do bloco atual
+        // limite inferior é o pixel mais abaixo do bloco atual
+        const limite = (this.gy + (this.direcaoY == 1 ? 1 : 0)) * this.map.s - this.direcaoY;
+        // Se estiver na borda superior ou inferior do mapa
+        if ((this.gy === 0 && this.direcaoY == -1) || (this.gy === (this.map.h - 1) && this.direcaoY == 1)) {
+            if (this.direcaoY == -1 && newY < limite) {
+                return this.y;
+            } else if (this.direcaoY == 1 && newY > limite) {
+                return this.y;
+            }
+        } else {
+            for (let i = -1; i <= 1; i++) {
+                if (this.gx + i < 0) {
+                    continue;
+                }
+                if (this.map.cell[this.gy + this.direcaoY][this.gx + i].tipo === 1) {
+                    const celulaPlayer = { x: this.x, y: newY, w: this.w, h: this.h }
+                    const celula = {
+                        x: (this.gx + i) * this.map.s + this.map.s / 2,
+                        y: (this.gy + this.direcaoY) * this.map.s + this.map.s / 2,
+                        w: this.map.s, h: this.map.s
+                    }
+                    if (Sprite.verificaColisao(celulaPlayer, celula)) {
+                        return limite - (this.h / 2 * this.direcaoY);
+                    }
+                }
+            }
+        }
+        return newY;
+    }
+
     controleInvencibilidade(dt) {
         this.atributos.cooldownImune = this.atributos.cooldownImune - dt;
         if (this.atributos.cooldownImune < 0) {
@@ -167,21 +260,24 @@ export default class Character extends Sprite {
 
 
     persegue(alvo) {
+        if (alvo == null) {
+            return;
+        }
+        const distanciaX = Math.floor(alvo.x) - Math.floor(this.x);
+        const distanciaY = Math.floor(alvo.y) - Math.floor(this.y);
         if (this.alvo === null) {
-            const dx = Math.floor(alvo.x) - Math.floor(this.x);
-            const dy = Math.floor(alvo.y) - Math.floor(this.y);
-            const d = Math.sqrt(dx * dx + dy * dy);
-            if (Math.abs(d) < this.atributos.raioAtaque * (this.map.s / 2)) {       //(k * 16) ==> 16 tamanho do celula
+            const distanciaAlvo = Math.sqrt(
+                (distanciaX * distanciaX) +
+                (distanciaY * distanciaY)
+            );
+            if (Math.abs(distanciaAlvo) < this.atributos.raioAtaque * (this.map.s / 2)) {       //(k * 16) ==> 16 tamanho do celula
                 this.alvo = alvo;
-                this.persegue();
                 return;
             }
 
         } else {
-            const dx = Math.floor(this.alvo.x) - Math.floor(this.x);
-            const dy = Math.floor(this.alvo.y) - Math.floor(this.y);
-            this.vx = 20 * Math.sign(dx);
-            this.vy = 20 * Math.sign(dy);
+            this.direcaoX = Math.sign(distanciaX);
+            this.direcaoY = Math.sign(distanciaY);
         }
     }
 

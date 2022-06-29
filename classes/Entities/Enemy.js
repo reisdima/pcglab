@@ -32,6 +32,8 @@ export default class Enemy extends Character {
         this.cooldownImune = 0;
         this.imune = false;
         this.atributos = Object.assign({}, slime_atributos);
+        this.vx = 30;
+        this.vy = 30;
         this.balancearDificuldade();
         //this.status = 0;                        // 0 => Normal, 1 => Ataque
         this.criarAnimacoes();
@@ -96,25 +98,6 @@ export default class Enemy extends Character {
 
     desenharHP(ctx) {
         super.desenharHP(ctx);
-    }
-
-    persegue(alvo) {
-        if (this.alvo === null) {
-            const dx = Math.floor(alvo.x) - Math.floor(this.x);
-            const dy = Math.floor(alvo.y) - Math.floor(this.y);
-            const d = Math.sqrt(dx * dx + dy * dy);
-            if (Math.abs(d) < this.raioAtaque * (this.map.s / 2)) {       //(k * 16) ==> 16 tamanho do celula
-                this.alvo = alvo;
-                this.persegue();
-                return;
-            }
-
-        } else {
-            const dx = Math.floor(this.alvo.x) - Math.floor(this.x);
-            const dy = Math.floor(this.alvo.y) - Math.floor(this.y);
-            this.vx = 20 * Math.sign(dx);
-            this.vy = 20 * Math.sign(dy);
-        }
     }
 
     attackPlayer(player) {

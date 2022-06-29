@@ -1,6 +1,7 @@
 import Sprite from "../Sprite.js";
 import assetsMng from "../AssetsMng.js";
 import { setDebugMode, getDebugMode } from "../DebugMode.js";
+import Character from "./Character.js";
 
 let _player = null;
 
@@ -12,7 +13,7 @@ export function getPlayer() {
     return _player;
 }
 
-export default class Player extends Sprite {
+export default class Player extends Character {
 
     constructor(params) {
         super({
@@ -42,6 +43,8 @@ export default class Player extends Sprite {
             cooldownAtaque: 1,                  //Tempo do personagem travado até terminar o ataque            
             cooldownImune: 0,
             imune: false,
+            vx: 180,
+            vy: 180,
 
             // Mapa das teclas pressionadas
             teclas: {
@@ -79,7 +82,6 @@ export default class Player extends Sprite {
     }
 
     setRoom() {
-        console.log('Chamou setRoom');
         this.room = this.map.cell[this.gy][this.gx].room;
     }
 
@@ -195,10 +197,10 @@ export default class Player extends Sprite {
     controlePorTeclas() {
         const inputManager = this.cena.inputManager;
         // Teclas direcionais
-        if (inputManager.estaPressionado("SETA_CIMA")) { this.vy = - this.playerVel; this.sentidoMovimento = 0; }
-        if (inputManager.estaPressionado("SETA_DIREITA")) { this.vx = this.playerVel; this.sentidoMovimento = 3; }
-        if (inputManager.estaPressionado("SETA_BAIXO")) { this.vy = this.playerVel; this.sentidoMovimento = 2; }
-        if (inputManager.estaPressionado("SETA_ESQUERDA")) { this.vx = - this.playerVel; this.sentidoMovimento = 1; }
+        if (inputManager.estaPressionado("SETA_CIMA")) { this.direcaoY = -1; this.sentidoMovimento = 0; }
+        if (inputManager.estaPressionado("SETA_DIREITA")) { this.direcaoX = 1; this.sentidoMovimento = 3; }
+        if (inputManager.estaPressionado("SETA_BAIXO")) { this.direcaoY = 1; this.sentidoMovimento = 2; }
+        if (inputManager.estaPressionado("SETA_ESQUERDA")) { this.direcaoX = -1; this.sentidoMovimento = 1; }
 
         // Teclas com ações a mais
         if (inputManager.estaPressionado("CONTROL")) {
@@ -207,8 +209,8 @@ export default class Player extends Sprite {
         if (inputManager.foiPressionado("SHIFT")) { this.playerVel = 250; } else { this.playerVel = 180 }
 
         // Condição de parada
-        if (inputManager.estaPressionado("SETA_CIMA") === inputManager.estaPressionado("SETA_BAIXO")) { this.vy = 0; }
-        if (inputManager.estaPressionado("SETA_DIREITA") === inputManager.estaPressionado("SETA_ESQUERDA")) { this.vx = 0; }
+        if (inputManager.estaPressionado("SETA_CIMA") === inputManager.estaPressionado("SETA_BAIXO")) { this.direcaoY = 0; }
+        if (inputManager.estaPressionado("SETA_DIREITA") === inputManager.estaPressionado("SETA_ESQUERDA")) { this.direcaoX = 0; }
     }
 
     realizarAtaque() {
@@ -269,7 +271,7 @@ export default class Player extends Sprite {
 
         this.pose = this.pose + this.speedAnimation * dt;
         if (this.atacando === 0) {
-            if (this.vx === 0 && this.vy === 0) {     // Personagem parado a pose se mantem
+            if (this.direcaoX === 0 && this.direcaoY === 0) {     // Personagem parado a pose se mantem
                 this.pose = 0;
             }
         }
@@ -379,117 +381,6 @@ export default class Player extends Sprite {
             ctx.fillRect(-this.hitBox.w / 2, -this.hitBox.h / 2, this.hitBox.w, this.hitBox.h);
             ctx.strokeRect(-this.hitBox.w / 2, -this.hitBox.h / 2, this.hitBox.w, this.hitBox.h);
             ctx.restore();
-        }
-    }
-    /**
-     * Mover que usa WIDTH e HEIGHT como referência no movimento
-     */
-    mover(dt) {
-        this.gx = Math.floor(this.x / this.map.s);
-        this.gy = Math.floor(this.y / this.map.s);
-
-        if (getDebugMode() === 0 || getDebugMode() === 4) {
-            if (this.gx === 0 || this.gx === (this.map.w - 1))  // Trata casos extremos do mapa =>{gx <= 0, gx >= gxMapa}
-            {
-                if (this.gx === 0) {
-                    if (this.vx < 0) {
-                        let limite = (this.gx) * this.map.s;
-                        let maxDx = limite - (this.x - this.w / 2);
-                        let Dx = this.vx * dt;
-                        this.x += Math.max(Dx, maxDx);
-                    } else if (this.vx > 0 && this.map.cell[this.gy][this.gx + 1].tipo === 1) {
-                        let limite = (this.gx + 1) * this.map.s;
-                        let maxDx = limite - (this.x + this.w / 2);
-                        let Dx = this.vx * dt;
-                        this.x += Math.min(Dx, maxDx);
-                    } else {
-                        this.x += this.vx * dt;
-                    }
-                }
-                else {
-                    if (this.vx < 0 && this.map.cell[this.gy][this.gx - 1].tipo === 1) {
-                        let limite = (this.gx) * this.map.s;
-                        let maxDx = limite - (this.x - this.w / 2);
-                        let Dx = this.vx * dt;
-                        this.x += Math.max(Dx, maxDx);
-                    } else if (this.vx > 0) {
-                        let limite = (this.gx + 1) * this.map.s;
-                        let maxDx = limite - (this.x + this.w / 2);
-                        let Dx = this.vx * dt;
-                        this.x += Math.min(Dx, maxDx);
-                    } else {
-                        this.x += this.vx * dt;
-                    }
-                }
-            }
-            else {
-                if (this.vx < 0 && this.map.cell[this.gy][this.gx - 1].tipo === 1) {
-                    let limite = (this.gx) * this.map.s;
-                    let maxDx = limite - (this.x - this.w / 2);
-                    let Dx = this.vx * dt;
-                    this.x += Math.max(Dx, maxDx);
-                } else if (this.vx > 0 && this.map.cell[this.gy][this.gx + 1].tipo === 1) {
-                    let limite = (this.gx + 1) * this.map.s;
-                    let maxDx = limite - (this.x + this.w / 2);
-                    let Dx = this.vx * dt;
-                    this.x += Math.min(Dx, maxDx);
-                } else {
-                    this.x += this.vx * dt;
-                }
-            }
-
-            if (this.gy === 0 || this.gy === (this.map.h - 1))  // Trata casos extremos do mapa =>{gy <= 0, gy >= gyMapa}
-            {
-                if (this.gy === 0) {
-                    if (this.vy < 0) {
-                        let limite = (this.gy) * this.map.s;
-                        let maxDy = limite - (this.y - this.h / 2);
-                        let Dy = (this.vy) * dt;
-                        this.y += Math.max(Dy, maxDy);
-                    } else if ((this.vy) > 0 && this.map.cell[this.gy + 1][this.gx].tipo !== 0) {
-                        let limite = (this.gy + 1) * this.map.s;
-                        let maxDy = limite - (this.y + this.h / 2);
-                        let Dy = (this.vy) * dt;
-                        this.y += Math.min(Dy, maxDy);
-                    } else {
-                        this.y += (this.vy) * dt;
-                    }
-                }
-                else {
-                    if ((this.vy) < 0 && this.map.cell[this.gy - 1][this.gx].tipo !== 0) {
-                        let limite = (this.gy) * this.map.s;
-                        let maxDy = limite - (this.y - this.h / 2);
-                        let Dy = (this.vy) * dt;
-                        this.y += Math.max(Dy, maxDy);
-                    } else if ((this.vy) > 0) {
-                        let limite = (this.gy + 1) * this.map.s;
-                        let maxDy = limite - (this.y + this.h / 2);
-                        let Dy = (this.vy) * dt;
-                        this.y += Math.min(Dy, maxDy);
-                    } else {
-                        this.y += (this.vy) * dt;
-                    }
-                }
-            }
-            else {
-                if ((this.vy) < 0 && this.map.cell[this.gy - 1][this.gx].tipo !== 0) {
-                    let limite = (this.gy) * this.map.s;
-                    let maxDy = limite - (this.y - this.h / 2);
-                    let Dy = (this.vy) * dt;
-                    this.y += Math.max(Dy, maxDy);
-                } else if ((this.vy) > 0 && this.map.cell[this.gy + 1][this.gx].tipo !== 0) {
-                    let limite = (this.gy + 1) * this.map.s;
-                    let maxDy = limite - (this.y + this.h / 2);
-                    let Dy = (this.vy) * dt;
-                    this.y += Math.min(Dy, maxDy);
-                } else {
-                    this.y += (this.vy) * dt;
-                }
-            }
-        }
-        else {   // Debug mode => Colision is not detected
-            this.x += (this.vx) * dt;
-            this.y += (this.vy) * dt;
         }
     }
 
