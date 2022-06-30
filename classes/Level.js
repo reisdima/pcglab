@@ -585,7 +585,6 @@ export default class Level {
 
   passo(dt) {
     this.player.passo(dt);
-    this.colisaoTeleportes(this.player, this);
     this.colisaoFireZones(this.player);
     //this.colisaoInimigos(this.player);
     this.colisaoTesouros(this.player);
@@ -794,21 +793,19 @@ export default class Level {
    * Colisões e ataques *
    **********************/
 
-  colisaoTeleportes(player) {
-    let auxRoom = this.rooms[player.room - 1];          // Checar somente a sala onde o player se encontra
-    if (player.teclas.space) {
-      if (player.cooldownTeleporte < 0) {
-        if (auxRoom.teleporterInitial.colidiuComCentralSize(player)) {
-          auxRoom.teleporterInitial.teleportar(player, this);
-          //this.hud.bussola.update();
-        }
-        else if (auxRoom.teleporterFinal.colidiuComCentralSize(player)) {
-          auxRoom.teleporterFinal.teleportar(player, this);
-          //this.hud.bussola.update();
-        }
-        player.cooldownTeleporte = 1;
-      }
+  teleportar() {
+    const room = this.rooms[this.player.room - 1];
+    if (room.teleporterInitial.colidiuComCentralSize(this.player)) {
+      room.teleporterInitial.teleportar(this.player, this);
+      return true;
+      //this.hud.bussola.update();
     }
+    else if (room.teleporterFinal.colidiuComCentralSize(this.player)) {
+      room.teleporterFinal.teleportar(this.player, this);
+      return true;
+      //this.hud.bussola.update();
+    }
+    return false;
   }
 
   colisaoFireZones(player) {

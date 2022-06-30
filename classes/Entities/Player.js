@@ -86,7 +86,7 @@ export default class Player extends Character {
     }
 
     passo(dt) {
-        this.cooldownTeleporte = this.cooldownTeleporte - dt;         // Cooldown de teleporte pra não teleportar direto
+        this.cooldownTeleporte = Math.max(this.cooldownTeleporte - dt, 0);         // Cooldown de teleporte pra não teleportar direto
         this.cooldownImune = this.cooldownImune - dt;
         this.tratarAnimacao();
         if (this.cooldownAtaque < 0) {
@@ -211,6 +211,14 @@ export default class Player extends Character {
         // Condição de parada
         if (inputManager.estaPressionado("SETA_CIMA") === inputManager.estaPressionado("SETA_BAIXO")) { this.direcaoY = 0; }
         if (inputManager.estaPressionado("SETA_DIREITA") === inputManager.estaPressionado("SETA_ESQUERDA")) { this.direcaoX = 0; }
+
+        if (inputManager.foiPressionado("SPACE")) {
+            if (this.cooldownTeleporte == 0) {
+                if (this.level.teleportar()) {
+                    this.cooldownTeleporte = 1;
+                }
+            }
+        }
     }
 
     realizarAtaque() {

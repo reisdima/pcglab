@@ -99,6 +99,7 @@ export default class CenaJogo extends Cena {
 
         this.levelAtual.clonarLevel(this.levels[0]);
         getPlayer().map = this.levelAtual.mapa;
+        getPlayer().level = this.levelAtual;
 
         this.teasuresCollected = 0;
 
@@ -328,10 +329,6 @@ export default class CenaJogo extends Cena {
     }
 
     capturarInput() {
-        if (this.inputManager.foiPressionado("SPACE")) {
-            getPlayer().setTeclas("space", true);
-            return;
-        }
         if (this.inputManager.foiPressionado("M")) {
             this.hud.bussola.mapMode = this.hud.bussola.mapMode + 1;
             if (this.hud.bussola.mapMode > 3) {
