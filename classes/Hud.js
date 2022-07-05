@@ -5,111 +5,64 @@ import { getPlayer } from "./Entities/Player.js";
 const fontMainMenu = "30px Arial Black";
 const wordsColor = "white";
 const alignMainMenu = "center";
+let _hud = null;
 
-// HUD
-const hud = {
-  tempo: { x: 0, y: 0, text: "Tempo: " },
-  energia: { x: 0, y: 0, text: "Energia: " },
-  vidas: { x: 0, y: 0, text: "Vidas: " },
-  tesouros: { x: 0, y: 0, text: "Tesouros: " },
-  bussola: {
-    centerX: 0,
-    centerY: 0,
-    raio: 40,
-    color: "rgba(10, 10, 10, 0.6)",
-    stroke: "rgba(105, 105, 105, 0.4)",
-    sAngle: 0,
-    eAngle: Math.PI * 2,
-    counterclockwise: false,
-    salaPlayer: null,
-    tesouros: null,
-    inimigos: null,
-    teleporteInitial: null,
-    teleporteFinal: null,
-    mapMode: 0,
-    mapModeText: [],
-    desenhar: function (ctx) {
-      ctx.linewidth = 1;
-      ctx.fillStyle = this.color; //"rgba(10, 10, 10, 0.4)";
-      ctx.strokeStyle = this.stroke; //"rgba(10, 10, 10, 0.4)";
-      //  Circulo de fora
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(
-        this.centerX,
-        this.centerY,
-        this.raio,
-        this.sAngle,
-        this.eAngle,
-        this.counterclockwise
-      );
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
+export function getHud() {
+  return _hud;
+}
 
-      switch (this.mapMode) {
-        case 0:
-          {
-            // Todos
-            for (let i = 0; i < this.tesouros.length; i++) {
-              let vetorUnitario = {
-                x: this.tesouros[i].x - getPlayer().x,
-                y: this.tesouros[i].y - getPlayer().y,
-                modulo: 0,
-              };
-              vetorUnitario.modulo = Math.sqrt(
-                vetorUnitario.x * vetorUnitario.x +
-                vetorUnitario.y * vetorUnitario.y
-              );
-              vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-              vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
+export function setHud(newHud) {
+  _hud = newHud;
+  return _hud;
+}
 
-              ctx.save();
-              ctx.strokeStyle = "yellow"; // linha de acabamento preta pra facilitar a visualização
-              ctx.lineWidth = 1;
-              ctx.beginPath();
-              ctx.moveTo(this.centerX, this.centerY);
-              ctx.lineTo(
-                this.centerX + vetorUnitario.x * (this.raio / 2),
-                this.centerY + vetorUnitario.y * (this.raio / 2)
-              );
-              ctx.closePath();
-              ctx.stroke();
-              ctx.restore();
-            }
+class Bussola {
+  constructor() {
+    this.centerX = 0;
+    this.centerY = 0;
+    this.raio = 40;
+    this.color = "rgba(10, 10, 10, 0.6)";
+    this.stroke = "rgba(105, 105, 105, 0.4)";
+    this.sAngle = 0;
+    this.eAngle = Math.PI * 2;
+    this.counterclockwise = false;
+    this.salaPlayer = null;
+    this.tesouros = null;
+    this.inimigos = null;
+    this.teleporteInitial = null;
+    this.teleporteFinal = null;
+    this.mapMode = 0;
+    this.mapModeText = [];
+  }
 
-            for (let i = 0; i < this.inimigos.length; i++) {
-              // Ligação entre os teleportes
-              let vetorUnitario = {
-                x: this.inimigos[i].x - getPlayer().x,
-                y: this.inimigos[i].y - getPlayer().y,
-                modulo: 0,
-              };
-              vetorUnitario.modulo = Math.sqrt(
-                vetorUnitario.x * vetorUnitario.x +
-                vetorUnitario.y * vetorUnitario.y
-              );
-              vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-              vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
+  desenhar(ctx) {
+    ctx.linewidth = 1;
+    ctx.fillStyle = this.color; //"rgba(10, 10, 10, 0.4)";
+    ctx.strokeStyle = this.stroke; //"rgba(10, 10, 10, 0.4)";
+    //  Circulo de fora
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(
+      this.centerX,
+      this.centerY,
+      this.raio,
+      this.sAngle,
+      this.eAngle,
+      this.counterclockwise
+    );
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
 
-              ctx.save();
-              ctx.strokeStyle = "red"; // linha de acabamento preta pra facilitar a visualização
-              ctx.lineWidth = 1;
-              ctx.beginPath();
-              ctx.moveTo(this.centerX, this.centerY);
-              ctx.lineTo(
-                this.centerX + vetorUnitario.x * (this.raio / 2),
-                this.centerY + vetorUnitario.y * (this.raio / 2)
-              );
-              ctx.closePath();
-              ctx.stroke();
-              ctx.restore();
-            }
-
+    switch (this.mapMode) {
+      case 0:
+        {
+          // Todos
+          for (let i = 0; i < this.tesouros.length; i++) {
             let vetorUnitario = {
-              x: this.teleporteInitial.x - getPlayer().x,
-              y: this.teleporteInitial.y - getPlayer().y,
+              x: this.tesouros[i].x - getPlayer().x,
+              y: this.tesouros[i].y - getPlayer().y,
               modulo: 0,
             };
             vetorUnitario.modulo = Math.sqrt(
@@ -120,32 +73,7 @@ const hud = {
             vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
 
             ctx.save();
-            ctx.strokeStyle = "green"; // linha de acabamento preta pra facilitar a visualização
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(this.centerX, this.centerY);
-            ctx.lineTo(
-              this.centerX + vetorUnitario.x * (this.raio / 2),
-              this.centerY + vetorUnitario.y * (this.raio / 2)
-            );
-            ctx.closePath();
-            ctx.stroke();
-            ctx.restore();
-
-            vetorUnitario = {
-              x: this.teleporteFinal.x - getPlayer().x,
-              y: this.teleporteFinal.y - getPlayer().y,
-              modulo: 0,
-            };
-            vetorUnitario.modulo = Math.sqrt(
-              vetorUnitario.x * vetorUnitario.x +
-              vetorUnitario.y * vetorUnitario.y
-            );
-            vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-            vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
-
-            ctx.save();
-            ctx.strokeStyle = "green"; // linha de acabamento preta pra facilitar a visualização
+            ctx.strokeStyle = "yellow"; // linha de acabamento preta pra facilitar a visualização
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(this.centerX, this.centerY);
@@ -157,13 +85,12 @@ const hud = {
             ctx.stroke();
             ctx.restore();
           }
-          break;
-        case 1:
-          {
-            //Teleportes
+
+          for (let i = 0; i < this.inimigos.length; i++) {
+            // Ligação entre os teleportes
             let vetorUnitario = {
-              x: this.teleporteInitial.x - getPlayer().x,
-              y: this.teleporteInitial.y - getPlayer().y,
+              x: this.inimigos[i].x - getPlayer().x,
+              y: this.inimigos[i].y - getPlayer().y,
               modulo: 0,
             };
             vetorUnitario.modulo = Math.sqrt(
@@ -174,32 +101,7 @@ const hud = {
             vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
 
             ctx.save();
-            ctx.strokeStyle = "green"; // linha de acabamento preta pra facilitar a visualização
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(this.centerX, this.centerY);
-            ctx.lineTo(
-              this.centerX + vetorUnitario.x * (this.raio / 2),
-              this.centerY + vetorUnitario.y * (this.raio / 2)
-            );
-            ctx.closePath();
-            ctx.stroke();
-            ctx.restore();
-
-            vetorUnitario = {
-              x: this.teleporteFinal.x - getPlayer().x,
-              y: this.teleporteFinal.y - getPlayer().y,
-              modulo: 0,
-            };
-            vetorUnitario.modulo = Math.sqrt(
-              vetorUnitario.x * vetorUnitario.x +
-              vetorUnitario.y * vetorUnitario.y
-            );
-            vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-            vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
-
-            ctx.save();
-            ctx.strokeStyle = "green"; // linha de acabamento preta pra facilitar a visualização
+            ctx.strokeStyle = "red"; // linha de acabamento preta pra facilitar a visualização
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(this.centerX, this.centerY);
@@ -211,120 +113,239 @@ const hud = {
             ctx.stroke();
             ctx.restore();
           }
-          break;
-        case 2:
-          {
-            // Inimigos
-            for (let i = 0; i < this.inimigos.length; i++) {
-              // Ligação entre os teleportes
-              let vetorUnitario = {
-                x: this.inimigos[i].x - getPlayer().x,
-                y: this.inimigos[i].y - getPlayer().y,
-                modulo: 0,
-              };
-              vetorUnitario.modulo = Math.sqrt(
-                vetorUnitario.x * vetorUnitario.x +
-                vetorUnitario.y * vetorUnitario.y
-              );
-              vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-              vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
 
-              ctx.save();
-              ctx.strokeStyle = "red"; // linha de acabamento preta pra facilitar a visualização
-              ctx.lineWidth = 1;
-              ctx.beginPath();
-              ctx.moveTo(this.centerX, this.centerY);
-              ctx.lineTo(
-                this.centerX + vetorUnitario.x * (this.raio / 2),
-                this.centerY + vetorUnitario.y * (this.raio / 2)
-              );
-              ctx.closePath();
-              ctx.stroke();
-              ctx.restore();
-            }
+          let vetorUnitario = {
+            x: this.teleporteInitial.x - getPlayer().x,
+            y: this.teleporteInitial.y - getPlayer().y,
+            modulo: 0,
+          };
+          vetorUnitario.modulo = Math.sqrt(
+            vetorUnitario.x * vetorUnitario.x +
+            vetorUnitario.y * vetorUnitario.y
+          );
+          vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
+          vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
+
+          ctx.save();
+          ctx.strokeStyle = "green"; // linha de acabamento preta pra facilitar a visualização
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(this.centerX, this.centerY);
+          ctx.lineTo(
+            this.centerX + vetorUnitario.x * (this.raio / 2),
+            this.centerY + vetorUnitario.y * (this.raio / 2)
+          );
+          ctx.closePath();
+          ctx.stroke();
+          ctx.restore();
+
+          vetorUnitario = {
+            x: this.teleporteFinal.x - getPlayer().x,
+            y: this.teleporteFinal.y - getPlayer().y,
+            modulo: 0,
+          };
+          vetorUnitario.modulo = Math.sqrt(
+            vetorUnitario.x * vetorUnitario.x +
+            vetorUnitario.y * vetorUnitario.y
+          );
+          vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
+          vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
+
+          ctx.save();
+          ctx.strokeStyle = "green"; // linha de acabamento preta pra facilitar a visualização
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(this.centerX, this.centerY);
+          ctx.lineTo(
+            this.centerX + vetorUnitario.x * (this.raio / 2),
+            this.centerY + vetorUnitario.y * (this.raio / 2)
+          );
+          ctx.closePath();
+          ctx.stroke();
+          ctx.restore();
+        }
+        break;
+      case 1:
+        {
+          //Teleportes
+          let vetorUnitario = {
+            x: this.teleporteInitial.x - getPlayer().x,
+            y: this.teleporteInitial.y - getPlayer().y,
+            modulo: 0,
+          };
+          vetorUnitario.modulo = Math.sqrt(
+            vetorUnitario.x * vetorUnitario.x +
+            vetorUnitario.y * vetorUnitario.y
+          );
+          vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
+          vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
+
+          ctx.save();
+          ctx.strokeStyle = "green"; // linha de acabamento preta pra facilitar a visualização
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(this.centerX, this.centerY);
+          ctx.lineTo(
+            this.centerX + vetorUnitario.x * (this.raio / 2),
+            this.centerY + vetorUnitario.y * (this.raio / 2)
+          );
+          ctx.closePath();
+          ctx.stroke();
+          ctx.restore();
+
+          vetorUnitario = {
+            x: this.teleporteFinal.x - getPlayer().x,
+            y: this.teleporteFinal.y - getPlayer().y,
+            modulo: 0,
+          };
+          vetorUnitario.modulo = Math.sqrt(
+            vetorUnitario.x * vetorUnitario.x +
+            vetorUnitario.y * vetorUnitario.y
+          );
+          vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
+          vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
+
+          ctx.save();
+          ctx.strokeStyle = "green"; // linha de acabamento preta pra facilitar a visualização
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(this.centerX, this.centerY);
+          ctx.lineTo(
+            this.centerX + vetorUnitario.x * (this.raio / 2),
+            this.centerY + vetorUnitario.y * (this.raio / 2)
+          );
+          ctx.closePath();
+          ctx.stroke();
+          ctx.restore();
+        }
+        break;
+      case 2:
+        {
+          // Inimigos
+          for (let i = 0; i < this.inimigos.length; i++) {
+            // Ligação entre os teleportes
+            let vetorUnitario = {
+              x: this.inimigos[i].x - getPlayer().x,
+              y: this.inimigos[i].y - getPlayer().y,
+              modulo: 0,
+            };
+            vetorUnitario.modulo = Math.sqrt(
+              vetorUnitario.x * vetorUnitario.x +
+              vetorUnitario.y * vetorUnitario.y
+            );
+            vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
+            vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
+
+            ctx.save();
+            ctx.strokeStyle = "red"; // linha de acabamento preta pra facilitar a visualização
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(this.centerX, this.centerY);
+            ctx.lineTo(
+              this.centerX + vetorUnitario.x * (this.raio / 2),
+              this.centerY + vetorUnitario.y * (this.raio / 2)
+            );
+            ctx.closePath();
+            ctx.stroke();
+            ctx.restore();
           }
-          break;
-        case 3:
-          {
-            for (let i = 0; i < this.tesouros.length; i++) {
-              let vetorUnitario = {
-                x: this.tesouros[i].x - getPlayer().x,
-                y: this.tesouros[i].y - getPlayer().y,
-                modulo: 0,
-              };
-              vetorUnitario.modulo = Math.sqrt(
-                vetorUnitario.x * vetorUnitario.x +
-                vetorUnitario.y * vetorUnitario.y
-              );
-              vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
-              vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
+        }
+        break;
+      case 3: // Tesouros
+        {
+          for (let i = 0; i < this.tesouros.length; i++) {
+            let vetorUnitario = {
+              x: this.tesouros[i].x - getPlayer().x,
+              y: this.tesouros[i].y - getPlayer().y,
+              modulo: 0,
+            };
+            vetorUnitario.modulo = Math.sqrt(
+              vetorUnitario.x * vetorUnitario.x +
+              vetorUnitario.y * vetorUnitario.y
+            );
+            vetorUnitario.x = vetorUnitario.x / vetorUnitario.modulo;
+            vetorUnitario.y = vetorUnitario.y / vetorUnitario.modulo;
 
-              ctx.save();
-              ctx.strokeStyle = "yellow"; // linha de acabamento preta pra facilitar a visualização
-              ctx.lineWidth = 1;
-              ctx.beginPath();
-              ctx.moveTo(this.centerX, this.centerY);
-              ctx.lineTo(
-                this.centerX + vetorUnitario.x * (this.raio / 2),
-                this.centerY + vetorUnitario.y * (this.raio / 2)
-              );
-              ctx.closePath();
-              ctx.stroke();
-              ctx.restore();
-            }
+            ctx.save();
+            ctx.strokeStyle = "yellow"; // linha de acabamento preta pra facilitar a visualização
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(this.centerX, this.centerY);
+            ctx.lineTo(
+              this.centerX + vetorUnitario.x * (this.raio / 2),
+              this.centerY + vetorUnitario.y * (this.raio / 2)
+            );
+            ctx.closePath();
+            ctx.stroke();
+            ctx.restore();
           }
-          break;
-      }
+        }
+        break;
+    }
 
-      // centro
-      ctx.save();
-      ctx.beginPath();
-      ctx.lineWidth = 1;
-      ctx.fillStyle = "yellow";
-      ctx.arc(
-        this.centerX,
-        this.centerY,
-        2,
-        this.sAngle,
-        this.eAngle,
-        this.counterclockwise
-      );
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
+    // centro
+    ctx.save();
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.fillStyle = "yellow";
+    ctx.arc(
+      this.centerX,
+      this.centerY,
+      2,
+      this.sAngle,
+      this.eAngle,
+      this.counterclockwise
+    );
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
 
-      // Titulo
-      ctx.fillStyle = wordsColor;
-      ctx.textAlign = alignMainMenu;
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "black";
-      escreveTexto(
-        ctx,
-        this.mapMode + 1 + " - " + this.mapModeText[this.mapMode],
-        this.centerX,
-        this.centerY + this.raio + this.raio / 2
-      );
-    },
+    // Titulo
+    ctx.fillStyle = wordsColor;
+    ctx.textAlign = alignMainMenu;
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "black";
+    escreveTexto(
+      ctx,
+      this.mapMode + 1 + " - " + this.mapModeText[this.mapMode],
+      this.centerX,
+      this.centerY + this.raio + this.raio / 2
+    );
+  }
 
-    update: function (levelAtual) {
-      this.salaPlayer = levelAtual.getPlayerRoom();
-      this.tesouros = this.salaPlayer.treasures;
-      this.inimigos = this.salaPlayer.enemies;
-      this.teleporteInitial = this.salaPlayer.teleporterInitial;
-      this.teleporteFinal = this.salaPlayer.teleporterFinal;
-    },
+  update(levelAtual) {
+    this.salaPlayer = levelAtual.getPlayerRoom();
+    this.tesouros = this.salaPlayer.treasures;
+    this.inimigos = this.salaPlayer.enemies;
+    this.teleporteInitial = this.salaPlayer.teleporterInitial;
+    this.teleporteFinal = this.salaPlayer.teleporterFinal;
+  }
 
-    init: function () {
-      this.mapModeText.push("Todos");
-      this.mapModeText.push("Teleportes");
-      this.mapModeText.push("Inimigos");
-      this.mapModeText.push("Tesouros");
-    },
-  },
+  init() {
+    this.mapModeText.push("Todos");
+    this.mapModeText.push("Teleportes");
+    this.mapModeText.push("Inimigos");
+    this.mapModeText.push("Tesouros");
+  }
 
-  level: { x: 0, y: 0, text: "Level: " },
-  debugText: [],
-  init: function (tela) {
+}
+
+
+export default class Hud {
+
+  constructor() {
+    this.tempo = { x: 0, y: 0, text: "Tempo: " };
+    this.energia = { x: 0, y: 0, text: "Energia: " };
+    this.vidas = { x: 0, y: 0, text: "Vidas: " };
+    this.tesouros = { x: 0, y: 0, text: "Tesouros: " };
+    this.level = { x: 0, y: 0, text: "Level: " };
+    this.debugText = [];
+    this.bussola = new Bussola();
+
+  }
+
+
+  init(tela) {
     this.debugText.push("Mode 1 - Tipo da celula");
     this.debugText.push("Mode 2 - Room da celula");
     this.debugText.push("Mode 3 - Ligação dos Teleportes"); // Centro do personagem e celula marcada
@@ -345,8 +366,9 @@ const hud = {
     this.debugText.push("Mode 18 - Gráfico Caminho do Player");
     this.updateElementos(tela);
     this.bussola.init();
-  },
-  updateElementos: function (tela) {
+  }
+
+  updateElementos(tela) {
     this.tempo.x = converteTelaCheia(40, tela.widthOld, tela.width);
     this.tempo.y = converteTelaCheia(20, tela.heightOld, tela.height);
     this.energia.x = converteTelaCheia(200, tela.widthOld, tela.width);
@@ -360,13 +382,6 @@ const hud = {
     this.bussola.centerX = converteTelaCheia(545, tela.widthOld, tela.width);
     this.bussola.centerY = converteTelaCheia(250, tela.heightOld, tela.height);
     this.bussola.raio = converteTelaCheia(20, tela.heightOld, tela.height);
-  },
-};
+  }
 
-export function getHud() {
-  return hud;
-}
-
-export function setHud(_hud) {
-  hud = _hud;
 }

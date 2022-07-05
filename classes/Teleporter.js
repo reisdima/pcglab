@@ -1,14 +1,14 @@
 import Sprite from "./Sprite.js";
 import assetsMng from "./AssetsMng.js";
-import { setHud, getHud } from "./Hud.js";
+import { getHud } from "./Hud.js";
 
-const hud = getHud();
 
 export default class Teleporter extends Sprite {
 
 	constructor(type = null) {
 		super({ s: 32, w: 32, h: 32 });
 
+		this.hud = getHud();
 		this.proximoTeleporte = undefined;
 		this.type = type;
 		this.roomNumber = -1;
@@ -87,7 +87,7 @@ export default class Teleporter extends Sprite {
 			player.gx = this.proximoTeleporte.gx;
 			player.gy = this.proximoTeleporte.gy;
 			player.room = this.proximoTeleporte.roomNumber;
-			hud.bussola.update(levelAtual);
+			this.hud.bussola.update(levelAtual);
 		}
 		else {
 			console.log("proximoTeleporte eh undefined !!!");
