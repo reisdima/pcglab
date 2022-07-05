@@ -27,7 +27,7 @@ export default class Room {
 		this.beginLevel; // Teleportador que Inicia a fase
 		this.fireZones = []; // Area para a recarga do tempo
 		this.treasures = []; // Lista de tesouros
-		this.enemies = {}; // Lista de inimigos
+		this.enemies = []; // Lista de inimigos
 		this.pathGPS = new Path(); // Path GPS até a saída
 		this.pathRoom = new Path(); // Path Teleporte - Teleporte
 		this.pathTesouros = new Path(); // Path passando por todos os tesouros
@@ -793,11 +793,10 @@ export default class Room {
 	copyEnemies(room) {
 		for (const indiceInimigo in room.enemies) {
 			const enemy = room.enemies[indiceInimigo];
-			const newEnemy = new Enemy(2);
+			const newEnemy = new Enemy(enemy.nivel);
 			newEnemy.room = this;
-			newEnemy.indexNaSala = Object.keys(this.enemies).length;
 			newEnemy.copy(enemy);
-			this.enemies[newEnemy.indexNaSala] = newEnemy;
+			this.enemies.push(newEnemy);
 		}
 	};
 
@@ -895,7 +894,8 @@ export default class Room {
 
 	init() {
 		for (let i = 0; i < this.blocks.length; i++) {
-			this.defineIndexBlocos();
+			// this.defineIndexBlocos();
+			this.blocks[i].indexRoom = i;
 			this.defineVizinhos(this.blocks[i]);
 			if (!this.achouEntrada) {
 				this.achaEntrada();
@@ -946,12 +946,6 @@ export default class Room {
 				this.indexTesouros.push(i);
 				this.pontosInteresse.push(i);
 			}
-		}
-	};
-
-	defineIndexBlocos() {
-		for (let i = 0; i < this.blocks.length; i++) {
-			this.blocks[i].indexRoom = i;
 		}
 	};
 

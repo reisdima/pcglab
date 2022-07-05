@@ -101,13 +101,14 @@ export default class Enemy extends Character {
     }
 
     attackPlayer(player) {
-        if (this.colidiuComCentralWidthHeight(player) && this.type === 0) {    // Detecta o player e não ta atacando
+        const colidiuComPlayer = this.colidiuComCentralWidthHeight(player);
+        if (colidiuComPlayer && this.type === 0) {    // Detecta o player e não ta atacando
             this.type = 1;
             this.cooldownAtaque = 1;
         }
         if (this.cooldownAtaque < 0 && this.type === 1) {
             this.type = 0;
-            if (this.colidiuComCentralWidthHeight(player)) {
+            if (colidiuComPlayer) {
                 if (player.hp > 0) {
                     player.hp = player.hp - this.atributos.ataque;
                     player.ativarInvencibilidade();

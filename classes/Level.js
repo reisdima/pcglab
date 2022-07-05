@@ -555,11 +555,13 @@ export default class Level {
         for (let i = 0; i < listaCelulas.length; i++) {       // preenche a lista de celulas disponiveis --- Dist Inimigos
           /*let auxDistanciaNormalizada = auxRoom.blocks[i].distInimigoTeleporte(auxRoom.distancias.maxInimigos, 
             auxRoom.distancias.maxTeleportes);*/
+          if (listaCelulas[i].distInimigos <= 5) { // Evita inimigos muito próximos
+            continue;
+          }
           let auxDistanciaNormalizada = listaCelulas[i].distInimigoTeleporte(maxDistInimigos,
             distMaxTeleporte);
           if ((minimalValueComposto <= auxDistanciaNormalizada) //&& 
             //(auxDistanciaNormalizada <= minimalValueComposto * 1.5)
-            && (listaCelulas[i].distInimigos > 5)           // Evita inimigos muito próximos
           ) {
             listaCelulasFinal.push(listaCelulas[i]);
           }
@@ -567,20 +569,24 @@ export default class Level {
 
         if (listaCelulasFinal.length > 0) {
           let celula = listaCelulasFinal[this.getRandomInt(0, listaCelulasFinal.length - 1)];
-          let auxEnemy = new Enemy(2);
-          auxEnemy.room = auxRoom;
-          auxEnemy.gx = celula.coluna;
-          auxEnemy.gy = celula.linha;
-          auxEnemy.x = celula.coluna * this.mapa.s + this.mapa.s / 2;
-          auxEnemy.y = celula.linha * this.mapa.s + this.mapa.s / 2;
-          auxEnemy.map = this.mapa;
-          auxEnemy.indexNaSala = Object.keys(auxRoom.enemies).length;
-          auxRoom.enemies[auxEnemy.indexNaSala] = auxEnemy;
+          const inimigo = this.criarInimigo(celula, auxRoom);
+          auxRoom.enemies.push(inimigo);
           this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 2);     // Recalcula
         }
       }
       while (numInimigos-- > 0 && listaCelulasFinal.length > 0);
     }
+  }
+
+  criarInimigo(celula, room, dificuldade = 1) {
+    const inimigo = new Enemy(dificuldade);
+    inimigo.room = room;
+    inimigo.gx = celula.coluna;
+    inimigo.gy = celula.linha;
+    inimigo.x = celula.coluna * this.mapa.s + this.mapa.s / 2;
+    inimigo.y = celula.linha * this.mapa.s + this.mapa.s / 2;
+    inimigo.map = this.mapa;
+    return inimigo;
   }
 
   passo(dt) {
