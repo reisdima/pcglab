@@ -12,6 +12,6 @@ let seedValueURL = location.search;
       let minValue = 500000;
       seedValueURL = (Math.floor(Math.random() * (maxValue - minValue)) + minValue);
     }
-const seedGen = new SeedGenerator({seed_1: seedValueURL , seed_2_string: "teste"});
+const seedGen = new SeedGenerator(seedValueURL.toString() , "sfc32");
 
 export default seedGen;
