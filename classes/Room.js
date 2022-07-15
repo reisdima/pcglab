@@ -794,8 +794,8 @@ export default class Room {
 		for (const indiceInimigo in room.enemies) {
 			const enemy = room.enemies[indiceInimigo];
 			const newEnemy = new Enemy(enemy.nivel);
-			newEnemy.room = this;
 			newEnemy.copy(enemy);
+			newEnemy.room = this;
 			this.enemies.push(newEnemy);
 		}
 	};

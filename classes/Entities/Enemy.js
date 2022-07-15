@@ -13,7 +13,6 @@ export default class Enemy extends Character {
         this.alvo = null;
         this.nivel = nivel;
         this.roomNumber = -1;
-        this.indexNaSala = -1;
         this.animation = [];
         this.room = null;
         this.hitpoint = 40;
@@ -120,12 +119,13 @@ export default class Enemy extends Character {
         }
     }
 
+    copy(enemy) {
+        super.copy(enemy);
+    }
+
     morrer() {
         super.morrer();
-        console.log('Morrer enemy');
-        console.log(this.atributos);
-        console.log(this.roomNumber);
-        delete this.room.enemies[this.indexNaSala];
+        this.room.enemies.splice(this.room.enemies.indexOf(this), 1);
     }
 
     balancearDificuldade() {

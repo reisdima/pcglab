@@ -570,14 +570,13 @@ export default class Level {
         if (listaCelulasFinal.length > 0) {
           let celula = listaCelulasFinal[this.getRandomInt(0, listaCelulasFinal.length - 1)];
           const inimigo = this.criarInimigo(celula, auxRoom);
-          auxRoom.enemies.push(inimigo);
           this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 2);     // Recalcula
         }
       }
       while (numInimigos-- > 0 && listaCelulasFinal.length > 0);
     }
   }
-
+  
   criarInimigo(celula, room, dificuldade = 1) {
     const inimigo = new Enemy(dificuldade);
     inimigo.room = room;
@@ -586,6 +585,7 @@ export default class Level {
     inimigo.x = celula.coluna * this.mapa.s + this.mapa.s / 2;
     inimigo.y = celula.linha * this.mapa.s + this.mapa.s / 2;
     inimigo.map = this.mapa;
+    room.enemies.push(inimigo);
     return inimigo;
   }
 
