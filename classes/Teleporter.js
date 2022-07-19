@@ -1,6 +1,6 @@
 import Sprite from "./Sprite.js";
 import assetsMng from "./AssetsMng.js";
-import { getHud } from "./Hud.js";
+import Hud from "./Hud.js";
 
 
 export default class Teleporter extends Sprite {
@@ -8,7 +8,7 @@ export default class Teleporter extends Sprite {
 	constructor(type = null) {
 		super({ s: 32, w: 32, h: 32 });
 
-		this.hud = getHud();
+		this.hud = Hud.getInstance();
 		this.proximoTeleporte = undefined;
 		this.type = type;
 		this.roomNumber = -1;

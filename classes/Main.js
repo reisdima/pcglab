@@ -10,7 +10,6 @@ import CellularAutomata from "./CellularAutomata.js";
 import assetsMng from "./AssetsMng.js";
 import { setMapArea, getMapArea } from "./MAPA_AREA.js";
 import { setDebugMode, getDebugMode } from "./DebugMode.js";
-import { setHud, getHud } from "./Hud.js";
 import { converteTelaCheia, escreveTexto } from "./Utils.js";
 import Game from "./Game.js";
 

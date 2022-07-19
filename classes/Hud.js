@@ -5,16 +5,6 @@ import { getPlayer } from "./Entities/Player.js";
 const fontMainMenu = "30px Arial Black";
 const wordsColor = "white";
 const alignMainMenu = "center";
-let _hud = null;
-
-export function getHud() {
-  return _hud;
-}
-
-export function setHud(newHud) {
-  _hud = newHud;
-  return _hud;
-}
 
 class Bussola {
   constructor() {
@@ -333,7 +323,12 @@ class Bussola {
 
 export default class Hud {
 
+  static #instance;
+
   constructor() {
+    if(Hud.#instance) {
+      throw 'Error ao instancia HUD'
+    }
     this.tempo = { x: 0, y: 0, text: "Tempo: " };
     this.energia = { x: 0, y: 0, text: "Energia: " };
     this.vidas = { x: 0, y: 0, text: "Vidas: " };
@@ -342,10 +337,15 @@ export default class Hud {
     this.debugText = [];
     this.bussola = new Bussola();
 
+  static getInstance() {
+    if(!Hud.#instance) {
+      Hud.#instance = new Hud();
+    }
+    return Hud.#instance;
   }
 
 
-  init(tela) {
+  init(canvas) {
     this.debugText.push("Mode 1 - Tipo da celula");
     this.debugText.push("Mode 2 - Room da celula");
     this.debugText.push("Mode 3 - Ligação dos Teleportes"); // Centro do personagem e celula marcada
@@ -364,24 +364,24 @@ export default class Hud {
     this.debugText.push("Mode 16 - Gráfico Entrada-Saída");
     this.debugText.push("Mode 17 - Gráfico Entrada-Tesouros-Saída");
     this.debugText.push("Mode 18 - Gráfico Caminho do Player");
-    this.updateElementos(tela);
+    this.updateElementos(canvas);
     this.bussola.init();
   }
 
-  updateElementos(tela) {
-    this.tempo.x = converteTelaCheia(40, tela.widthOld, tela.width);
-    this.tempo.y = converteTelaCheia(20, tela.heightOld, tela.height);
-    this.energia.x = converteTelaCheia(200, tela.widthOld, tela.width);
-    this.energia.y = converteTelaCheia(20, tela.heightOld, tela.height);
-    this.vidas.x = converteTelaCheia(350, tela.widthOld, tela.width);
-    this.vidas.y = converteTelaCheia(20, tela.heightOld, tela.height);
-    this.tesouros.x = converteTelaCheia(450, tela.widthOld, tela.width);
-    this.tesouros.y = converteTelaCheia(20, tela.heightOld, tela.height);
-    this.level.x = converteTelaCheia(545, tela.widthOld, tela.width);
-    this.level.y = converteTelaCheia(20, tela.heightOld, tela.height);
-    this.bussola.centerX = converteTelaCheia(545, tela.widthOld, tela.width);
-    this.bussola.centerY = converteTelaCheia(250, tela.heightOld, tela.height);
-    this.bussola.raio = converteTelaCheia(20, tela.heightOld, tela.height);
+  updateElementos(canvas) {
+    this.tempo.x = converteTelaCheia(40, canvas.widthOld, canvas.width);
+    this.tempo.y = converteTelaCheia(20, canvas.heightOld, canvas.height);
+    this.energia.x = converteTelaCheia(200, canvas.widthOld, canvas.width);
+    this.energia.y = converteTelaCheia(20, canvas.heightOld, canvas.height);
+    this.vidas.x = converteTelaCheia(350, canvas.widthOld, canvas.width);
+    this.vidas.y = converteTelaCheia(20, canvas.heightOld, canvas.height);
+    this.tesouros.x = converteTelaCheia(450, canvas.widthOld, canvas.width);
+    this.tesouros.y = converteTelaCheia(20, canvas.heightOld, canvas.height);
+    this.level.x = converteTelaCheia(545, canvas.widthOld, canvas.width);
+    this.level.y = converteTelaCheia(20, canvas.heightOld, canvas.height);
+    this.bussola.centerX = converteTelaCheia(545, canvas.widthOld, canvas.width);
+    this.bussola.centerY = converteTelaCheia(250, canvas.heightOld, canvas.height);
+    this.bussola.raio = converteTelaCheia(20, canvas.heightOld, canvas.height);
   }
 
 }

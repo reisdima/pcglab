@@ -1,6 +1,6 @@
 import CellularAutomata from '../CellularAutomata.js';
 import { getDebugMode, setDebugMode } from '../DebugMode.js';
-import Hud, { setHud } from '../Hud.js';
+import Hud from "../Hud.js";
 import Level from '../Level.js';
 import { setMapArea } from '../MAPA_AREA.js';
 import Player, { getPlayer, setPlayer } from '../Entities/Player.js';
@@ -12,7 +12,7 @@ let stateMainMenu = 0;
 export default class CenaJogo extends Cena {
 
     desenhar() {
-        this.limparTela();
+        super.desenhar();
         /*if(audioLibrary.isPlaying("BGM")==false){
           audioLibrary.play("BGM");
         }*/
@@ -40,9 +40,7 @@ export default class CenaJogo extends Cena {
     preparar() {
         this.debugModeBegin = 0;
         this.debugModeEnd = 18;
-        const hud = new Hud();
-        setHud(hud);
-        this.hud = hud;
+        this.hud = Hud.getInstance();
         this.hud.init(this.canvas);
 
         this.seedGen = this.getSeedGenerator();

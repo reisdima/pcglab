@@ -3,7 +3,7 @@ import Cena, { fontMainMenu, wordsColor, alignMainMenu } from './Cena.js';
 export default class CenaMenu extends Cena {
 
     desenhar() {
-        this.limparTela();
+        super.desenhar();
         this.ctx.fillStyle = wordsColor;
         this.ctx.textAlign = alignMainMenu;
         this.ctx.lineWidth = 2;
