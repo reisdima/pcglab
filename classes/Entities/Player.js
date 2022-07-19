@@ -433,4 +433,22 @@ export default class Player extends Character {
     setTeclas(key, value) {
         this.teclas[key] = value;
     }
+
+    aumentarAtributo(atributo) {
+        switch (atributo) {
+            case 'vida':
+                this.maxHp += 10;
+                this.hp += 10;
+                break;
+            case 'dano':
+                this.hitpoint += 10;
+                break;
+            case 'velocidade':
+                this.vx += 10;
+                this.vy += 10;
+                break;
+            default:
+                break;
+        }
+    }
 }

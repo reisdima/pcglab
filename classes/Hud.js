@@ -334,8 +334,16 @@ export default class Hud {
     this.vidas = { x: 0, y: 0, text: "Vidas: " };
     this.tesouros = { x: 0, y: 0, text: "Tesouros: " };
     this.level = { x: 0, y: 0, text: "Level: " };
+
+    this.atributos = { x: 0, y: 0, text: "Atributos" };
+    this.vida = { x: 0, y: 0, text: "Vida: " };
+    this.dano = { x: 0, y: 0, text: "Dano: " };
+    this.velocidade = { x: 0, y: 0, text: "Velocidade: " };
+
     this.debugText = [];
+    this.botoes = [];
     this.bussola = new Bussola();
+  }
 
   static getInstance() {
     if(!Hud.#instance) {
@@ -382,6 +390,30 @@ export default class Hud {
     this.bussola.centerX = converteTelaCheia(545, canvas.widthOld, canvas.width);
     this.bussola.centerY = converteTelaCheia(250, canvas.heightOld, canvas.height);
     this.bussola.raio = converteTelaCheia(20, canvas.heightOld, canvas.height);
+
+
+    this.atributos.x = converteTelaCheia(500, canvas.widthOld, canvas.width);
+    this.atributos.y = converteTelaCheia(60, canvas.heightOld, canvas.height);
+    this.dano.x = converteTelaCheia(480, canvas.widthOld, canvas.width);
+    this.dano.y = converteTelaCheia(80, canvas.heightOld, canvas.height);
+    this.vida.x = converteTelaCheia(480, canvas.widthOld, canvas.width);
+    this.vida.y = converteTelaCheia(100, canvas.heightOld, canvas.height);
+    this.velocidade.x = converteTelaCheia(480, canvas.widthOld, canvas.width);
+    this.velocidade.y = converteTelaCheia(120, canvas.heightOld, canvas.height);
+  }
+
+  adicionarBotao(botao) {
+    this.botoes.push(botao);
+  }
+
+  desenharBotoes(ctx, assets) {
+    this.botoes.forEach(botao => {
+      botao.desenhar(ctx, assets);
+    });
+  }
+
+  limparBotoes() {
+    this.botoes = [];
   }
 
 }

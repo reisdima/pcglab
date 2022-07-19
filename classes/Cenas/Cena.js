@@ -1,8 +1,10 @@
 export const fontMainMenu = "30px Arial Black";
 export const wordsColor = "white";
 export const alignMainMenu = "center";
-export default class Cena {
+import Hud from "../Hud.js";
+import getXY from "../utils/getXY.js";
 
+export default class Cena {
     constructor(canvas = null, assets = null) {
         this.canvas = canvas;
         this.ctx = canvas?.getContext("2d");
@@ -101,6 +103,19 @@ export default class Cena {
     limparTela() {
         this.ctx.fillStyle = "black";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    mousemove(e) {
+        const [x, y] = getXY(e, this.canvas);
+        const botoes = Hud.getInstance().botoes;
+        for (let i = 0; i < botoes.length; i++) {
+            const botao = botoes[i];
+            if (!botao.esconder && botao.hasPoint({ x, y })) {
+            this.canvas.style.cursor = 'pointer'
+            return;
+            }
+        }
+        this.canvas.style.cursor = 'default'
     }
 
     // capturarInput() {

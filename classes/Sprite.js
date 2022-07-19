@@ -415,5 +415,14 @@ export default class Sprite {
         return true;
     };
 
+    hasPoint(point) {
+        return !(
+            this.x + this.w / 2 < point.x ||
+            this.x - this.w / 2 > point.x ||
+            this.y + this.h / 2 < point.y ||
+            this.y - this.h / 2 > point.y
+        );
+    }
+
     //module.exports = Sprite;
 }

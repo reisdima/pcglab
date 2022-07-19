@@ -1,13 +1,15 @@
 import CellularAutomata from '../CellularAutomata.js';
 import { getDebugMode, setDebugMode } from '../DebugMode.js';
 import Hud from "../Hud.js";
-import Level from '../Level.js';
-import { setMapArea } from '../MAPA_AREA.js';
-import Player, { getPlayer, setPlayer } from '../Entities/Player.js';
-import SeedGenerator from '../SeedGenerator.js';
-import Sprite from '../Sprite.js';
-import { converteTelaCheia, escreveTexto } from '../Utils.js';
-import Cena, { fontMainMenu, wordsColor, alignMainMenu } from './Cena.js';
+import Level from "../Level.js";
+import { setMapArea } from "../MAPA_AREA.js";
+import Player, { getPlayer, setPlayer } from "../Entities/Player.js";
+import SeedGenerator from "../SeedGenerator.js";
+import Sprite from "../Sprite.js";
+import { converteTelaCheia, escreveTexto } from "../Utils.js";
+import Cena, { fontMainMenu, wordsColor, alignMainMenu } from "./Cena.js";
+import Button from "../utils/Button.js";
+import getXY from '../utils/getXY.js';
 let stateMainMenu = 0;
 export default class CenaJogo extends Cena {
 
@@ -27,8 +29,7 @@ export default class CenaJogo extends Cena {
         if (!getPlayer().vivo) {
             this.estado = 5;
         }
-
-
+        this.hud.desenharBotoes(this.ctx, this.assetsMng);
     }
 
     quadro(t) {
@@ -153,13 +154,39 @@ export default class CenaJogo extends Cena {
         // window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
         this.updateTamanhoElementos(this.canvas);
         this.loadLevel(0);
+
+        this.criarBotoes();
+        this.canvas.onmousemove = (e) => {
+            this.mousemove(e);
+        };
+        this.canvas.onmousedown = (e) => {
+            this.mousedown(e);
+        };
+    }
+
+    mousedown(e) {
+        // if (this.assets.progresso() < 100.0 || this.expire > 0) {
+        //     return;
+        // }
+        const [x, y] = getXY(e, this.canvas);
+        const botoes = this.hud.botoes;
+        for (let i = 0; i < botoes.length; i++) {
+            const botao = botoes[i];
+            if (!botao.esconder && botao.hasPoint({ x, y })) {
+                botao.executarFuncao();
+                return;
+            }
+        }
+      }
+
+    mousemove(e) {
+        super.mousemove(e);
     }
 
     inciar() {
         super.iniciar();
-        window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
+        window.addEventListener("resize", onResize, false); // Ouve os eventos de resize
     }
-
 
     desenharHUD() {
         this.barraTempo.desenhar(this.ctx);
@@ -177,8 +204,18 @@ export default class CenaJogo extends Cena {
         escreveTexto(this.ctx, this.hud.tesouros.text + getPlayer().tesourosColetados, this.hud.tesouros.x, this.hud.tesouros.y);
         escreveTexto(this.ctx, this.hud.level.text + getPlayer().levelNumber, this.hud.level.x, this.hud.level.y);
 
+        this.ctx.textAlign = "left";
+        escreveTexto(this.ctx, this.hud.atributos.text, this.hud.atributos.x, this.hud.atributos.y);
+        escreveTexto(this.ctx, this.hud.vida.text, this.hud.vida.x, this.hud.vida.y);
+        escreveTexto(this.ctx,this.hud.dano.text,this.hud.dano.x,this.hud.dano.y);
+        escreveTexto(this.ctx, this.hud.velocidade.text, this.hud.velocidade.x, this.hud.velocidade.y);
 
+        this.ctx.textAlign = "right";
+        escreveTexto(this.ctx, getPlayer().maxHp, this.hud.vida.x + 150, this.hud.vida.y);
+        escreveTexto(this.ctx, getPlayer().hitpoint, this.hud.dano.x + 150, this.hud.dano.y);
+        escreveTexto(this.ctx, getPlayer().vx, this.hud.velocidade.x + 150, this.hud.velocidade.y);
 
+        this.ctx.textAlign = alignMainMenu;
         if (getDebugMode() >= 1) {
             let typeMode = this.hud.debugText[getDebugMode() - 1];
 
@@ -412,6 +449,40 @@ export default class CenaJogo extends Cena {
         this.levelAtual.setTaxaDiminuicaoTempo(this.dt, this.barraTempo.interna);        // Atualiza o decaimento da barra
         getPlayer().restart();
         this.hud.bussola.update(this.levelAtual);
+    }
+
+    criarBotoes() {
+        const aumentarDano = new Button(
+            0.2 * this.canvas.width,
+            0.9 * this.canvas.height,
+            0.25 * this.canvas.width,
+            0.07 * this.canvas.height,
+            "+ Dano"
+        );
+        aumentarDano.setFuncao(() => getPlayer().aumentarAtributo('dano'));
+
+        const aumentarVida = new Button(
+            0.5 * this.canvas.width,
+            0.9 * this.canvas.height,
+            0.25 * this.canvas.width,
+            0.07 * this.canvas.height,
+            "+ Vida"
+        );
+        aumentarVida.setFuncao(() => getPlayer().aumentarAtributo('vida'));
+
+        const aumentarVelocidade = new Button(
+            0.8 * this.canvas.width,
+            0.9 * this.canvas.height,
+            0.25 * this.canvas.width,
+            0.07 * this.canvas.height,
+            "+ Velocidade"
+        );
+        aumentarVelocidade.setFuncao(() => getPlayer().aumentarAtributo('velocidade'));
+
+        this.hud.adicionarBotao(aumentarDano);
+        this.hud.adicionarBotao(aumentarVida);
+        this.hud.adicionarBotao(aumentarVelocidade);
+        console.log(this.hud.botoes);
     }
 
 }
