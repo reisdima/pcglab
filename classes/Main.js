@@ -258,8 +258,6 @@ let stateMainMenu = 0;
 *                                   *
 *************************************/
 const game = new Game(tela, assetsMng, input);
-game.preparar();
-game.iniciar();
 // requestAnimationFrame(passo);
 // function passo(t) {
 //     dt = (t - anterior) / 1000;
