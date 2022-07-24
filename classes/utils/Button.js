@@ -16,6 +16,7 @@ export default class Button extends Sprite {
 
     desenhar(ctx, assets) {
         if (this.esconder) return;
+        ctx.save();
         ctx.beginPath();
         let fontSize = 0.05 * ctx.canvas.height;
         ctx.font = `${fontSize}px 'Skranji'`;
@@ -47,6 +48,7 @@ export default class Button extends Sprite {
         ctx.textAlign = "center";
         ctx.fillStyle = "black";
         ctx.fillText(this.text, this.x, this.y + this.w * 0.04);
+        ctx.restore();
     }
 
 
