@@ -38,13 +38,16 @@ export default class Player extends Character {
             playerVel: 180, // 100
             hp: 500,
             maxHp: 500,
-            hitpoint: 50,
+            hitpoint: 500,
             cooldownTeleporte: 1,
             cooldownAtaque: 1,                  //Tempo do personagem travado até terminar o ataque            
             cooldownImune: 0,
             imune: false,
             vx: 180,
             vy: 180,
+            xpAtual: 0,
+            xpDoLevel: 100,
+            levelAtual: 1,
 
             // Mapa das teclas pressionadas
             teclas: {
@@ -397,7 +400,10 @@ export default class Player extends Character {
             for (let i = 0; i < this.tiro.length; i++) {
                 if (this.tiro[i].colidiuComCentralWidthHeight(alvo)) {
                     if (!alvo.imune) {
-                        alvo.sofrerAtaque(this.hitpoint);
+                        if (alvo.sofrerAtaque(this.hitpoint)) {
+                            this.xpAtual += alvo.xpFornecida;
+                            this.calculaXp();
+                        }
                         alvo.ativarInvencibilidade();
                     }
                     /*
@@ -424,6 +430,15 @@ export default class Player extends Character {
                 }
             }
         }
+    }
+
+    calculaXp() {
+        if (this.xpAtual >= this.xpDoLevel) {
+            console.log('PASSOU DE NÍVEL');
+            this.xpAtual -= this.xpDoLevel;
+            this.levelAtual++;
+        }
+        console.log('Level atual: ', this.levelAtual);
     }
 
     getRoom() {

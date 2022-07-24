@@ -104,47 +104,6 @@ export default class CenaJogo extends Cena {
 
         this.teasuresCollected = 0;
 
-        this.barraTempo = {
-            externa: new Sprite(),
-            interna: new Sprite(),
-            desenhar: function (ctx) {
-                this.externa.desenharTempo(ctx);
-                this.interna.desenharTempo(ctx);
-            },
-            init: function () {
-                this.externa.w = 127;
-                this.externa.h = 15;
-                this.externa.colorBG = "black";
-                this.externa.colorBorder = "white";
-                this.externa.x = 95;
-                this.externa.y = 7;
-                this.interna.w = 127;
-                this.interna.h = 15;
-                this.interna.x = 96;
-                this.interna.y = 8;
-                this.interna.colorBG = "rgb(170, 120, 0)";
-                this.interna.borderSize = 0;
-            }
-        };
-        this.barraTempo.init();
-
-        // Energia === Player
-        this.barraEnergia = {
-            sprite: new Sprite(),
-            desenhar: function (ctx) {
-                this.sprite.desenharBarraEnergiaHUD(ctx, getPlayer());
-            },
-            init: function () {
-                this.sprite.w = 127;
-                this.sprite.h = 15;
-                this.sprite.colorBG = "black";
-                this.sprite.colorBorder = "white";
-                this.sprite.x = 95;
-                this.sprite.y = 7;
-            }
-        };
-        this.barraEnergia.init();
-
         // Main Menu campos
         const fontMainMenu = "30px Arial Black";
         const wordsColor = "white";
@@ -152,16 +111,17 @@ export default class CenaJogo extends Cena {
         let stateMainMenu = 0;
 
         // window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
-        this.updateTamanhoElementos(this.canvas);
-        this.loadLevel(0);
-
+        
         this.criarBotoes();
+        this.criarBarras();
         this.canvas.onmousemove = (e) => {
             this.mousemove(e);
         };
         this.canvas.onmousedown = (e) => {
             this.mousedown(e);
         };
+        this.loadLevel(0);
+        this.updateTamanhoElementos(this.canvas);
     }
 
     mousedown(e) {
@@ -189,8 +149,6 @@ export default class CenaJogo extends Cena {
     }
 
     desenharHUD() {
-        this.barraTempo.desenhar(this.ctx);
-        this.barraEnergia.desenhar(this.ctx);
         this.hud.bussola.desenhar(this.ctx);
 
         this.ctx.font = "15px Arial Black";
@@ -198,13 +156,16 @@ export default class CenaJogo extends Cena {
         this.ctx.textAlign = alignMainMenu;
         this.ctx.lineWidth = 2;
         this.ctx.strokeStyle = "black";
+        this.ctx.textAlign = "left";
         escreveTexto(this.ctx, this.hud.tempo.text, this.hud.tempo.x, this.hud.tempo.y);
         escreveTexto(this.ctx, this.hud.energia.text, this.hud.energia.x, this.hud.energia.y);
         escreveTexto(this.ctx, this.hud.vidas.text + getPlayer().vidas, this.hud.vidas.x, this.hud.vidas.y);
         escreveTexto(this.ctx, this.hud.tesouros.text + getPlayer().tesourosColetados, this.hud.tesouros.x, this.hud.tesouros.y);
         escreveTexto(this.ctx, this.hud.level.text + getPlayer().levelNumber, this.hud.level.x, this.hud.level.y);
+        
+        escreveTexto(this.ctx, this.hud.levelJogador.text + getPlayer().levelAtual, this.hud.levelJogador.x, this.hud.levelJogador.y);
 
-        this.ctx.textAlign = "left";
+        // Atributos
         escreveTexto(this.ctx, this.hud.atributos.text, this.hud.atributos.x, this.hud.atributos.y);
         escreveTexto(this.ctx, this.hud.vida.text, this.hud.vida.x, this.hud.vida.y);
         escreveTexto(this.ctx,this.hud.dano.text,this.hud.dano.x,this.hud.dano.y);
@@ -215,6 +176,7 @@ export default class CenaJogo extends Cena {
         escreveTexto(this.ctx, getPlayer().hitpoint, this.hud.dano.x + 150, this.hud.dano.y);
         escreveTexto(this.ctx, getPlayer().vx, this.hud.velocidade.x + 150, this.hud.velocidade.y);
 
+        this.hud.desenharBarras(this.ctx);
         this.ctx.textAlign = alignMainMenu;
         if (getDebugMode() >= 1) {
             let typeMode = this.hud.debugText[getDebugMode() - 1];
@@ -286,14 +248,16 @@ export default class CenaJogo extends Cena {
     controleTempo() {
         if (getDebugMode() == 0) {
             //if(!getPlayer().imune){
-            this.barraTempo.interna.w = this.barraTempo.interna.w - this.levelAtual.taxaDiminuicaoTempo;
+            this.barraTempo.barraExterna.w -= (this.barraTempo.barraExterna.w * this.dt) / this.levels[0].tempoTotal;
             this.levelAtual.updateTempo();
-            if (this.barraTempo.interna.w <= 0) {
-                this.barraTempo.interna.w = 0;
+            if (this.barraTempo.barraExterna.w <= 0) {
+                this.barraTempo.barraExterna.w = 0;
                 // estado = 5;
                 limparTela();
             }
-            //}
+            if (this.levelAtual.colisaoFireZones(getPlayer())) {
+                this.barraTempo.barraExterna.w = this.barraTempo.barraInterna.w;
+            }
         }
     }
     onResize(tela) {
@@ -306,16 +270,6 @@ export default class CenaJogo extends Cena {
 
     // Atualiza o tamanho dos elementos quando a interface é redimensionada
     updateTamanhoElementos(tela) {
-        // Update barra de tempo
-        this.barraTempo.externa.x = converteTelaCheia(67, tela.widthOld, tela.width);
-        this.barraTempo.externa.y = converteTelaCheia(13.5, tela.heightOld, tela.height);
-        this.barraTempo.interna.x = converteTelaCheia(67, tela.widthOld, tela.width);
-        this.barraTempo.interna.y = converteTelaCheia(13.5, tela.heightOld, tela.height);
-
-        // Update barra de energia do player
-        this.barraEnergia.sprite.x = converteTelaCheia(225, tela.widthOld, tela.width);
-        this.barraEnergia.sprite.y = converteTelaCheia(13.5, tela.heightOld, tela.height);
-
         // HUD
         this.hud.updateElementos(tela);
     }
@@ -347,7 +301,6 @@ export default class CenaJogo extends Cena {
                 else {
                     this.levelAtual.clonarLevel(this.levels[getPlayer().levelNumber - 1]);
                     this.levelAtual.posicionarPlayer(getPlayer());
-                    this.levelAtual.setTaxaDiminuicaoTempo(this.dt, this.barraTempo.interna);        // Atualiza o decaimento da barra
                     getPlayer().restart();
                     this.hud.bussola.update(this.levelAtual);
                     getPlayer().vidas = 3;
@@ -357,7 +310,6 @@ export default class CenaJogo extends Cena {
             case 1:   //Reload
                 this.levelAtual.clonarLevel(this.levels[getPlayer().levelNumber - 1]);
                 this.levelAtual.posicionarPlayer(getPlayer());
-                this.levelAtual.setTaxaDiminuicaoTempo(this.dt, this.barraTempo.interna);        // Atualiza o decaimento da barra
                 getPlayer().restart();
                 this.hud.bussola.update(this.levelAtual);
                 this.estado = 0;
@@ -446,7 +398,6 @@ export default class CenaJogo extends Cena {
         );
         this.levelAtual.clonarLevel(this.levels[0]);
         this.levelAtual.posicionarPlayer(getPlayer());
-        this.levelAtual.setTaxaDiminuicaoTempo(this.dt, this.barraTempo.interna);        // Atualiza o decaimento da barra
         getPlayer().restart();
         this.hud.bussola.update(this.levelAtual);
     }
@@ -483,6 +434,60 @@ export default class CenaJogo extends Cena {
         this.hud.adicionarBotao(aumentarVida);
         this.hud.adicionarBotao(aumentarVelocidade);
         console.log(this.hud.botoes);
+    }
+
+    criarBarras() {
+        this.barraTempo = this.hud.adicionarBarra({
+            x: 67,
+            y: 13.5,
+            width: 127,
+            height: 15,
+            corBarra: "rgb(170, 120, 0)",
+            corFundo: 'black',
+            corBorda: 'white',
+            tamanhoBorda: 1,
+            texto: null,
+        });
+
+        this.barraEnergia = this.hud.adicionarBarra({
+            x: 225,
+            y: 13.5,
+            width: 127,
+            height: 15,
+            corBarra: () => `hsl(${120 * getPlayer().hp / getPlayer().maxHp}, 100%, 50%)`,
+            corFundo: 'black',
+            corBorda: 'black',
+            tamanhoBorda: 2,
+            porcentagem: () => (Math.max(0, getPlayer().hp) / getPlayer().maxHp),
+            texto: {
+                valor: () => getPlayer().hp,
+                font: "13px Arial Black",
+                fillStyle: "yellow",
+                textAlign: "center",
+                lineWidth: 2,
+                strokeStyle: "black",
+            },
+        });
+
+        this.barraXp = this.hud.adicionarBarra({
+            x: 20,
+            y: 50,
+            width: 150,
+            height: 20,
+            corBarra: () => 'purple',
+            corFundo: 'black',
+            corBorda: 'black',
+            tamanhoBorda: 'white',
+            porcentagem: () => (getPlayer().xpAtual / getPlayer().xpDoLevel),
+            texto: {
+                valor: () => `${getPlayer().xpAtual}/${getPlayer().xpDoLevel}`,
+                font: "13px Arial Black",
+                fillStyle: "white",
+                textAlign: "center",
+                lineWidth: 2,
+                strokeStyle: "black",
+            },
+        });
     }
 
 }

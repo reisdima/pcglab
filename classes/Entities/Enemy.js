@@ -21,6 +21,7 @@ export default class Enemy extends Character {
         this.type = 0;
         this.pose = 0;
         this.raioAtaque = 5;
+        this.xpFornecida = 50;
         this.matrizImagem = {
             linha: 1,
             colunas: 9,
@@ -126,6 +127,7 @@ export default class Enemy extends Character {
     morrer() {
         super.morrer();
         this.room.enemies.splice(this.room.enemies.indexOf(this), 1);
+        return true;
     }
 
     balancearDificuldade() {

@@ -304,8 +304,9 @@ export default class Character extends Sprite {
         console.log("Sofrer ataque Character");
         this.hpAtual -= dano;
         if (this.hpAtual <= 0) {
-            this.morrer();
+            return this.morrer();
         }
+        return false;
     }
 
     morrer() {

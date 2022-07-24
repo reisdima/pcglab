@@ -1,5 +1,6 @@
 import { converteTelaCheia, escreveTexto } from "./Utils.js";
 import { getPlayer } from "./Entities/Player.js";
+import Sprite from "./Sprite.js";
 
 // Main Menu campos
 const fontMainMenu = "30px Arial Black";
@@ -334,14 +335,17 @@ export default class Hud {
     this.vidas = { x: 0, y: 0, text: "Vidas: " };
     this.tesouros = { x: 0, y: 0, text: "Tesouros: " };
     this.level = { x: 0, y: 0, text: "Level: " };
-
+    
     this.atributos = { x: 0, y: 0, text: "Atributos" };
     this.vida = { x: 0, y: 0, text: "Vida: " };
     this.dano = { x: 0, y: 0, text: "Dano: " };
     this.velocidade = { x: 0, y: 0, text: "Velocidade: " };
 
+    this.levelJogador = { x: 0, y: 0, text: "Level do Player: " };
+
     this.debugText = [];
     this.botoes = [];
+    this.barras = [];
     this.bussola = new Bussola();
   }
 
@@ -377,9 +381,9 @@ export default class Hud {
   }
 
   updateElementos(canvas) {
-    this.tempo.x = converteTelaCheia(40, canvas.widthOld, canvas.width);
+    this.tempo.x = converteTelaCheia(20, canvas.widthOld, canvas.width);
     this.tempo.y = converteTelaCheia(20, canvas.heightOld, canvas.height);
-    this.energia.x = converteTelaCheia(200, canvas.widthOld, canvas.width);
+    this.energia.x = converteTelaCheia(180, canvas.widthOld, canvas.width);
     this.energia.y = converteTelaCheia(20, canvas.heightOld, canvas.height);
     this.vidas.x = converteTelaCheia(350, canvas.widthOld, canvas.width);
     this.vidas.y = converteTelaCheia(20, canvas.heightOld, canvas.height);
@@ -390,8 +394,8 @@ export default class Hud {
     this.bussola.centerX = converteTelaCheia(545, canvas.widthOld, canvas.width);
     this.bussola.centerY = converteTelaCheia(250, canvas.heightOld, canvas.height);
     this.bussola.raio = converteTelaCheia(20, canvas.heightOld, canvas.height);
-
-
+    
+    
     this.atributos.x = converteTelaCheia(500, canvas.widthOld, canvas.width);
     this.atributos.y = converteTelaCheia(60, canvas.heightOld, canvas.height);
     this.dano.x = converteTelaCheia(480, canvas.widthOld, canvas.width);
@@ -400,6 +404,16 @@ export default class Hud {
     this.vida.y = converteTelaCheia(100, canvas.heightOld, canvas.height);
     this.velocidade.x = converteTelaCheia(480, canvas.widthOld, canvas.width);
     this.velocidade.y = converteTelaCheia(120, canvas.heightOld, canvas.height);
+
+    this.levelJogador.x = converteTelaCheia(20, canvas.widthOld, canvas.width);
+    this.levelJogador.y = converteTelaCheia(40, canvas.heightOld, canvas.height);
+
+    this.barras.forEach(barra => {
+      barra.barraInterna.x = converteTelaCheia(barra.barraInterna.x, canvas.widthOld, canvas.width);
+      barra.barraInterna.y = converteTelaCheia(barra.barraInterna.y, canvas.heightOld, canvas.height);
+      barra.barraExterna.x = converteTelaCheia(barra.barraExterna.x, canvas.widthOld, canvas.width);
+      barra.barraExterna.y = converteTelaCheia(barra.barraExterna.y, canvas.heightOld, canvas.height);
+    });
   }
 
   adicionarBotao(botao) {
@@ -414,6 +428,76 @@ export default class Hud {
 
   limparBotoes() {
     this.botoes = [];
+  }
+
+  adicionarBarra(params) {
+    const barra = {
+      barraInterna: new Sprite({
+        x: params.x,
+        y: params.y,
+        w: params.width,
+        h: params.height,
+      }),
+      barraExterna: new Sprite({
+        x: params.x,
+        y: params.y,
+        w: params.width,
+        h: params.height,
+      }),
+      texto: params.texto,
+      corBarra: params.corBarra,
+      corFundo: params.corFundo,
+      corBorda: params.corBorda,
+      porcentagem: params.porcentagem ? params.porcentagem : () => 1,
+      tamanhoBorda: params.tamanhoBorda,
+      texto: params.texto,
+    }
+    this.barras.push(barra);
+    return barra;
+  }
+
+  desenharBarras(ctx) {
+    this.barras.forEach(barra => {
+      // Barra de fundo
+      ctx.fillStyle = barra.corFundo;
+      ctx.fillRect(barra.barraInterna.x, barra.barraInterna.y, barra.barraInterna.w, barra.barraInterna.h);
+      // Barra de preenchimento
+      ctx.fillStyle = (typeof barra.corBarra === 'function') ? barra.corBarra() : barra.corBarra;
+      ctx.fillRect(
+        barra.barraExterna.x,
+        barra.barraExterna.y,
+        barra.barraExterna.w * barra.porcentagem(),
+        barra.barraExterna.h
+      );
+      // Linha de contorno
+      ctx.strokeStyle = barra.corBorda;
+      ctx.lineWidth = barra.tamanhoBorda;
+      ctx.strokeRect(barra.barraInterna.x, barra.barraInterna.y, barra.barraInterna.w, barra.barraInterna.h);
+
+      if (barra.texto) {
+        // Texto com o número no meio da barra
+        const texto = barra.texto;
+        ctx.font = texto.font;
+        ctx.fillStyle = texto.fillStyle,
+        ctx.textAlign = texto.textAlign; //alignMainMenu;
+        ctx.lineWidth = texto.lineWidth;
+        ctx.strokeStyle = texto.strokeStyle;
+        ctx.strokeText(
+            texto.valor(),
+            barra.barraInterna.x + barra.barraInterna.w / 2,
+            barra.barraInterna.y + barra.barraInterna.h / 2 + 4
+        );
+        ctx.fillText(
+            texto.valor(),
+            barra.barraInterna.x + barra.barraInterna.w / 2,
+            barra.barraInterna.y + barra.barraInterna.h / 2 + 4
+        );
+      }
+    });
+  }
+
+  limparBarras() {
+    this.barras = [];
   }
 
 }

@@ -44,16 +44,6 @@ export default class Level {
     //this.taxaDiminuicaoTempo = Math.floor(larguraBarra/tempo);
   };
 
-  setTaxaDiminuicaoTempo(dt, barra) {
-    /**
-     * tempoTotal --- larguraBarra  |    X = (larguraBarra * dt)/tempoTotal
-     *     dt     ---     X         |
-     */
-    this.tempo = barra;
-    this.larguraBarra = barra.w;
-    this.taxaDiminuicaoTempo = (this.larguraBarra * dt) / this.tempoTotal; // Math.floor(larguraBarra/tempo);
-  };
-
   updateTempo() {
     this.tempoFase = this.tempoFase - 1;
   }
@@ -817,7 +807,7 @@ export default class Level {
   colisaoFireZones(player) {
     let auxRoom = this.rooms[player.room - 1];          // Checar somente a sala onde o player se encontra
     if (auxRoom.collisionFirezones(player)) {             // Checa colisão com as firezones
-      this.tempo.w = this.larguraBarra;
+      return true;
     }
   }
 
