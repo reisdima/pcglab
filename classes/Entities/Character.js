@@ -2,6 +2,7 @@ import Sprite from "../Sprite.js";
 import seedGen from "../SeedGen.js";
 import assetsMng from "../AssetsMng.js";
 import { setDebugMode, getDebugMode } from "../DebugMode.js";
+import { escreveTexto } from "../Utils.js";
 
 export default class Character extends Sprite {
     constructor() {
@@ -224,7 +225,7 @@ export default class Character extends Sprite {
         });
         ctx.restore();
         this.desenharHP(ctx);
-        this.desenharNivel(ctx);
+        this.desenharAtributos(ctx);
         if (getDebugMode() == 3) {
             this.desenharCentro(ctx);
         }
@@ -244,16 +245,28 @@ export default class Character extends Sprite {
         ctx.strokeRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w, 4);       // Borda
     }
 
-    desenharNivel(ctx) {
+
+    desenharAtributos(ctx) {
+        ctx.save();
+        ctx.fillStyle = 'yellow';
+        ctx.lineWidth = 2;
+        ctx.textAlign = 'center';
+        ctx.strokeStyle = "black";
+        ctx.font = "10px Arial Black";
         if (this.nivel) {
-            ctx.fillStyle = 'yellow';
-            ctx.lineWidth = 2;
-            ctx.textAlign = 'center';
-            ctx.strokeStyle = "black";
-            ctx.font = "10px Arial Black";
             ctx.strokeText(this.nivel, this.x, this.y - this.h * 2.7);
             ctx.fillText(this.nivel, this.x, this.y - this.h * 2.7);
         }
+        
+        if (this.atributos) {
+            ctx.lineWidth = 1;
+            ctx.textAlign = 'left';
+            ctx.font = "8px Arial Black";
+            escreveTexto(ctx, "A: " + this.atributos.ataque, this.x + (0.7 * this.w), this.y - (this.h * 2))
+            escreveTexto(ctx, "H: " + this.atributos.hpMax, this.x + (0.7 * this.w), this.y - this.h)
+            escreveTexto(ctx, "V: " + this.atributos.velocidade, this.x + (0.7 * this.w), this.y)
+        }
+        ctx.restore();
 
     }
 

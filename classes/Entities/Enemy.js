@@ -32,8 +32,8 @@ export default class Enemy extends Character {
         this.cooldownImune = 0;
         this.imune = false;
         this.atributos = Object.assign({}, slime_atributos);
-        this.vx = 30;
-        this.vy = 30;
+        this.vx = this.atributos.velocidade;
+        this.vy = this.atributos.velocidade;
         this.balancearDificuldade();
         //this.status = 0;                        // 0 => Normal, 1 => Ataque
         this.criarAnimacoes();

@@ -1,7 +1,7 @@
 const slime_atributos = {
-    hpMax: 200,
-    ataque: 40,
-    velocidade: 0,
+    hpMax: 20,
+    ataque: 10,
+    velocidade: 30,
     raioAtaque: 5,
     cooldownAtaque: 0,
     cooldownImune: 0,
