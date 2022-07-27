@@ -22,13 +22,15 @@ export default class Cell {
         Object.assign(this, exemplo, params);   // Sobrescreve os atributos de params e exemplo na classe
     }
 
+    // Média entre as distências da célula até inimigo e teleporte
     distInimigoTeleporte(maxInimigo = 1, maxTeleporte = 1) {
-        return ((this.distInimigos * 0.5) / maxInimigo + (this.distTeleportes * 0.5) / maxTeleporte);
+        return ((this.distInimigos / maxInimigo) + (this.distTeleportes / maxTeleporte)) / 2;
     }
 
+    // Média entre as distências da célula até inimigo e teleporte
     distInimigo_Tesouro_Teleporte(maxInimigo = 1, maxTeleporte = 1, maxTesouro = 1) {
-        return ((this.distInimigos * 0.5) / maxInimigo + (this.distTeleportes * 0.5) / maxTeleporte +
-            (this.distTesouros * 0.5) / maxTesouro);
+        return ((this.distInimigos / maxInimigo) + (this.distTeleportes / maxTeleporte) +
+            (this.distTesouros / maxTesouro)) / 2;
     }
 
     clone(celula) {
