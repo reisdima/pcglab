@@ -1,38 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script defer src="./Entity.js" type="module"></script>
+    <script defer src="./Components.js" type="module"></script>
+    <script defer src="./systems/Render.js"></script>
     <title>EXC Basics</title>
-    <script defer src="./ecs.js" type="module"></script>
-</head>
-<body>
+  </head>
+  <body>
     <h1>EXC Basics</h1>
-    <canvas>
-        <script>const canvas = document.querySelector("canvas");
-            const ctx = canvas.getContext("2d");
-            canvas.width = 960;
-            canvas.height = 640;
-            let t0;
-            let dt;
-            
-            requestAnimationFrame(desenha);
-            
-            function desenha(t) {
-              t0 = t0 ?? t;
-              dt = (t - t0) / 1000;
-            
-              ctx.fillStyle = "darkslategray";
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-              requestAnimationFrame(desenha);
-              t0 = t;
-            }
-            </script>
-    </canvas>
+    <canvas> </canvas>
     <button>Play</button>
     <button>Pause</button>
     <button>Reset</button>
-</body>
+  </body>
 </html>
