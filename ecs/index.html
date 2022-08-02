@@ -13,14 +13,18 @@
     <h1>EXC Basics</h1>
     <canvas></canvas>
 
-    <script>
-      window.ECS = {
+    <script type="module">
+      import Entity from "./Entity.js";
+
+      const ECS = {
         components: {},
         system: {},
         entities: [],
         game: {},
         score: 0,
+        entity_count: 0,
       };
+      ECS.entities.push(new Entity(ECS));
     </script>
 
     <button>Play</button>
