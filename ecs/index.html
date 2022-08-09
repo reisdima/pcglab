@@ -1,17 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script defer src="./Entity.js" type="module"></script>
+    <script defer src="./Components.js" type="module"></script>
+    <script defer src="./systems/Render.js"></script>
     <title>EXC Basics</title>
-    <script defer src="./ecs.js" type="module"></script>
-</head>
-<body>
+  </head>
+  <body>
     <h1>EXC Basics</h1>
     <canvas></canvas>
+
+    <script type="module">
+      import Entity from "./Entity.js";
+
+      const ECS = {
+        components: {},
+        system: {},
+        entities: [],
+        game: {},
+        score: 0,
+        entity_count: 0,
+      };
+      ECS.entities.push(new Entity(ECS));
+    </script>
+
     <button>Play</button>
     <button>Pause</button>
     <button>Reset</button>
-</body>
+  </body>
 </html>

@@ -1,7 +1,7 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = 960;
-canvas.height = 640;
+canvas.height = 600;
 let t0;
 let dt;
 
