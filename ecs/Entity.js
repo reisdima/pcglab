@@ -3,31 +3,23 @@ export default class Entity {
     this.id =
       (+new Date()).toString(16) +
       ((Math.random() * 100000000) | 0).toString(16) +
-      ECS.entity_count;
+      Entity.entityCount;
 
-    ECS.entity_count++;
 
-    this.components = {};
+    this.components = new Map();
   }
 
   addComponent(component) {
-    this.component[component.name] = component;
-
+    this.component.set(component.name, component);
     return this;
   }
 
   removeComponent(componentName) {
-    var name = componentName;
-    if (typeof componentName === "function") {
-      name = componentName.name;
-    }
-    delete this.component[name];
+    this.component.delete(componentName);
     return this;
   }
+
   print() {
     console.log(JSON.stringify(this, null, 4));
-    return this;
+  }
 }
-
-
-};
