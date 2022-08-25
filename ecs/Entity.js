@@ -10,16 +10,16 @@ export default class Entity {
   }
 
   addComponent(component) {
-    this.component.set(component.name, component);
+    this.components.set(component.name, component);
     return this;
   }
 
-  removeComponent(componentName) {
-    this.component.delete(componentName);
+  removeComponent(component) {
+    this.components.delete(component.name);
     return this;
   }
 
-  print() {
+  toString() {
     console.log(JSON.stringify(this, null, 4));
   }
 }
