@@ -6,6 +6,7 @@ import Enemy from "./Entities/Enemy.js";
 import Treasure from "./Treasure.js";
 import Ordenacao from "./Ordenacao.js";
 import { setDebugMode, getDebugMode } from "./DebugMode.js";
+import Slime from "./Entities/Slime.js";
 
 
 //TODO Fix parametro
@@ -568,13 +569,14 @@ export default class Level {
   }
   
   criarInimigo(celula, room, dificuldade = 1) {
-    const inimigo = new Enemy(dificuldade);
+    const inimigo = new Slime(1);
     inimigo.room = room;
     inimigo.gx = celula.coluna;
     inimigo.gy = celula.linha;
     inimigo.x = celula.coluna * this.mapa.s + this.mapa.s / 2;
     inimigo.y = celula.linha * this.mapa.s + this.mapa.s / 2;
     inimigo.map = this.mapa;
+    inimigo.balancearDificuldade();
     room.enemies.push(inimigo);
     return inimigo;
   }

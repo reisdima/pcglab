@@ -35,30 +35,21 @@ export default class Player extends Character {
             vivo: true,
             room: -1,
             tesourosColetados: 0,
-            playerVel: 180, // 100
-            hp: 500,
-            maxHp: 500,
-            hitpoint: 500,
             cooldownTeleporte: 1,
             cooldownAtaque: 1,                  //Tempo do personagem travado até terminar o ataque            
             cooldownImune: 0,
             imune: false,
-            vx: 180,
-            vy: 180,
+            atributos: {
+                hpMax: 50,
+                ataque: 5,
+                velocidade: 160,
+            },
+            hpAtual: 50,
             xpAtual: 0,
             xpDoLevel: 100,
             levelAtual: 1,
-
-            // Mapa das teclas pressionadas
-            teclas: {
-                up: false,
-                down: false,
-                right: false,
-                left: false,
-                ctrl: false,
-                shift: false,
-                space: false
-            },
+            pontos: 0,
+            pontosTotais: 0,
 
             // Ataque
             tiro: [],
@@ -71,7 +62,7 @@ export default class Player extends Character {
         }
 
         Object.assign(this, exemplo, params);   // Sobrescreve os atributos de params e exemplo na classe
-
+        this.calcularPoderTotal();
         this.criarAnimacoes();
     }
 
@@ -80,7 +71,7 @@ export default class Player extends Character {
         this.tesourosColetados = 0;
         this.cooldownImune = 0;
         this.imune = false;
-        this.hp = 500;
+        this.hp = this.maxHp;
         this.setRoom();
     }
 
@@ -400,8 +391,9 @@ export default class Player extends Character {
             for (let i = 0; i < this.tiro.length; i++) {
                 if (this.tiro[i].colidiuComCentralWidthHeight(alvo)) {
                     if (!alvo.imune) {
-                        if (alvo.sofrerAtaque(this.hitpoint)) {
+                        if (alvo.sofrerAtaque(this.atributos.ataque)) {
                             this.xpAtual += alvo.xpFornecida;
+                            this.pontos += alvo.xpFornecida;
                             this.calculaXp();
                         }
                         alvo.ativarInvencibilidade();
@@ -445,25 +437,25 @@ export default class Player extends Character {
         return this.map.cell[this.gy][this.gx].room;
     }
 
-    setTeclas(key, value) {
-        this.teclas[key] = value;
-    }
-
     aumentarAtributo(atributo) {
         switch (atributo) {
             case 'vida':
-                this.maxHp += 10;
-                this.hp += 10;
+                this.atributos.hpMax += 10;
+                this.hpAtual += 10;
                 break;
             case 'dano':
-                this.hitpoint += 10;
+                this.atributos.ataque += 10;
                 break;
             case 'velocidade':
-                this.vx += 10;
-                this.vy += 10;
+                this.atributos.velocidade += 30;
                 break;
             default:
                 break;
         }
+    }
+
+    sofrerAtaque(dano) {
+        super.sofrerAtaque(dano);
+        this.ativarInvencibilidade();
     }
 }

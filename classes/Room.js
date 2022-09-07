@@ -6,6 +6,7 @@ import Enemy from "./Entities/Enemy.js";
 import { setDebugMode, getDebugMode } from "./DebugMode.js";
 import Path from "./Path.js";
 import { converteTelaCheia, escreveTexto } from "./Utils.js";
+import Slime from "./Entities/Slime.js";
 
 export default class Room {
 	constructor(number) {
@@ -793,9 +794,12 @@ export default class Room {
 	copyEnemies(room) {
 		for (const indiceInimigo in room.enemies) {
 			const enemy = room.enemies[indiceInimigo];
-			const newEnemy = new Enemy(enemy.nivel);
+			const newEnemy = new Slime(enemy.nivel);
 			newEnemy.copy(enemy);
 			newEnemy.room = this;
+			newEnemy.atributos = enemy.atributos;
+			newEnemy.hpAtual = enemy.hpAtual;
+			newEnemy.poderTotal = enemy.poderTotal;
 			this.enemies.push(newEnemy);
 		}
 	};

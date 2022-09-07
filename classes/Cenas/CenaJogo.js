@@ -172,9 +172,9 @@ export default class CenaJogo extends Cena {
         escreveTexto(this.ctx, this.hud.velocidade.text, this.hud.velocidade.x, this.hud.velocidade.y);
 
         this.ctx.textAlign = "right";
-        escreveTexto(this.ctx, getPlayer().maxHp, this.hud.vida.x + 150, this.hud.vida.y);
-        escreveTexto(this.ctx, getPlayer().hitpoint, this.hud.dano.x + 150, this.hud.dano.y);
-        escreveTexto(this.ctx, getPlayer().vx, this.hud.velocidade.x + 150, this.hud.velocidade.y);
+        escreveTexto(this.ctx, getPlayer().atributos.hpMax, this.hud.vida.x + 150, this.hud.vida.y);
+        escreveTexto(this.ctx, getPlayer().atributos.ataque, this.hud.dano.x + 150, this.hud.dano.y);
+        escreveTexto(this.ctx, getPlayer().atributos.velocidade, this.hud.velocidade.x + 150, this.hud.velocidade.y);
 
         this.hud.desenharBarras(this.ctx);
         this.ctx.textAlign = alignMainMenu;
@@ -433,7 +433,6 @@ export default class CenaJogo extends Cena {
         this.hud.adicionarBotao(aumentarDano);
         this.hud.adicionarBotao(aumentarVida);
         this.hud.adicionarBotao(aumentarVelocidade);
-        console.log(this.hud.botoes);
     }
 
     criarBarras() {
@@ -454,13 +453,13 @@ export default class CenaJogo extends Cena {
             y: 13.5,
             width: 127,
             height: 15,
-            corBarra: () => `hsl(${120 * getPlayer().hp / getPlayer().maxHp}, 100%, 50%)`,
+            corBarra: () => `hsl(${120 * getPlayer().hpAtual / getPlayer().atributos.hpMax}, 100%, 50%)`,
             corFundo: 'black',
             corBorda: 'black',
             tamanhoBorda: 2,
-            porcentagem: () => (Math.max(0, getPlayer().hp) / getPlayer().maxHp),
+            porcentagem: () => (Math.max(0, getPlayer().hpAtual) / getPlayer().atributos.hpMax),
             texto: {
-                valor: () => getPlayer().hp,
+                valor: () => getPlayer().hpAtual,
                 font: "13px Arial Black",
                 fillStyle: "yellow",
                 textAlign: "center",

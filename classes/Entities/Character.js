@@ -5,37 +5,26 @@ import { setDebugMode, getDebugMode } from "../DebugMode.js";
 import { escreveTexto } from "../Utils.js";
 
 export default class Character extends Sprite {
-    constructor() {
-        super({ s: 22, w: 22, h: 10, nomeImagem: "slime", sizeImagem: 22 });
+    constructor(params) {
+        super(params);
         this.alvo = null;
-        this.atributos = {
-
-        }
         this.roomNumber = -1;
+        this.room = null;
         this.hpMax = 200;
         this.hpAtual = 200;
         this.animation = [];
-        this.hitpoint = 40;
-        this.qtdAnimacoes = { types: 2, lines: [1, 0], qtd: [3, 9] /* atacking: 9, normal: 3*/ };
         this.speedAnimation = 11.49; //1.2;
         this.type = 0;
         this.pose = 0;
         this.raioAtaque = 5;
-        this.matrizImagem = {
-            linha: 1,
-            colunas: 9,
-            widthImagem: 22,
-            heightImagem: 22
-        };
         this.imune = false;
-        //this.status = 0;                        // 0 => Normal, 1 => Ataque
         this.atributos = {
             hpMax: 200,
             hpAtual: 200,
             ataque: 40,
             velocidade: 0,
             raioAtaque: 5,
-            cooldownAtaque: 0,                  //Tempo travado até terminar o ataque
+            cooldownAtaque: 0,
             cooldownImune: 0
         }
         this.criarAnimacoes();
@@ -63,8 +52,10 @@ export default class Character extends Sprite {
             (this.direcaoY * this.direcaoY)
         ) || 1; // se for 0, coloca 1 pra não dar exceção
 
-        let newX = this.x + (this.direcaoX / vetorNormalizado) * this.vx * dt;
-        let newY = this.y + (this.direcaoY / vetorNormalizado) * this.vy * dt
+        let newX = this.x + (this.direcaoX / vetorNormalizado) *
+            this.atributos.velocidade * dt;
+        let newY = this.y + (this.direcaoY / vetorNormalizado) *
+            this.atributos.velocidade * dt
         if (getDebugMode() === 0 || getDebugMode() === 4) {
             newX = this.restricoesHorizontal(newX);
             newY = this.restricoesVertical(newY);
@@ -265,6 +256,7 @@ export default class Character extends Sprite {
             escreveTexto(ctx, "A: " + this.atributos.ataque, this.x + (0.7 * this.w), this.y - (this.h * 2))
             escreveTexto(ctx, "H: " + this.atributos.hpMax, this.x + (0.7 * this.w), this.y - this.h)
             escreveTexto(ctx, "V: " + this.atributos.velocidade, this.x + (0.7 * this.w), this.y)
+            escreveTexto(ctx, "Pa: " + this.poderTotal, this.x + (0.7 * this.w), this.y + this.h)
         }
         ctx.restore();
 
@@ -315,6 +307,7 @@ export default class Character extends Sprite {
 
     sofrerAtaque(dano) {
         console.log("Sofrer ataque Character");
+        console.log(this);
         this.hpAtual -= dano;
         if (this.hpAtual <= 0) {
             return this.morrer();
@@ -324,5 +317,12 @@ export default class Character extends Sprite {
 
     morrer() {
         console.log('Morrer do Character');
+    }
+
+    calcularPoderTotal() {
+        this.poderTotal = 0;
+        this.poderTotal += this.atributos.hpMax * 2;
+        this.poderTotal += this.atributos.ataque;
+        this.poderTotal += this.atributos.velocidade * 2;
     }
 }

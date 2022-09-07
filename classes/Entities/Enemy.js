@@ -1,42 +1,15 @@
 import seedGen from "../SeedGen.js";
-import assetsMng from "../AssetsMng.js";
-import { setDebugMode, getDebugMode } from "../DebugMode.js";
 import Character from "./Character.js";
-import Sprite from "../Sprite.js";
-import { slime_atributos, slime_crescimento_por_nivel } from './EnemiesBaseAttributes.js';
 
 
 export default class Enemy extends Character {
 
-    constructor(nivel) {
-        super({ s: 22, w: 22, h: 10, nomeImagem: "slime", sizeImagem: 22 });
+    constructor(params, nivel) {
+        super(params);
         this.alvo = null;
         this.nivel = nivel;
-        this.roomNumber = -1;
-        this.animation = [];
-        this.room = null;
-        this.hitpoint = 40;
-        this.qtdAnimacoes = { types: 2, lines: [1, 0], qtd: [3, 9] /* atacking: 9, normal: 3*/ };
-        this.speedAnimation = 11.49; //1.2;
-        this.type = 0;
-        this.pose = 0;
-        this.raioAtaque = 5;
-        this.xpFornecida = 50;
-        this.matrizImagem = {
-            linha: 1,
-            colunas: 9,
-            widthImagem: 22,
-            heightImagem: 22
-        };
-        this.cooldownAtaque = 1;                  //Tempo travado até terminar o ataque            
         this.cooldownImune = 0;
         this.imune = false;
-        this.atributos = Object.assign({}, slime_atributos);
-        this.vx = this.atributos.velocidade;
-        this.vy = this.atributos.velocidade;
-        this.balancearDificuldade();
-        //this.status = 0;                        // 0 => Normal, 1 => Ataque
-        this.criarAnimacoes();
     }
 
 
@@ -45,7 +18,7 @@ export default class Enemy extends Character {
         this.controleInvencibilidade();
         this.mover(dt);
         if (this.type === 1) {
-            this.cooldownAtaque = this.cooldownAtaque - 2 * dt;
+            this.cooldownAtaque = this.cooldownAtaque - dt;
         }
     }
 
@@ -109,13 +82,7 @@ export default class Enemy extends Character {
         if (this.cooldownAtaque < 0 && this.type === 1) {
             this.type = 0;
             if (colidiuComPlayer) {
-                if (player.hp > 0) {
-                    player.hp = player.hp - this.atributos.ataque;
-                    player.ativarInvencibilidade();
-                }
-                else {
-                    player.hp = 0;
-                }
+                player.sofrerAtaque(this.atributos.ataque)
             }
         }
     }

@@ -690,38 +690,3 @@ addEventListener("keydown", function (e) {
     }
 });
 */
-
-/**
- * Mapeamento de teclas SOLTAS 
- */
-addEventListener("keyup", function (e) {
-    e.preventDefault();                         //Evento padrao do navegador
-    if (getPlayer() != null) {
-        switch (e.keyCode) {
-            case 37:
-                getPlayer().setTeclas("left", false);
-                break;
-            case 39:
-                getPlayer().setTeclas("right", false);
-                break;
-            case 38:
-                getPlayer().setTeclas("up", false);
-                break;
-            case 40:
-                getPlayer().setTeclas("down", false);
-                break;
-            case 17:  //Left CTRL
-                getPlayer().setTeclas("ctrl", false);
-                break
-            case 32:  //Espaco  -- Ativa teleporte
-                getPlayer().setTeclas("space", false);
-                break;
-            case 16: //Left SHIFT -- Correr
-                getPlayer().setTeclas("shift", false);
-                break;
-            default:
-                break;
-        }
-    }
-});
-
