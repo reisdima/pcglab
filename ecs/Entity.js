@@ -1,5 +1,5 @@
 export default class Entity {
-  constructor(ECS) {
+  constructor() {
     this.id =
       (+new Date()).toString(16) +
       ((Math.random() * 100000000) | 0).toString(16) +
@@ -7,6 +7,10 @@ export default class Entity {
 
 
     this.components = new Map();
+  }
+
+  get(componentName){
+    return this.components.get(componentName);
   }
 
   addComponent(component) {

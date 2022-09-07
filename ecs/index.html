@@ -4,27 +4,23 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="./Entity.js" type="module"></script>
-    <script defer src="./Components.js" type="module"></script>
-    <script defer src="./systems/Render.js"></script>
-    <title>EXC Basics</title>
+    <title>ECS Render Test</title>
   </head>
   <body>
-    <h1>EXC Basics</h1>
+    <h1>ECS Render Test</h1>
     <canvas></canvas>
 
-    <script type="module">
-      import Entity from "./Entity.js";
+    <script type="module" defer>
+      import EntityManager from "./EntityManager.js";
+      import Render from "./systems/Render.js"
+      import PositionComponent from "./components/PositionComponent.js"
+      const entityManager = new EntityManager();
 
-      const ECS = {
-        components: {},
-        system: {},
-        entities: [],
-        game: {},
-        score: 0,
-        entity_count: 0,
-      };
-      ECS.entities.push(new Entity(ECS));
+      const e1 = entityManager.createEntity();
+      e1.addComponent(new PositionComponent(30, 50));
+
+      entityManager.update(Render);
+
     </script>
 
     <button>Play</button>
