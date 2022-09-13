@@ -6,7 +6,8 @@ export default function Render(entityManager){
  ctx.fillStyle = "lightgreen";
  entityManager.entities.forEach(entity => {
   const pos = entity.get('POSITION');
-   ctx.fillRect(pos.x, pos.y, 10, 10);
+  const box = entity.get('BOX');
+   ctx.fillRect(pos.x, pos.y, box.width, box.height);
  });
 
 }

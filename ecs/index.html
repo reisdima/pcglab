@@ -14,10 +14,12 @@
       import EntityManager from "./EntityManager.js";
       import Render from "./systems/Render.js"
       import PositionComponent from "./components/PositionComponent.js"
+      import BoxComponent from "./components/BoxComponent.js"
       const entityManager = new EntityManager();
 
       const e1 = entityManager.createEntity();
       e1.addComponent(new PositionComponent(30, 50));
+      e1.addComponent(new BoxComponent(40, 20));
 
       entityManager.update(Render);
 
