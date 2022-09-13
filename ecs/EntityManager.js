@@ -12,7 +12,7 @@ export default class EntityManager {
   removeEntity(id) {
     this.entities = this.entities.filter((e) => e.id !== id);
   }
-  update(system) {
-    system(this);
+  update(system, opts = {}) {
+    system(this, opts);
   }
 }
