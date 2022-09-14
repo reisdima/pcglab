@@ -342,6 +342,8 @@ export default class Hud {
     this.velocidade = { x: 0, y: 0, text: "Velocidade: " };
 
     this.levelJogador = { x: 0, y: 0, text: "Level do Player: " };
+    this.pontos = { x: 0, y: 0, text: "Pontos: " };
+    this.poder = { x: 0, y: 0, text: "Poder: " };
 
     this.debugText = [];
     this.botoes = [];
@@ -407,6 +409,12 @@ export default class Hud {
 
     this.levelJogador.x = converteTelaCheia(20, canvas.widthOld, canvas.width);
     this.levelJogador.y = converteTelaCheia(40, canvas.heightOld, canvas.height);
+
+    this.pontos.x = converteTelaCheia(20, canvas.widthOld, canvas.width);
+    this.pontos.y = converteTelaCheia(70, canvas.heightOld, canvas.height);
+
+    this.poder.x = converteTelaCheia(20, canvas.widthOld, canvas.width);
+    this.poder.y = converteTelaCheia(85, canvas.heightOld, canvas.height);
 
     this.barras.forEach(barra => {
       barra.barraInterna.x = converteTelaCheia(barra.barraInterna.x, canvas.widthOld, canvas.width);

@@ -164,11 +164,13 @@ export default class CenaJogo extends Cena {
         escreveTexto(this.ctx, this.hud.level.text + getPlayer().levelNumber, this.hud.level.x, this.hud.level.y);
         
         escreveTexto(this.ctx, this.hud.levelJogador.text + getPlayer().levelAtual, this.hud.levelJogador.x, this.hud.levelJogador.y);
+        escreveTexto(this.ctx, this.hud.pontos.text + getPlayer().pontos, this.hud.pontos.x, this.hud.pontos.y);
+        escreveTexto(this.ctx, this.hud.poder.text + getPlayer().poderTotal, this.hud.poder.x, this.hud.poder.y);
 
         // Atributos
         escreveTexto(this.ctx, this.hud.atributos.text, this.hud.atributos.x, this.hud.atributos.y);
-        escreveTexto(this.ctx, this.hud.vida.text, this.hud.vida.x, this.hud.vida.y);
         escreveTexto(this.ctx,this.hud.dano.text,this.hud.dano.x,this.hud.dano.y);
+        escreveTexto(this.ctx, this.hud.vida.text, this.hud.vida.x, this.hud.vida.y);
         escreveTexto(this.ctx, this.hud.velocidade.text, this.hud.velocidade.x, this.hud.velocidade.y);
 
         this.ctx.textAlign = "right";
