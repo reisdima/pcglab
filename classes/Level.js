@@ -165,8 +165,12 @@ export default class Level {
     }
     let roomsAvailable = [];            //Rooms disponíveis para escolher o teleporte inicial
     let sortPosition;
+    let menorSala = this.rooms[0];
     for (let i = 0; i < this.rooms.length; i++) {
       const roomAtual = this.rooms[i];
+      if (roomAtual.blocks.length < menorSala.blocks.length) {
+        menorSala = roomAtual;
+      }
       // Pre-processamento -- Pega o bloco do meio da sala, calcula a distancia, pega o bloco
       // da maior, zera a distancia, posiciona o bloco e calcula a distancia de novo
 
@@ -187,11 +191,13 @@ export default class Level {
       // roomAtual.resetDistancia(0);
       // roomAtual.teleporterInitial = this.criaTeleporte(roomAtual, 100).setType(TeleporterType.InicioSala);
       roomAtual.teleporterFinal = this.criaTeleporte(roomAtual, params.porcentagem).setType(TeleporterType.FimSala);
+      this.mapa.atualizaDist(roomAtual.teleporterFinal.gy, roomAtual.teleporterFinal.gx, 0, 4);
       roomsAvailable.push(roomAtual.number);
     }
 
     // Posicionamento teleporte inicio de fase
-    let roomInicioLevel = params.opcaoTeleporteInicio ? this.getRandomInt(0, (this.rooms.length - 1)) : 0;
+    // let roomInicioLevel = params.opcaoTeleporteInicio ? this.getRandomInt(0, (this.rooms.length - 1)) : 0;
+    let roomInicioLevel = menorSala.number - 1;
     this.teleporteInicioLevel = this.criaTeleporte(this.rooms[roomInicioLevel], params.porcentagem).setType(TeleporterType.InicioLevel);
 
     // Posicionamento teleporte fim de fase
