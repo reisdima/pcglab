@@ -56,7 +56,7 @@ export default class CenaJogo extends Cena {
                 wDefault: 27,
                 hDefault: 11
             }
-        });
+        }, 5);
         player.cena = this;
         setPlayer(player);
 

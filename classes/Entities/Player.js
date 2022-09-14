@@ -15,7 +15,7 @@ export function getPlayer() {
 
 export default class Player extends Character {
 
-    constructor(params) {
+    constructor(params, nivel) {
         super({
             s: params.s, w: 16, h: 16,
             hitBox: {
@@ -26,7 +26,7 @@ export default class Player extends Character {
                 wDefault: 16,
                 hDefault: 16
             }
-        });
+        }, nivel);
 
         let exemplo = {
             timeWalkSound: 0.5,
@@ -42,9 +42,8 @@ export default class Player extends Character {
             atributos: {
                 hpMax: 50,
                 ataque: 5,
-                velocidade: 160,
+                velocidade: 100,
             },
-            hpAtual: 50,
             xpAtual: 0,
             xpDoLevel: 100,
             levelAtual: 1,
@@ -62,6 +61,7 @@ export default class Player extends Character {
         }
 
         Object.assign(this, exemplo, params);   // Sobrescreve os atributos de params e exemplo na classe
+        this.hpAtual = this.atributos.hpMax;
         this.calcularPoderTotal();
         this.criarAnimacoes();
     }

@@ -6,6 +6,7 @@ import Enemy from "./Entities/Enemy.js";
 import Treasure from "./Treasure.js";
 import Ordenacao from "./Ordenacao.js";
 import { setDebugMode, getDebugMode } from "./DebugMode.js";
+import ProgressionManager from "./ProgressionManager.js";
 import Slime from "./Entities/Slime.js";
 
 
@@ -14,6 +15,7 @@ export default class Level {
 
   constructor(w, h, s, { hud, seedGen, assetsMng }) {
     this.mapa = new Map(w, h, s, assetsMng);
+    this.progressionaManager = new ProgressionManager(seedGen, this.mapa);
     this.rooms = [];
     this.tempoFase = 0;
     this.tempoTotal = 0;
@@ -531,6 +533,10 @@ export default class Level {
     }
   }
 
+  posicionarInimigosTeste(params) {
+    this.progressionaManager.posicionarInimigos(params, this, this.rooms);
+  }
+
   posicionarInimigos(params) {
     for (let indiceSala = 0; indiceSala < this.rooms.length; indiceSala++) {
       let auxRoom = this.rooms[indiceSala];
@@ -606,26 +612,33 @@ export default class Level {
   montarLevel(params) {
     this.posicionarTeleportes({
       porcentagem: 100, opcaoTeleporteInicio: 1, opcaoTeleporteFinal: 1,
-      opcaoMapaCircular: false
+      opcaoMapaCircular: true
     });
     this.atualizaGradeTeleportes(params.dt);
     this.posicionarPlayer(params.player);
     this.posicionarFireZones(25);          // Posiciona acima de 25 na distancia de firezones
-    this.posicionarInimigos({
+    
+    this.posicionarInimigosTeste({
       porcentagemDistancia: 80,
       porcentagemDistanciaComp: 50,
+      distanciaMinimaEntreInimigos: 3
     });
 
-    this.posicionarTesouros({
-      //porcentagemDistancia: 90, qtdTesouros: 0, porcentagemTesourosPorSala: 5
-      porcentagemDistancia: 80,
-      porcentagemDistanciaComp: 50,
-
-      // porcentagemTesourosPorSala != 0 ==> Posiciona de acordo com o tamanho da sala
-
-    });
-
-
+    // this.posicionarInimigos({
+    //   porcentagemDistancia: 80,
+    //   porcentagemDistanciaComp: 50,
+    // });
+    
+    // this.posicionarTesouros({
+    //   //porcentagemDistancia: 90, qtdTesouros: 0, porcentagemTesourosPorSala: 5
+    //   porcentagemDistancia: 80,
+    //   porcentagemDistanciaComp: 50,
+      
+    //   // porcentagemTesourosPorSala != 0 ==> Posiciona de acordo com o tamanho da sala
+      
+    // });
+    
+    
     /* Distancias maximas em cada sala */
     for (let i = 0; i < this.rooms.length; i++) {
       this.rooms[i].maxCamadaDistancias();

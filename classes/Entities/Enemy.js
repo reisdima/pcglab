@@ -5,9 +5,8 @@ import Character from "./Character.js";
 export default class Enemy extends Character {
 
     constructor(params, nivel) {
-        super(params);
+        super(params, nivel);
         this.alvo = null;
-        this.nivel = nivel;
         this.cooldownImune = 0;
         this.imune = false;
     }

@@ -5,8 +5,9 @@ import { setDebugMode, getDebugMode } from "../DebugMode.js";
 import { escreveTexto } from "../Utils.js";
 
 export default class Character extends Sprite {
-    constructor(params) {
+    constructor(params, nivel) {
         super(params);
+        this.nivel = nivel;
         this.alvo = null;
         this.roomNumber = -1;
         this.room = null;
