@@ -19,6 +19,9 @@
 
       const canvas = document.querySelector("canvas");
       const ctx = canvas.getContext("2d");
+      let t;
+      let t0;
+      let dt;
 
       const entityManager = new EntityManager();
 
@@ -27,7 +30,7 @@
       e1.addComponent(new BoxComponent(40, 20));
       e1.addComponent(new MoveComponent());
 
-      entityManager.update(Render, { ctx, canvas });
+      entityManager.update(Render, { ctx, canvas, t, t0, dt });
     </script>
 
     <button>Play</button>
