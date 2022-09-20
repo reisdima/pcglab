@@ -10,7 +10,7 @@ describe("VelocityComponent class", () => {
     it("Has a name", () => {
       const component = new VelocityComponent();
       expect(typeof component.name).toBe("string");
-      expect(component.name).toBe("POSITION");
+      expect(component.name).toBe("VELOCITY");
     });
 
     it("Has a value", () => {
