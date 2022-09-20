@@ -8,25 +8,25 @@ export default class MoveComponent {
   }
 
   mover(dt) {
-    this.vx = this.vx + this.ax * dt;
-    this.x = this.x + this.vx * dt;
-    this.vy = this.vy + this.ay * dt;
-    this.y = this.y + this.vy * dt;
+    this.vx += this.ax * dt;
+    this.x += this.vx * dt;
+    this.vy += this.ay * dt;
+    this.y += this.vy * dt;
   }
 
-  aceleracao(e, K) {
+  aceleracao(e) {
     switch (e.key) {
       case "w":
-        this.ay = -K;
+        this.ay = -120;
         break;
       case "s":
-        this.ay = +K;
+        this.ay = +120;
         break;
       case "a":
-        this.ax = -K;
+        this.ax = -120;
         break;
       case "d":
-        this.ax = +K;
+        this.ax = +120;
         break;
 
       default:
