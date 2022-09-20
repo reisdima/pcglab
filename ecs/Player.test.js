@@ -17,19 +17,17 @@ describe("Player class", () => {
     it("add a component increase components size", () => {
       const entity = new Player();
       expect(entity.components.size).toBe(2);
-      entity.addComponent({name:'teste'});
+      entity.addComponent({ name: "teste" });
       expect(entity.components.size).toBe(3);
     });
 
     it("remove a component decrease components size", () => {
       const entity = new Player();
-      const mockComponent = {name:'teste'};
+      const mockComponent = { name: "teste" };
       entity.addComponent(mockComponent);
       expect(entity.components.size).toBe(3);
       entity.removeComponent(mockComponent);
       expect(entity.components.size).toBe(2);
-
     });
-
   });
 });
