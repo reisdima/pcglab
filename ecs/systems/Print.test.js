@@ -7,12 +7,12 @@ describe("Print class", () => {
     });
 
     it("Print a list of entities", () => {
-        const entities = [
-            {toString: ()=> '{id: 1}'}, 
-            {toString: ()=> '{id: 2}'}, 
-        ];
-        expect(Print(entities)).toBe(`{id: 1}
-{id: 2}`)
+      const entities = [
+        { toString: () => "{id: 1}" },
+        { toString: () => "{id: 2}" },
+      ];
+      expect(Print(entities)).toBe(`{id: 1}
+{id: 2}`);
     });
   });
 });

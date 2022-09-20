@@ -5,11 +5,10 @@ export default class Entity {
       ((Math.random() * 100000000) | 0).toString(16) +
       Entity.entityCount;
 
-
     this.components = new Map();
   }
 
-  get(componentName){
+  get(componentName) {
     return this.components.get(componentName);
   }
 
