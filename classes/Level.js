@@ -177,19 +177,19 @@ export default class Level {
       // da maior, zera a distancia, posiciona o bloco e calcula a distancia de novo
 
       let blocoMedio = Math.floor(roomAtual.blocks.length / 2) - 1;
-        this.mapa.atualizaDist(roomAtual.blocks[blocoMedio].linha, roomAtual.blocks[blocoMedio].coluna, 0, 0);     // Atualiza distancia dos teleportes
-        let maxDist = roomAtual.getMaxDist(0);
-        let celulas = roomAtual.getCellsByDist(maxDist, 0);
-        sortPosition = this.getRandomInt(0, (celulas.length - 1));
+      this.mapa.atualizaDist(roomAtual.blocks[blocoMedio].linha, roomAtual.blocks[blocoMedio].coluna, 0, 'distTeleportes');     // Atualiza distancia dos teleportes
+      let maxDist = roomAtual.getMaxDist(0);
+      let celulas = roomAtual.getCellsByDist(maxDist, 0);
+      sortPosition = this.getRandomInt(0, (celulas.length - 1));
         roomAtual.resetDistancia(0);
 
         // Posicionamento teleporte de inicio de sala
         roomAtual.teleporterInitial.setPosition(celulas[sortPosition]);
         roomAtual.teleporterInitial.roomNumber = celulas[sortPosition].room;
-        roomAtual.teleporterInitial.gy = celulas[sortPosition].linha;
+      roomAtual.teleporterInitial.gy = celulas[sortPosition].linha;
       roomAtual.teleporterInitial.gx = celulas[sortPosition].coluna;
       roomAtual.teleporterInitial.map = this.mapa;
-      this.mapa.atualizaDist(roomAtual.teleporterInitial.gy, roomAtual.teleporterInitial.gx, 0, 0);     // Atualiza distancia dos teleportes
+      this.mapa.atualizaDist(roomAtual.teleporterInitial.gy, roomAtual.teleporterInitial.gx, 0, 'distTeleportes');     // Atualiza distancia dos teleportes
       // roomAtual.resetDistancia(0);
       // roomAtual.teleporterInitial = this.criaTeleporte(roomAtual, 100).setType(TeleporterType.InicioSala);
       roomAtual.teleporterFinal = this.criaTeleporte(roomAtual, params.porcentagem).setType(TeleporterType.FimSala);
@@ -265,7 +265,7 @@ export default class Level {
     teleporte.gy = celulas[sortPosition].linha;
     teleporte.gx = celulas[sortPosition].coluna;
     teleporte.map = this.mapa;
-    this.mapa.atualizaDist(teleporte.gy, teleporte.gx, 0, 0);     // Atualiza distancia dos teleportes
+    this.mapa.atualizaDist(teleporte.gy, teleporte.gx, 0, 'distTeleportes');     // Atualiza distancia dos teleportes
     return teleporte;
   }
 
@@ -341,7 +341,7 @@ export default class Level {
           auxFireZone.y = celula.linha * this.mapa.s + auxFireZone.s / 2;
           auxFireZone.map = this.mapa;
           auxRoom.fireZones.push(auxFireZone);
-          this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 1);     //Recalcula
+          this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distFirezones');     //Recalcula
           celula = auxRoom.getCellByDist(valor, 1);
         }
       }
@@ -368,7 +368,7 @@ export default class Level {
     auxFireZone.y = this.teleporteInicioLevel.y;
     auxFireZone.map = this.mapa;
     auxRoom.fireZones.push(auxFireZone);
-    this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 1);     //Recalcula
+    this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distFirezones');     //Recalcula
 
     auxRoom = this.rooms[this.teleporteFinalLevel.roomNumber - 1];
     celula = this.teleporteFinalLevel.getCell();
@@ -379,7 +379,7 @@ export default class Level {
     auxFireZone.y = this.teleporteFinalLevel.y;
     auxFireZone.map = this.mapa;
     auxRoom.fireZones.push(auxFireZone);
-    this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 1);     //Recalcula
+    this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distFirezones');     //Recalcula
 
     /**
     * Teleportes nas salas
@@ -399,7 +399,7 @@ export default class Level {
       auxFireZone.y = celula.linha * this.mapa.s + auxFireZone.s / 2;
       auxFireZone.map = this.mapa;
       auxRoom.fireZones.push(auxFireZone);
-      this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 1);     //Recalcula
+      this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distFirezones');     //Recalcula
 
       // No teleporte final
       celula = this.mapa.getCell(auxRoom.teleporterFinal.gy, auxRoom.teleporterFinal.gx);
@@ -410,7 +410,7 @@ export default class Level {
       auxFireZone.y = celula.linha * this.mapa.s + auxFireZone.s / 2;
       auxFireZone.map = this.mapa;
       auxRoom.fireZones.push(auxFireZone);
-      this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 1);     //Recalcula
+      this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distFirezones');     //Recalcula
 
       indiceSala++;
 
@@ -526,7 +526,7 @@ export default class Level {
           auxTreasure.y = celula.linha * this.mapa.s + this.mapa.s / 2;
           auxTreasure.map = this.mapa;
           auxRoom.treasures.push(auxTreasure);
-          this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 3);     // Recalcula
+          this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distTesouros');     // Recalcula
         }
       }
       while (numTesouros-- > 0 && listaCelulasFinal.length > 0);
@@ -573,7 +573,7 @@ export default class Level {
         if (listaCelulasFinal.length > 0) {
           let celula = listaCelulasFinal[this.getRandomInt(0, listaCelulasFinal.length - 1)];
           const inimigo = this.criarInimigo(celula, auxRoom);
-          this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 2);     // Recalcula
+          this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distInimigos');     // Recalcula
         }
       }
       while (numInimigos-- > 0 && listaCelulasFinal.length > 0);
@@ -872,8 +872,6 @@ export default class Level {
       this.rooms[i].init();
       this.rooms[i].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
       this.rooms[i].constroiRota();
-    }
-    for (let i = 0; i < this.rooms.length; i++) {
       this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
       this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
