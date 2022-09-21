@@ -1,7 +1,10 @@
 import Enemy from "./Entities/Enemy.js";
 import { getPlayer } from "./Entities/Player.js";
 import Slime from "./Entities/Slime.js";
+import Debugger from "./utils/Debugger.js";
 import SeedGenerator from "./SeedGenerator.js";
+
+const debug = Debugger.debug;
 
 export default class ProgressionManager {
 
@@ -12,7 +15,8 @@ export default class ProgressionManager {
     }
 
     posicionarInimigos(params, level, rooms) {
-        console.log('============= Posicionar inimigos Teste =============');
+        Debugger.setDebugMode(true);
+        debug('============= Posicionar inimigos Teste =============');
         let indexRoomPlayer = level.ondeEstaOPlayer();
         let roomAtual = rooms[indexRoomPlayer];
         let roomInicial = roomAtual;
@@ -21,14 +25,14 @@ export default class ProgressionManager {
         let celulasDisponiveis = [];
         let poderAtual = poderSala;
         poderAtual = 0;
-        console.log("Poder jogador: ", poderJogador);
+        debug("Poder jogador: ", poderJogador);
         
         do {
-            console.log('====== Room ' + roomAtual.number + ' ======');
+            debug('====== Room ' + roomAtual.number + ' ======');
             // this.distribuirPoder(null, 500);
-            console.log("Poder Sala: ", poderSala);
+            debug("Poder Sala: ", poderSala);
             let numeroInimigos = this.getNumeroInimigosNaSala(roomAtual, level);
-            console.log("Número inimigos: ", numeroInimigos);
+            debug("Número inimigos: ", numeroInimigos);
             do {
                 celulasDisponiveis = this.getCelulasDisponiveis(roomAtual, params);
                 if (celulasDisponiveis.length > 0) {
@@ -45,7 +49,7 @@ export default class ProgressionManager {
             // poderSala = poderSala * 1.25;
             // poderAtual = poderSala;
         } while (roomAtual.number != roomInicial.number);
-        console.log("Poder jogador: ", poderJogador);
+        debug("Poder jogador: ", poderJogador);
     }
 
     calcularPoderSala(room) {
@@ -81,8 +85,8 @@ export default class ProgressionManager {
     criarInimigo(celula, room, level) {
         const inimigo = new Slime(1);
         if (room.number == 13) {
-            console.log('Aquiiii');
-            console.log(inimigo);
+            debug('Aquiiii');
+            debug(inimigo);
         }
         inimigo.room = room;
         inimigo.gx = celula.coluna;
@@ -117,7 +121,7 @@ export default class ProgressionManager {
         const inimigos = room.enemies.sort((a, b) => {
             const celulaA = this.mapa.getCell(a.gy, a.gx);
             const celulaB = this.mapa.getCell(b.gy, b.gx);
-            return celulaB.distSaida - celulaA.distSaida;
+            return celulaB.distInundacaoSaida - celulaA.distInundacaoSaida;
         });
         inimigos.forEach(inimigo => {
             let poder = poderInicial;
@@ -130,7 +134,7 @@ export default class ProgressionManager {
             
             let ataque = this.getRandomInt(1, poder);
             if (room.number == 13) {
-                console.log(ataque)
+                debug(ataque)
             }
             poder -= ataque;
             
@@ -168,13 +172,13 @@ export default class ProgressionManager {
             }
         }
         // if (room.number == 1 && listaCelulasFinal.length == 0) {
-        //     console.log("getCelulasDisponiveis");
-        //     console.log("maxDistInimigos ", maxDistInimigos);
-        //     console.log("distMaxTeleporte", distMaxTeleporte);
-        //     console.log("minimalValueComposto", minimalValueComposto);
-        //     console.log(listaCelulas);
-        //     console.log(listaCelulasFinalErrado);
-        //     console.log(auxDistanciaNormalizadaLista);
+        //     debug("getCelulasDisponiveis");
+        //     debug("maxDistInimigos ", maxDistInimigos);
+        //     debug("distMaxTeleporte", distMaxTeleporte);
+        //     debug("minimalValueComposto", minimalValueComposto);
+        //     debug(listaCelulas);
+        //     debug(listaCelulasFinalErrado);
+        //     debug(auxDistanciaNormalizadaLista);
         // }
         return listaCelulasFinal;
     }
