@@ -17,7 +17,7 @@
       import BoxComponent from "./components/BoxComponent.js";
       import VelocityComponent from "./components/VelocityComponent.js";
       import Move from "./systems/Move.js";
-      import Controls from "./systems/Controls.js";
+      import {keydown, keyup} from "./systems/Controls.js";
 
       const canvas = document.querySelector("canvas");
       const ctx = canvas.getContext("2d");
@@ -44,7 +44,10 @@
       }
 
       addEventListener("keydown", (e) => {
-        entityManager.update(Controls, { e });
+        entityManager.update(keydown, { e });
+      });
+      addEventListener("keyup", (e) => {
+        entityManager.update(keyup, { e });
       });
     </script>
 
