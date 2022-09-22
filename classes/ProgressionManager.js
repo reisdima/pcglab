@@ -39,7 +39,7 @@ export default class ProgressionManager {
                     let celula = celulasDisponiveis[this.getRandomInt(0, celulasDisponiveis.length - 1)];
                     const inimigo = this.criarInimigo(celula, roomAtual, level);
                     // this.distribuirPoder(inimigo, poderSala);
-                    this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 2);     // Recalcula
+                    this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distInimigos');     // Recalcula
                 }
             } while (--numeroInimigos > 0 && celulasDisponiveis.length > 0);
 
