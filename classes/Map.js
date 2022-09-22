@@ -1,7 +1,7 @@
 import Cell from "./Cell.js";
 import { getMapArea, setMapArea } from "./MAPA_AREA.js";
-import { setDebugMode, getDebugMode } from "./DebugMode.js";
 import { getPlayer } from "./Entities/Player.js";
+import Debugger, { DEBUG_MODE } from "./utils/Debugger.js";
 
 export default class Map {
   constructor(w, h, s, assetsMng) {
@@ -259,7 +259,7 @@ export default class Map {
 
   desenharDebugMode(ctx) {
     const player = getPlayer();
-    if (getDebugMode() >= 5 || (getDebugMode() <= 2 && getDebugMode() > 0)) {
+    if (Debugger.getDebugMode() >= 5 || (Debugger.getDebugMode() <= 2 && Debugger.getDebugMode() > 0)) {
       for (let l = Math.max(0, player.gy - getMapArea()); l < Math.min(this.h, player.gy + getMapArea()); l++) {
         for (let c = Math.max(0, player.gx - getMapArea()); c < Math.min(this.w, player.gx + getMapArea()); c++) {
           this.desenharCell(ctx, l, c);         //Debug mode Grid
@@ -283,11 +283,11 @@ export default class Map {
       ctx.lineWidth = 2;
       ctx.font = "10px Arial Black";
 
-      switch (getDebugMode()) {
-        case 1:                   // Tipos
+      switch (Debugger.getDebugMode()) {
+        case DEBUG_MODE.TIPO_DA_CELULA:                   // Tipos
           this.escreveTexto(ctx, this.cell[l][c].tipo + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
           break;
-        case 2:                   // Rooms
+        case DEBUG_MODE.ROOM_DA_CELULA:                   // Rooms
           this.escreveTexto(ctx, this.cell[l][c].room + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
           break;
       }
@@ -298,11 +298,11 @@ export default class Map {
       ctx.lineWidth = 2;
       ctx.font = "10px Arial Black";
 
-      switch (getDebugMode()) {
-        case 1:                   // Tipos
+      switch (Debugger.getDebugMode()) {
+        case DEBUG_MODE.TIPO_DA_CELULA:                   // Tipos
           this.escreveTexto(ctx, this.cell[l][c].tipo + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
           break;
-        case 2:                   // Rooms
+        case DEBUG_MODE.ROOM_DA_CELULA:                   // Rooms
           this.escreveTexto(ctx, this.cell[l][c].room + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
           break;
         /*case 5:                   // Teleportes
@@ -350,7 +350,7 @@ export default class Map {
 
     }
 
-    if (getDebugMode() < 16) {
+    if (Debugger.getDebugMode() < 16) {
       ctx.strokeStyle = "white";
       ctx.lineWidth = 1;
       ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);

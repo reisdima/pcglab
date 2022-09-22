@@ -10,6 +10,7 @@ import { converteTelaCheia, escreveTexto } from "../Utils.js";
 import Cena, { fontMainMenu, wordsColor, alignMainMenu } from "./Cena.js";
 import Button from "../utils/Button.js";
 import getXY from '../utils/getXY.js';
+import Debugger, { DEBUG_MODE } from '../utils/Debugger.js';
 let stateMainMenu = 0;
 export default class CenaJogo extends Cena {
 
@@ -180,8 +181,8 @@ export default class CenaJogo extends Cena {
 
         this.hud.desenharBarras(this.ctx);
         this.ctx.textAlign = alignMainMenu;
-        if (getDebugMode() >= 1) {
-            let typeMode = this.hud.debugText[getDebugMode() - 1];
+        if (Debugger.isDebugModeOn()) {
+            let typeMode = this.hud.debugText[Debugger.getDebugMode() - 1];
 
             // Desenha menu debaixo
             this.ctx.font = "13px Arial Black";
@@ -248,7 +249,7 @@ export default class CenaJogo extends Cena {
     }
 
     controleTempo() {
-        if (getDebugMode() == 0) {
+        if (!Debugger.isDebugModeOn()) {
             //if(!getPlayer().imune){
             this.barraTempo.barraExterna.w -= (this.barraTempo.barraExterna.w * this.dt) / this.levels[0].tempoTotal;
             this.levelAtual.updateTempo();
@@ -337,25 +338,15 @@ export default class CenaJogo extends Cena {
         // Debug mode
         if (this.inputManager.foiPressionado("p")) {
             console.log("Clicou no P");
-            setDebugMode(getDebugMode() + 1);
-            if (getDebugMode() > this.debugModeEnd) {
-                setDebugMode(this.debugModeBegin);  //Padrão do jogo
-                this.game.escala = 1.8;
-                setMapArea(14);
-            }
+            Debugger.nextDebugMode();
             return;
         }
         if (this.inputManager.foiPressionado("o")) {
-            setDebugMode(getDebugMode() - 1);
-            if (getDebugMode() < this.debugModeBegin) {
-                setDebugMode(this.debugModeBegin);  //Padrão do jogo
-                this.game.escala = 1.8;
-                setMapArea(14);
-            }
+            Debugger.previousDebugMode();
             return;
         }
         if (this.inputManager.foiPressionado("+")) {
-            if (getDebugMode() >= 1) {
+            if (Debugger.isDebugModeOn()) {
                 this.game.escala = this.game.escala + 0.025;
                 if (this.game.escala >= 0.85)
                     setMapArea(20);
@@ -373,7 +364,7 @@ export default class CenaJogo extends Cena {
             return;
         }
         if (this.inputManager.foiPressionado("-")) {
-            if (getDebugMode() >= 1) {
+            if (Debugger.isDebugModeOn()) {
                 this.game.escala = this.game.escala - 0.025;
                 if (this.game.escala >= 0.85)
                     setMapArea(20);

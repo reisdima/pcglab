@@ -1,4 +1,4 @@
-import { setDebugMode, getDebugMode } from "./DebugMode.js";
+import Debugger, { DEBUG_MODE } from "./utils/Debugger.js";
 
 
 export default class Sprite {
@@ -65,9 +65,10 @@ export default class Sprite {
           this.x = this.gx*this.map.s + this.s;       //Andando por grade
           this.y = this.gy*this.map.s + this.s;
         */
-        if (getDebugMode() === 0 || getDebugMode() === 4) {
-            if (this.gx === 0 || this.gx === (this.map.w - 1))  //Trata casos extremos do mapa =>{gx <= 0, gx >= gxMapa}
-            {
+          if (Debugger.isDebugMode(DEBUG_MODE.DEBUG_OFF) ||
+              Debugger.isDebugMode(DEBUG_MODE.CAIXA_DE_COLISAO)) {
+              if (this.gx === 0 || this.gx === this.map.w - 1) {
+                  //Trata casos extremos do mapa =>{gx <= 0, gx >= gxMapa}
                 if (this.gx === 0) {
                     if (this.vx < 0) {
                         let limite = (this.gx) * this.map.s;
@@ -176,7 +177,8 @@ export default class Sprite {
         this.gx = Math.floor(this.x / this.map.s);
         this.gy = Math.floor(this.y / this.map.s);
 
-        if (getDebugMode() == 0 || getDebugMode() == 4) {
+        if (Debugger.isDebugMode(DEBUG_MODE.DEBUG_OFF) ||
+            Debugger.isDebugMode(DEBUG_MODE.CAIXA_DE_COLISAO)) {
             this.adicionaRestricaoMovimento(dt);
         }
         else {

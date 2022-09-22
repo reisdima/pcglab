@@ -3,10 +3,10 @@ import Cell from "./Cell.js";
 import FireZone from "./FireZone.js";
 import Treasure from "./Treasure.js";
 import Enemy from "./Entities/Enemy.js";
-import { setDebugMode, getDebugMode } from "./DebugMode.js";
 import Path from "./Path.js";
 import { converteTelaCheia, escreveTexto } from "./Utils.js";
 import Slime from "./Entities/Slime.js";
+import Debugger, { DEBUG_MODE } from "./utils/Debugger.js";
 
 export default class Room {
 	constructor(number) {
@@ -338,7 +338,7 @@ export default class Room {
 	};
 
 	move(dt, player) {
-		if (getDebugMode() > 0) {
+		if (Debugger.isDebugModeOn()) {
 			for (let i = 0; i < this.fireZones.length; i++) {
 				this.fireZones[i].mover(dt);
 			}
@@ -390,8 +390,8 @@ export default class Room {
 		params.ctx.lineWidth = 2;
 		params.ctx.font = "10px Arial Black";
 
-		switch (getDebugMode()) {
-			case 5: // Teleportes
+		switch (Debugger.getDebugMode()) {
+			case DEBUG_MODE.DISTANCIA_TELEPORTES: // Teleportes
 				for (let i = 0; i < this.blocks.length; i++) {
 					//this.escreveTexto(params.ctx, this.blocks[i].distTeleportes + "", this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
 
@@ -435,7 +435,7 @@ export default class Room {
 					);
 				}
 				break;
-			case 6: // Firezones
+			case DEBUG_MODE.DISTANCIA_FIREZONES: // Firezones
 				for (let i = 0; i < this.blocks.length; i++) {
 					params.ctx.save();
 					params.ctx.fillStyle = `hsl(${(150 * this.blocks[i].distFirezones) / this.distancias.maxFirezones
@@ -461,7 +461,7 @@ export default class Room {
 					);
 				}
 				break;
-			case 7: // Inimigos
+			case DEBUG_MODE.DISTANCIA_INIMIGOS: // Inimigos
 				for (let i = 0; i < this.blocks.length; i++) {
 					params.ctx.save();
 					params.ctx.fillStyle = `hsl(${(150 * this.blocks[i].distInimigos) / this.distancias.maxInimigos
@@ -487,7 +487,7 @@ export default class Room {
 					);
 				}
 				break;
-			case 8: // Tesouros
+			case DEBUG_MODE.DISTANCIA_TESOUROS: // Tesouros
 				for (let i = 0; i < this.blocks.length; i++) {
 					params.ctx.save();
 					params.ctx.fillStyle = `hsl(${(150 * this.blocks[i].distTesouros) / this.distancias.maxTesouros
@@ -513,7 +513,7 @@ export default class Room {
 					);
 				}
 				break;
-			case 9: {
+			case DEBUG_MODE.DISTANCIA_INIMIGOS_TELEPORTES: {
 				// distInimigosTeleportes
 				for (let i = 0; i < this.blocks.length; i++) {
 					params.ctx.save();
@@ -547,7 +547,7 @@ export default class Room {
 				}
 				break;
 			}
-			case 10: {
+			case DEBUG_MODE.DISTANCIA_INIMIGOS_TELEPORTES_FIREZONES: {
 				// distInimigo_Tesouro_Teleporte
 				for (let i = 0; i < this.blocks.length; i++) {
 					params.ctx.save();
@@ -582,7 +582,7 @@ export default class Room {
 				}
 				break;
 			}
-			case 11: {
+			case DEBUG_MODE.GPS_SAIDA_ROOM: {
 				// Path GPS
 				this.pathGPS.desenhar(params.ctx, params.s);
 				break;

@@ -1,7 +1,7 @@
 import Sprite from "./Sprite.js";
 import seedGen from "./SeedGen.js";
 import assetsMng from "./AssetsMng.js";
-import { setDebugMode, getDebugMode } from "./DebugMode.js";
+import Debugger, { DEBUG_MODE } from "./utils/Debugger.js";
 
 
 export default class FireZone extends Sprite {
@@ -72,11 +72,11 @@ export default class FireZone extends Sprite {
             dy: -12
         });
         ctx.restore();
-        if (getDebugMode() === 3) {
+        if (Debugger.isDebugMode(DEBUG_MODE.LIGACAO_TELEPORTES)) {
             //this.desenharCell(ctx);         //Debug mode Grid
             this.desenharCentro(ctx);
         }
-        else if (getDebugMode() === 4) {
+        else if (Debugger.isDebugMode(DEBUG_MODE.CAIXA_DE_COLISAO)) {
             //this.desenharCell(ctx);         //Debug mode Grid
             this.desenharCaixaColisao(ctx);
             this.desenharCentro(ctx);

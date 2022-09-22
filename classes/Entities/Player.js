@@ -1,7 +1,7 @@
 import Sprite from "../Sprite.js";
 import assetsMng from "../AssetsMng.js";
-import { setDebugMode, getDebugMode } from "../DebugMode.js";
 import Character from "./Character.js";
+import Debugger, { DEBUG_MODE } from "../utils/Debugger.js";
 
 let _player = null;
 
@@ -332,12 +332,12 @@ export default class Player extends Character {
             dx: (- auxAnimation.sw / 2), dy: (5 - auxAnimation.sh), dw: auxAnimation.sw, dh: auxAnimation.sh
         });
         ctx.restore();
-        if (getDebugMode() == 3) {
+        if (Debugger.isDebugMode(DEBUG_MODE.LIGACAO_TELEPORTES)) {
             this.desenharCell(ctx);         //Debug mode Grid
             this.desenharCentro(ctx);
             this.desenharCentroHitBox(ctx);
         }
-        else if (getDebugMode() == 4) {
+        else if (Debugger.isDebugMode(DEBUG_MODE.CAIXA_DE_COLISAO)) {
             this.desenharCell(ctx);         //Debug mode Grid    
             this.desenharHurtBox(ctx);
             this.desenharCentro(ctx);

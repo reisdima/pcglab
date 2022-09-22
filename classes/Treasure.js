@@ -1,7 +1,7 @@
 import Sprite from "./Sprite.js";
 import seedGen from "./SeedGen.js";
 import assetsMng from "./AssetsMng.js";
-import { setDebugMode, getDebugMode } from "./DebugMode.js";
+import Debugger, { DEBUG_MODE } from "./utils/Debugger.js";
 
 
 export default class Treasure extends Sprite {
@@ -53,10 +53,10 @@ export default class Treasure extends Sprite {
             dy: -this.matrizImagem.heightImagem / 2 - this.matrizImagem.heightImagem / 2 + 3
         });
         ctx.restore();
-        if (getDebugMode() === 3) {
+        if (Debugger.isDebugMode(DEBUG_MODE.LIGACAO_TELEPORTES)) {
             this.desenharCentro(ctx);
         }
-        else if (getDebugMode() === 4) {
+        else if (Debugger.isDebugMode(DEBUG_MODE.CAIXA_DE_COLISAO)) {
             this.desenharCaixaColisao(ctx);
             this.desenharCentro(ctx);
         }

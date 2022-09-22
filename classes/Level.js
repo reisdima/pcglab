@@ -5,9 +5,9 @@ import FireZone from "./FireZone.js";
 import Enemy from "./Entities/Enemy.js";
 import Treasure from "./Treasure.js";
 import Ordenacao from "./Ordenacao.js";
-import { setDebugMode, getDebugMode } from "./DebugMode.js";
 import ProgressionManager from "./ProgressionManager.js";
 import Slime from "./Entities/Slime.js";
+import Debugger, { DEBUG_MODE } from "./utils/Debugger.js";
 
 
 //TODO Fix parametro
@@ -698,13 +698,13 @@ export default class Level {
     this.mapa.desenharDebugMode(ctx);
 
 
-    if (getDebugMode() === 0) {
+    if (Debugger.isDebugMode(DEBUG_MODE.DEBUG_OFF)) {
       let playerPresente = this.ondeEstaOPlayer();
       if (playerPresente !== -1) {
         this.rooms[playerPresente].getPathPlayer(this.player.gx, this.player.gy);
       }
     }
-    if (getDebugMode() > 3) {
+    if (Debugger.getDebugMode() > DEBUG_MODE.LIGACAO_TELEPORTES) {
       for (let i = 0; i < this.rooms.length; i++) {
         this.rooms[i].desenharCamadas({
           ctx: ctx, s: this.mapa.s
@@ -712,13 +712,13 @@ export default class Level {
       }
     }
     else {
-      if (getDebugMode() === 3) {
+      if (Debugger.isDebugMode(DEBUG_MODE.LIGACAO_TELEPORTES)) {
         for (let i = 0; i < this.rooms.length; i++) {
           this.rooms[i].drawTeleportersLine(ctx);
         }
       }
     }
-    if (getDebugMode() === 1) {
+    if (Debugger.isDebugMode(DEBUG_MODE.TIPO_DA_CELULA)) {
       if (!this.roomIniciado) {
         this.iniciaRooms();
         this.roomIniciado = true;
@@ -729,12 +729,12 @@ export default class Level {
         }*/
       }
     }
-    if (getDebugMode() === 11) {
+    if (Debugger.isDebugMode(DEBUG_MODE.GPS_SAIDA_ROOM) ) {
       for (let i = 0; i < this.rooms.length; i++) {
         this.rooms[i].getPathGPS(this.player.gx, this.player.gy);
       }
     }
-    if (getDebugMode() === 12) {
+    if (Debugger.isDebugMode(DEBUG_MODE.CAMINHO_ENTRADA_SAIDA)) {
       /*for(let i = 0; i < this.rooms.length; i++){
         this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
       }*/
@@ -743,7 +743,7 @@ export default class Level {
         this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
       }
     }
-    if (getDebugMode() === 13) {
+    if (Debugger.isDebugMode(DEBUG_MODE.CAMINHO_TESOUROS)) {
       /*for(let i = 0; i < this.rooms.length; i++){
         this.rooms[i].getPathTesouros(this.player.gx, this.player.gy);
       }*/
@@ -752,14 +752,14 @@ export default class Level {
         this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
       }
     }
-    if (getDebugMode() === 14) {
+    if (Debugger.isDebugMode(DEBUG_MODE.CAMINHO_PLAYER)) {
       let playerPresente = this.ondeEstaOPlayer();
       if (playerPresente !== -1) {
         //this.rooms[playerPresente].getPathPlayer(this.player.gx, this.player.gy);
         this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
       }
     }
-    if (getDebugMode() === 15) {
+    if (Debugger.isDebugMode(DEBUG_MODE.CAMINHO_SOBREPOSICAO)) {
       let playerPresente = this.ondeEstaOPlayer();
       //console.log(playerPresente);
       if (playerPresente !== -1) {
@@ -768,7 +768,7 @@ export default class Level {
         this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
       }
     }
-    if (getDebugMode() === 16) {
+    if (Debugger.isDebugMode(DEBUG_MODE.GRAFICO_ENTRADA_SAIDA)) {
       let playerPresente = this.ondeEstaOPlayer();
       if (playerPresente !== -1) {
         this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
@@ -776,7 +776,7 @@ export default class Level {
       }
     }
 
-    if (getDebugMode() === 17) {
+    if (Debugger.isDebugMode(DEBUG_MODE.GRAFICO_ENTRADA_TESOURO_SAIDA)) {
       let playerPresente = this.ondeEstaOPlayer();
       if (playerPresente !== -1) {
         this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
@@ -784,7 +784,7 @@ export default class Level {
       }
     }
 
-    if (getDebugMode() === 18) {
+    if (Debugger.isDebugMode(DEBUG_MODE.GRAFICO_CAMINHO_PLAYER)) {
       let playerPresente = this.ondeEstaOPlayer();
       if (playerPresente !== -1) {
         this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);

@@ -15,7 +15,7 @@ export default class ProgressionManager {
     }
 
     posicionarInimigos(params, level, rooms) {
-        Debugger.setDebugMode(true);
+        // Debugger.setDebugMode(true);
         debug('============= Posicionar inimigos Teste =============');
         let indexRoomPlayer = level.ondeEstaOPlayer();
         let roomAtual = rooms[indexRoomPlayer];
