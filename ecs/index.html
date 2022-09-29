@@ -17,6 +17,7 @@
       import BoxComponent from "./components/BoxComponent.js";
       import VelocityComponent from "./components/VelocityComponent.js";
       import Move from "./systems/Move.js";
+      import {keydown, keyup} from "./systems/Controls.js";
 
       const canvas = document.querySelector("canvas");
       const ctx = canvas.getContext("2d");
@@ -37,9 +38,17 @@
         dt = (t - t0) / 1000;
         entityManager.update(Move, { dt });
         entityManager.update(Render, { ctx, canvas });
-        t0 = t;
+
         requestAnimationFrame(animationStep);
+        t0 = t;
       }
+
+      addEventListener("keydown", (e) => {
+        entityManager.update(keydown, { e });
+      });
+      addEventListener("keyup", (e) => {
+        entityManager.update(keyup, { e });
+      });
     </script>
 
     <button>Play</button>
