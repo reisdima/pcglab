@@ -16,7 +16,9 @@ export default class Cell {
             distInundacaoSaida: -1,
             distInundacaoTemp: -1,
             indexRoom: -1,
-            vizinhos: []
+            vizinhos: [],
+            influenciaPoder: 0,
+            idObjetoInundacao: -1,
         };
 
         Object.assign(this, exemplo, params);   // Sobrescreve os atributos de params e exemplo na classe
@@ -42,5 +44,6 @@ export default class Cell {
         this.distTesouros = celula.distTesouros;
         this.linha = celula.linha;
         this.coluna = celula.coluna;
+        this.influenciaPoder = celula.influenciaPoder;
     }
 }

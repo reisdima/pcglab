@@ -177,4 +177,39 @@ export default class ProgressionManager {
         // }
         return listaCelulasFinal;
     }
+
+
+    calculaMapaDePoderSala(room) {
+        if (room == null) {
+            return;
+        }
+        const inimigos = room.enemies;
+        inimigos.forEach((inimigo, index) => {
+            const celula = room.blocks.find(block => {
+                return (block.linha == inimigo.gy && block.coluna == inimigo.gx);
+        });
+            if (celula) {
+                let poderInimigo = inimigo.poderTotal;
+                const avaliar = [{ celula: celula, poder: poderInimigo}];
+                let aux;
+                while (aux = avaliar.shift()) {
+                    if (aux.poder <= 0 || aux.celula.idObjetoInundacao == index) {
+                        continue;
+                    }
+                    aux.celula.influenciaPoder += aux.poder;
+                    aux.celula.idObjetoInundacao = index;
+                    for (let i = 0; i < aux.celula.vizinhos.length; i++) {
+                        avaliar.push({
+                            celula: room.blocks[aux.celula.vizinhos[i]],
+                            poder: aux.poder - (poderInimigo * 0.2)
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    inundarPoder() {
+
+    }
 }

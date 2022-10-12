@@ -33,6 +33,12 @@ export default class Room {
 		this.pathRoom = new Path(); // Path Teleporte - Teleporte
 		this.pathTesouros = new Path(); // Path passando por todos os tesouros
 		this.pathPlayer = new Path();
+		this.poderSala = 0;
+
+		// Mapa Influencia
+		this.mapaInfluencia = {
+			influenciaPoder: 0,
+		}
 
 		// Distancias
 		this.distancias = {
@@ -289,6 +295,17 @@ export default class Room {
 		}
 		return value;
 	};
+
+	getValorMaxMapaInfluencia(opcao) {
+		let valor = 0;
+		for (let i = 0; i < this.blocks.length; i++) {
+			let bloco = this.blocks[i];
+			if (bloco[opcao] > valor) {
+				valor = bloco[opcao];
+			}
+		}
+		return valor;
+	}
 
 	// Reseta a distancias da sala com o valor 999
 	resetDistancia(option) {
@@ -587,7 +604,37 @@ export default class Room {
 				this.pathGPS.desenhar(params.ctx, params.s);
 				break;
 			}
-			case 19: { // Pintar área de room específico 
+			case DEBUG_MODE.INFLUENCIA_PODER: {
+				let maxPoder = 0;
+				this.blocks.forEach(block => {
+					if (maxPoder < block.influenciaPoder) {
+						maxPoder = block.influenciaPoder;
+					}
+				});
+				for (let i = 0; i < this.blocks.length; i++) {
+					params.ctx.save();
+					params.ctx.fillStyle = `hsl(${150 - (150 * this.blocks[i].influenciaPoder / this.mapaInfluencia.influenciaPoder)}, 100%, 50%)`;
+					params.ctx.linewidth = 1;
+					params.ctx.globalAlpha = 0.3;
+					params.ctx.fillRect(
+						this.blocks[i].coluna * params.s,
+						this.blocks[i].linha * params.s,
+						params.s,
+						params.s
+					);
+					params.ctx.restore();
+					params.ctx.fillStyle = "yellow";
+					params.ctx.strokeStyle = "black";
+					this.escreveTexto(
+						params.ctx,
+						this.blocks[i].influenciaPoder,
+						this.blocks[i].coluna * params.s + params.s / 2,
+						this.blocks[i].linha * params.s + params.s / 2
+					);
+				}
+				break;
+			}
+			case 20: { // Pintar área de room específico 
 				for (let i = 0; i < this.blocks.length; i++) {
 					if (this.number === 1) { // Informar número do room
 						params.ctx.save();

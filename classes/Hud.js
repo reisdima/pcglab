@@ -378,6 +378,7 @@ export default class Hud {
     this.debugText.push("Mode 16 - Gráfico Entrada-Saída");
     this.debugText.push("Mode 17 - Gráfico Entrada-Tesouros-Saída");
     this.debugText.push("Mode 18 - Gráfico Caminho do Player");
+    this.debugText.push("Mode 19 - Influência - poder");
     this.updateElementos(canvas);
     this.bussola.init();
   }

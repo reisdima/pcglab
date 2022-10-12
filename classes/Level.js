@@ -875,6 +875,8 @@ export default class Level {
       this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
       this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
+      this.progressionaManager.calculaMapaDePoderSala(this.rooms[i]);
+      this.rooms[i].mapaInfluencia.influenciaPoder = this.rooms[i].getValorMaxMapaInfluencia('influenciaPoder');
     }
     //this.rooms[10].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
     //this.rooms[10].constroiRota();
