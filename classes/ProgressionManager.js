@@ -16,7 +16,7 @@ export default class ProgressionManager {
 
     posicionarInimigos(params, level, rooms) {
         // Debugger.setDebugMode(true);
-        debug('============= Posicionar inimigos Teste =============');
+        console.log('============= Posicionar inimigos Teste =============');
         let indexRoomPlayer = level.ondeEstaOPlayer();
         let roomAtual = rooms[indexRoomPlayer];
         let roomInicial = roomAtual;
@@ -25,14 +25,14 @@ export default class ProgressionManager {
         let celulasDisponiveis = [];
         let poderAtual = poderSala;
         poderAtual = 0;
-        debug("Poder jogador: ", poderJogador);
+        console.log("Poder jogador: ", poderJogador);
         
         do {
-            debug('====== Room ' + roomAtual.number + ' ======');
+            console.log('====== Room ' + roomAtual.number + ' ======');
             // this.distribuirPoder(null, 500);
-            debug("Poder Sala: ", poderSala);
+            console.log("Poder Sala: ", poderSala);
             let numeroInimigos = this.getNumeroInimigosNaSala(roomAtual, level);
-            debug("Número inimigos: ", numeroInimigos);
+            console.log("Número inimigos: ", numeroInimigos);
             do {
                 celulasDisponiveis = this.getCelulasDisponiveis(roomAtual, params);
                 if (celulasDisponiveis.length > 0) {
@@ -49,7 +49,7 @@ export default class ProgressionManager {
             // poderSala = poderSala * 1.25;
             // poderAtual = poderSala;
         } while (roomAtual.number != roomInicial.number);
-        debug("Poder jogador: ", poderJogador);
+        console.log("Poder jogador: ", poderJogador);
     }
 
     calcularPoderSala(room) {
@@ -75,7 +75,6 @@ export default class ProgressionManager {
         let numeroInimigos = Math.round(room.blocks.length / level.tamanhoSalasMinimo);
         return numeroInimigos;
     }
-
     
     criarInimigoBase() {
         const inimigo = new Enemy(1);
@@ -84,10 +83,6 @@ export default class ProgressionManager {
 
     criarInimigo(celula, room, level) {
         const inimigo = new Slime(1);
-        if (room.number == 13) {
-            debug('Aquiiii');
-            debug(inimigo);
-        }
         inimigo.room = room;
         inimigo.gx = celula.coluna;
         inimigo.gy = celula.linha;
@@ -134,7 +129,7 @@ export default class ProgressionManager {
             
             let ataque = this.getRandomInt(1, poder);
             if (room.number == 13) {
-                debug(ataque)
+                console.log(ataque)
             }
             poder -= ataque;
             

@@ -32,10 +32,6 @@ export default class Debugger {
         return Debugger._debugMode;
     }
 
-    static debug(mensagem) {
-        console.log(mensagem);
-    }
-
     static isDebugMode(debugMode) {
         return Debugger._debugMode === debugMode;
     }

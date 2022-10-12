@@ -718,7 +718,7 @@ export default class Level {
         }
       }
     }
-    if (Debugger.isDebugMode(DEBUG_MODE.TIPO_DA_CELULA)) {
+    if (Debugger.isDebugModeOn()) {
       if (!this.roomIniciado) {
         this.iniciaRooms();
         this.roomIniciado = true;

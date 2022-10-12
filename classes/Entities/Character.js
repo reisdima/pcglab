@@ -1,8 +1,8 @@
 import Sprite from "../Sprite.js";
 import seedGen from "../SeedGen.js";
 import assetsMng from "../AssetsMng.js";
-import { setDebugMode, getDebugMode } from "../DebugMode.js";
 import { escreveTexto } from "../Utils.js";
+import Debugger, { DEBUG_MODE } from "../utils/Debugger.js";
 
 export default class Character extends Sprite {
     constructor(params, nivel) {
@@ -57,7 +57,8 @@ export default class Character extends Sprite {
             this.atributos.velocidade * dt;
         let newY = this.y + (this.direcaoY / vetorNormalizado) *
             this.atributos.velocidade * dt
-        if (getDebugMode() === 0 || getDebugMode() === 4) {
+        if (Debugger.isDebugMode(DEBUG_MODE.DEBUG_OFF) ||
+            Debugger.isDebugMode(DEBUG_MODE.CAIXA_DE_COLISAO)) {
             newX = this.restricoesHorizontal(newX);
             newY = this.restricoesVertical(newY);
         }
@@ -218,10 +219,10 @@ export default class Character extends Sprite {
         ctx.restore();
         this.desenharHP(ctx);
         this.desenharAtributos(ctx);
-        if (getDebugMode() == 3) {
+        if (Debugger.isDebugMode(DEBUG_MODE.LIGACAO_TELEPORTES)) {
             this.desenharCentro(ctx);
         }
-        else if (getDebugMode() == 4) {
+        else if (Debugger.isDebugMode(DEBUG_MODE.CAIXA_DE_COLISAO)) {
             this.desenharCaixaColisao(ctx);
             this.desenharCentro(ctx);
         }
