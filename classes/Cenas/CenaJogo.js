@@ -345,6 +345,15 @@ export default class CenaJogo extends Cena {
             Debugger.previousDebugMode();
             return;
         }
+        
+        // Path
+        if (this.inputManager.foiPressionado("ALTERNA_CAMINHO")) {
+            if (Debugger.isDebugModeOn()) {
+                Debugger.nextPath();
+            }
+            return;
+        }
+        
         if (this.inputManager.foiPressionado("+")) {
             if (Debugger.isDebugModeOn()) {
                 this.game.escala = this.game.escala + 0.025;

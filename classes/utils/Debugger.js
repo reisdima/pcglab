@@ -21,8 +21,18 @@ export const DEBUG_MODE = Object.freeze({
     INFLUENCIA_PODER: 19,
 });
 
+export const PATHS = Object.freeze({
+    CAMINHO_OFF: 0,
+    GPS_SAIDA_ROOM: 1,
+    CAMINHO_ENTRADA_SAIDA: 2,
+    CAMINHO_TESOUROS: 3,
+    CAMINHO_SOBREPOSICAO: 4,
+    CAMINHO_PLAYER: 5,
+});
+
 export default class Debugger {
     static _debugMode = DEBUG_MODE.DEBUG_OFF;
+    static _pathSelecionado = PATHS.CAMINHO_OFF;
 
     static setDebugMode(debugMode) {
         Debugger._debugMode = debugMode;
@@ -53,4 +63,31 @@ export default class Debugger {
             Debugger._debugMode = Object.values(DEBUG_MODE).length - 1;
         }
     }
+
+    static isPath(path) {
+        return Debugger._pathSelecionado === path;
+    }
+
+    static setPath(path) {
+        Debugger._pathSelecionado = path;
+    }
+
+    static getPath(){
+        return Debugger._pathSelecionado;
+    }
+
+    static nextPath() {
+        Debugger._pathSelecionado++;
+        if (Debugger._pathSelecionado >= Object.values(PATHS).length) {
+            Debugger._pathSelecionado = 0;
+        }
+    }
+
+    static previousPath() {
+        Debugger._pathSelecionado--;
+        if (Debugger._pathSelecionado < 0) {
+            Debugger._pathSelecionado = Object.values(PATHS).length - 1;
+        }
+    }
+
 }

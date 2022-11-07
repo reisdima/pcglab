@@ -7,7 +7,7 @@ import Treasure from "./Treasure.js";
 import Ordenacao from "./Ordenacao.js";
 import ProgressionManager from "./ProgressionManager.js";
 import Slime from "./Entities/Slime.js";
-import Debugger, { DEBUG_MODE } from "./utils/Debugger.js";
+import Debugger, { DEBUG_MODE, PATHS } from "./utils/Debugger.js";
 
 
 //TODO Fix parametro
@@ -719,55 +719,17 @@ export default class Level {
       }
     }
     if (Debugger.isDebugModeOn()) {
+
       if (!this.roomIniciado) {
-        this.iniciaRooms();
-        this.roomIniciado = true;
-        /*for(let i = 0; i < this.rooms.length; i++){
-          this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
-          this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
-          this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
-        }*/
-      }
-    }
-    if (Debugger.isDebugMode(DEBUG_MODE.GPS_SAIDA_ROOM) ) {
-      for (let i = 0; i < this.rooms.length; i++) {
-        this.rooms[i].getPathGPS(this.player.gx, this.player.gy);
-      }
-    }
-    if (Debugger.isDebugMode(DEBUG_MODE.CAMINHO_ENTRADA_SAIDA)) {
+      this.iniciaRooms();
+      this.roomIniciado = true;
       /*for(let i = 0; i < this.rooms.length; i++){
         this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
+        this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
+        this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
       }*/
-      let playerPresente = this.ondeEstaOPlayer();
-      if (playerPresente !== -1) {
-        this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
-      }
     }
-    if (Debugger.isDebugMode(DEBUG_MODE.CAMINHO_TESOUROS)) {
-      /*for(let i = 0; i < this.rooms.length; i++){
-        this.rooms[i].getPathTesouros(this.player.gx, this.player.gy);
-      }*/
-      let playerPresente = this.ondeEstaOPlayer();
-      if (playerPresente !== -1) {
-        this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
-      }
-    }
-    if (Debugger.isDebugMode(DEBUG_MODE.CAMINHO_PLAYER)) {
-      let playerPresente = this.ondeEstaOPlayer();
-      if (playerPresente !== -1) {
-        //this.rooms[playerPresente].getPathPlayer(this.player.gx, this.player.gy);
-        this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
-      }
-    }
-    if (Debugger.isDebugMode(DEBUG_MODE.CAMINHO_SOBREPOSICAO)) {
-      let playerPresente = this.ondeEstaOPlayer();
-      //console.log(playerPresente);
-      if (playerPresente !== -1) {
-        this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
-        this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
-        this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
-      }
-    }
+    
     if (Debugger.isDebugMode(DEBUG_MODE.GRAFICO_ENTRADA_SAIDA)) {
       let playerPresente = this.ondeEstaOPlayer();
       if (playerPresente !== -1) {
@@ -789,8 +751,51 @@ export default class Level {
       if (playerPresente !== -1) {
         this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
         this.rooms[playerPresente].desenharGraficoPlayer(ctx, this.player.x, this.player.y);
+        }
       }
+      
+      if (Debugger.isPath(PATHS.CAMINHO_ENTRADA_SAIDA)) {
+        let playerPresente = this.ondeEstaOPlayer();
+        if (playerPresente !== -1) {
+          this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
+        }
+      }
+
+      if (Debugger.isPath(PATHS.CAMINHO_TESOUROS)) {
+        let playerPresente = this.ondeEstaOPlayer();
+        if (playerPresente !== -1) {
+          this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
+        }
+      }
+
+      if (Debugger.isPath(PATHS.GPS_SAIDA_ROOM)) {
+        let playerPresente = this.ondeEstaOPlayer();
+        if (playerPresente !== -1) {
+          this.rooms[playerPresente].getPathGPS(this.player.gx, this.player.gy);
+          this.rooms[playerPresente].pathGPS.desenhar(ctx, this.mapa.s);
+        }
+      }
+
+      if (Debugger.isPath(PATHS.CAMINHO_PLAYER)) {
+        let playerPresente = this.ondeEstaOPlayer();
+        if (playerPresente !== -1) {
+          //this.rooms[playerPresente].getPathPlayer(this.player.gx, this.player.gy);
+          this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
+        }
+      }
+
+      if (Debugger.isPath(PATHS.CAMINHO_SOBREPOSICAO)) {
+        let playerPresente = this.ondeEstaOPlayer();
+        //console.log(playerPresente);
+        if (playerPresente !== -1) {
+          this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
+          this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
+          this.rooms[playerPresente].pathPlayer.desenhar(ctx, this.mapa.s, 1);
+        }
+      }
+
     }
+
   };
 
   removerInimigos() {

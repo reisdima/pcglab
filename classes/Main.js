@@ -33,6 +33,7 @@ input.configurarTeclado({
     Shift: "Shift",
     m: "m",
     Escape: "ESC",
+    c: "ALTERNA_CAMINHO",
     p: "p",
     o: "o",
     Add: "+",

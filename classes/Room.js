@@ -599,11 +599,6 @@ export default class Room {
 				}
 				break;
 			}
-			case DEBUG_MODE.GPS_SAIDA_ROOM: {
-				// Path GPS
-				this.pathGPS.desenhar(params.ctx, params.s);
-				break;
-			}
 			case DEBUG_MODE.INFLUENCIA_PODER: {
 				let maxPoder = 0;
 				this.blocks.forEach(block => {
