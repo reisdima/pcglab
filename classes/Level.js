@@ -719,25 +719,25 @@ export default class Level {
       
     if (Debugger.isPath(PATHS.CAMINHO_ENTRADA_SAIDA)) {
       let playerPresente = this.ondeEstaOPlayer();
-        if (playerPresente !== -1) {
-          this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
-        }
+      if (playerPresente !== -1) {
+        this.rooms[playerPresente].pathRoom.desenhar(ctx, this.mapa.s);
       }
+    }
 
-      if (Debugger.isPath(PATHS.CAMINHO_TESOUROS)) {
-        let playerPresente = this.ondeEstaOPlayer();
-        if (playerPresente !== -1) {
-          this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
-        }
+    if (Debugger.isPath(PATHS.CAMINHO_TESOUROS)) {
+      let playerPresente = this.ondeEstaOPlayer();
+      if (playerPresente !== -1) {
+        this.rooms[playerPresente].pathTesouros.desenhar(ctx, this.mapa.s, 0);
       }
+    }
 
-      if (Debugger.isPath(PATHS.GPS_SAIDA_ROOM)) {
-        let playerPresente = this.ondeEstaOPlayer();
-        if (playerPresente !== -1) {
-          this.rooms[playerPresente].getPathGPS(this.player.gx, this.player.gy);
-          this.rooms[playerPresente].pathGPS.desenhar(ctx, this.mapa.s);
-        }
+    if (Debugger.isPath(PATHS.GPS_SAIDA_ROOM)) {
+      let playerPresente = this.ondeEstaOPlayer();
+      if (playerPresente !== -1) {
+        this.rooms[playerPresente].getPathGPS(this.player.gx, this.player.gy);
+        this.rooms[playerPresente].pathGPS.desenhar(ctx, this.mapa.s);
       }
+    }
 
     if (Debugger.isPath(PATHS.CAMINHO_PLAYER)) {
       let playerPresente = this.ondeEstaOPlayer();
@@ -844,7 +844,7 @@ export default class Level {
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
       this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
       this.progressionaManager.calculaMapaDePoderSala(this.rooms[i]);
-      this.rooms[i].mapaInfluencia.influenciaPoder = this.rooms[i].getValorMaxMapaInfluencia('influenciaPoder');
+      this.rooms[i].metricas.mapaInfluencia.influenciaPoder = this.rooms[i].getValorMaxMapaInfluencia('influenciaPoder');
     }
     this.roomIniciado = true;
     //this.rooms[10].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1

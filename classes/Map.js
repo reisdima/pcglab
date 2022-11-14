@@ -259,7 +259,7 @@ export default class Map {
 
   desenharDebugMode(ctx) {
     const player = getPlayer();
-    if (Debugger.getDebugMode() >= 5 || (Debugger.getDebugMode() <= 2 && Debugger.getDebugMode() > 0)) {
+    if (Debugger.getDebugMode() >= 6 || (Debugger.getDebugMode() <= 3 && Debugger.getDebugMode() > 0)) {
       for (let l = Math.max(0, player.gy - getMapArea()); l < Math.min(this.h, player.gy + getMapArea()); l++) {
         for (let c = Math.max(0, player.gx - getMapArea()); c < Math.min(this.w, player.gx + getMapArea()); c++) {
           this.desenharCell(ctx, l, c);         //Debug mode Grid

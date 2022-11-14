@@ -327,4 +327,9 @@ export default class Character extends Sprite {
         this.poderTotal += this.atributos.ataque;
         this.poderTotal += this.atributos.velocidade * 2;
     }
+
+    getPorcentagemVida() {
+        return Math.max(0, this.hpAtual) / this.atributos.hpMax;
+    }
+
 }

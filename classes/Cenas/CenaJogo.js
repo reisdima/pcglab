@@ -62,18 +62,14 @@ export default class CenaJogo extends Cena {
         setPlayer(player);
 
 
+        this.levels = [];
         this.levelAtual = new Level(
             this.game.widthMap,
             this.game.heightMap,
             this.game.sizeMap,
             { hud: this.hud, seedGen: this.seedGen, assetsMng: this.assetsMng }
         );
-        this.levels = [];
-        this.levels.push(new Level(this.game.widthMap,
-            this.game.heightMap,
-            this.game.sizeMap,
-            { hud: this.hud, seedGen: this.seedGen, assetsMng: this.assetsMng }
-        ));
+        this.levels.push(this.levelAtual);
 
         const geraFase = new CellularAutomata({
             HS: this.game.heightMap, WS: this.game.widthMap, MOORE: 1, r: 0.5,
@@ -88,18 +84,17 @@ export default class CenaJogo extends Cena {
         geraFase.countRooms();
         geraFase.filterRooms(25);
 
-        this.levels[0].setMatrixMap(geraFase.map);       // Copia a matriz de tipos dentro do gerador
-        this.levels[0].copiaSalas(geraFase.rooms);       // Copia os dados em que os blocos da sala são apenas as posições linha e coluna da matriz
-        this.levels[0].montarLevel({
+        this.levelAtual.setMatrixMap(geraFase.map);       // Copia a matriz de tipos dentro do gerador
+        this.levelAtual.copiaSalas(geraFase.rooms);       // Copia os dados em que os blocos da sala são apenas as posições linha e coluna da matriz
+        this.levelAtual.montarLevel({
             dt: this.dt,
             geraFase: geraFase,
             player: getPlayer(),
         });
-        this.levels[0].setTempo(20);                // 20 segundos
+        this.levelAtual.setTempo(20);                // 20 segundos
 
         let tempoGameOver = 2;
 
-        this.levelAtual.clonarLevel(this.levels[0]);
         getPlayer().map = this.levelAtual.mapa;
         getPlayer().level = this.levelAtual;
 
@@ -205,7 +200,7 @@ export default class CenaJogo extends Cena {
                 converteTelaCheia(585, this, canvas.widthOld, this.canvas.width),
                 converteTelaCheia(37, this.canvas.heightOld, this.canvas.height)
             );
-
+    
             // Escritos
             this.ctx.strokeStyle = "black";
             this.ctx.fillStyle = "yellow";
@@ -362,7 +357,7 @@ export default class CenaJogo extends Cena {
             }
             return;
         }
-        
+
         if (this.inputManager.foiPressionado("ALTERNA_GRAFICO")) {
             if (Debugger.isDebugModeOn()) {
                 this.hud.grafico.alternarModo();
@@ -471,11 +466,11 @@ export default class CenaJogo extends Cena {
             y: 13.5,
             width: 127,
             height: 15,
-            corBarra: () => `hsl(${120 * getPlayer().hpAtual / getPlayer().atributos.hpMax}, 100%, 50%)`,
+            corBarra: () => `hsl(${120 * getPlayer().getPorcentagemVida()}, 100%, 50%)`,
             corFundo: 'black',
             corBorda: 'black',
             tamanhoBorda: 2,
-            porcentagem: () => (Math.max(0, getPlayer().hpAtual) / getPlayer().atributos.hpMax),
+            porcentagem: () => (getPlayer().getPorcentagemVida()),
             texto: {
                 valor: () => getPlayer().hpAtual,
                 font: "13px Arial Black",
