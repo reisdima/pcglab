@@ -88,6 +88,7 @@ export default class Teleporter extends Sprite {
 			player.gy = this.proximoTeleporte.gy;
 			player.room = this.proximoTeleporte.roomNumber;
 			this.hud.bussola.update(levelAtual);
+			this.hud.atualizarGrafico(levelAtual);
 		}
 		else {
 			console.log("proximoTeleporte eh undefined !!!");

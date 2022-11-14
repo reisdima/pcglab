@@ -36,6 +36,7 @@ input.configurarTeclado({
     c: "ALTERNA_CAMINHO",
     p: "p",
     o: "o",
+    g: "ALTERNA_GRAFICO",
     Add: "+",
     Subtract: "-"
 

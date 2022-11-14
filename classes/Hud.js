@@ -2,6 +2,8 @@ import { converteTelaCheia, escreveTexto } from "./Utils.js";
 import { getPlayer } from "./Entities/Player.js";
 import Sprite from "./Sprite.js";
 import Barra from "./utils/Barra.js";
+import Grafico, { MODO_GRAFICO } from "./utils/Grafico.js";
+import Debugger, { DEBUG_MODE, PATHS } from "./utils/Debugger.js";
 
 // Main Menu campos
 const fontMainMenu = "30px Arial Black";
@@ -350,6 +352,7 @@ export default class Hud {
     this.botoes = [];
     this.barras = [];
     this.bussola = new Bussola();
+    this.grafico = new Grafico();
   }
 
   static getInstance() {
@@ -361,27 +364,21 @@ export default class Hud {
 
 
   init(canvas) {
-    this.debugText.push("Mode 1 - Tipo da celula");
-    this.debugText.push("Mode 2 - Room da celula");
-    this.debugText.push("Mode 3 - Ligação dos Teleportes"); // Centro do personagem e celula marcada
-    this.debugText.push("Mode 4 - Caixa de Colisão"); // Box collision
-    this.debugText.push("Mode 5 - Distancia - Teleportes"); // Dados das celulas -- DistTeleportes
-    this.debugText.push("Mode 6 - Distancia - Firezones"); // Dados das celulas -- DistFirezones
-    this.debugText.push("Mode 7 - Distancia - Inimigos"); // Dados das celulas -- DistInimigos
-    this.debugText.push("Mode 8 - Distancia - Tesouros"); // Dados das celulas -- DistTesouros
-    this.debugText.push("Mode 9 - Dist - Inimigos + Teleportes"); // Dados das celulas -- DistTesouros
-    this.debugText.push("Mode 10 - Dist - Inimigos + Telep.. + Fire.."); // Dados das celulas -- DistInimigosTeleporte
-    this.debugText.push("Mode 11 - GPS até a saída do Room");
-    this.debugText.push("Mode 12 - Caminho Teleporte - Teleporte");
-    this.debugText.push("Mode 13 - Caminho Tesouros");
-    this.debugText.push("Mode 14 - Caminho do Player");
-    this.debugText.push("Mode 15 - Sobreposição de caminhos");
-    this.debugText.push("Mode 16 - Gráfico Entrada-Saída");
-    this.debugText.push("Mode 17 - Gráfico Entrada-Tesouros-Saída");
-    this.debugText.push("Mode 18 - Gráfico Caminho do Player");
-    this.debugText.push("Mode 19 - Influência - poder");
+    this.debugText.push("Mode 1 - Debug On");
+    this.debugText.push("Mode 2 - Tipo da celula");
+    this.debugText.push("Mode 3 - Room da celula");
+    this.debugText.push("Mode 4 - Ligação dos Teleportes"); // Centro do personagem e celula marcada
+    this.debugText.push("Mode 5 - Caixa de Colisão"); // Box collision
+    this.debugText.push("Mode 6 - Distancia - Teleportes"); // Dados das celulas -- DistTeleportes
+    this.debugText.push("Mode 7 - Distancia - Firezones"); // Dados das celulas -- DistFirezones
+    this.debugText.push("Mode 8 - Distancia - Inimigos"); // Dados das celulas -- DistInimigos
+    this.debugText.push("Mode 9 - Distancia - Tesouros"); // Dados das celulas -- DistTesouros
+    this.debugText.push("Mode 10 - Dist - Inimigos + Teleportes"); // Dados das celulas -- DistTesouros
+    this.debugText.push("Mode 11 - Dist - Inimigos + Telep.. + Fire.."); // Dados das celulas -- DistInimigosTeleporte
+    this.debugText.push("Mode 12 - Influência - poder");
     this.updateElementos(canvas);
     this.bussola.init();
+    
   }
 
   updateElementos(canvas) {
@@ -466,6 +463,37 @@ export default class Hud {
 
   limparBarras() {
     this.barras = [];
+  }
+
+  atualizarGrafico(levelAtual) {
+    let roomPlayer = levelAtual.rooms[getPlayer().getRoom() - 1];
+
+    let pathEscolhido = null;
+    let titulo = "";
+    switch (Debugger.getPath()) {
+        case PATHS.CAMINHO_ENTRADA_SAIDA:
+            titulo = "Gráfico entrada-saída";
+            pathEscolhido = roomPlayer.pathRoom;
+            break;
+        case PATHS.CAMINHO_TESOUROS:
+            titulo = "Gráfico entrada-tesouro-saída";
+            pathEscolhido = roomPlayer.pathTesouros;
+            break;
+        case PATHS.CAMINHO_PLAYER:
+            titulo = "Gráfico caminho do player";
+            pathEscolhido = roomPlayer.pathPlayer;
+            break;
+        default:
+            break;
+    }
+
+    if (pathEscolhido != null) {
+        this.grafico.setModo(MODO_GRAFICO.TRANSPARENTE);
+        this.grafico.criarGrafico(pathEscolhido);
+        this.grafico.setTitulo(titulo);
+        return;
+    }
+    this.grafico.setModo(MODO_GRAFICO.GRAFICO_OFF);
   }
 
 }

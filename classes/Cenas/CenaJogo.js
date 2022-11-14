@@ -181,9 +181,14 @@ export default class CenaJogo extends Cena {
 
         this.hud.desenharBarras(this.ctx);
         this.ctx.textAlign = alignMainMenu;
+        this.desenharDebug();
+        this.hud.grafico.desenhar(this.ctx);
+    }
+    
+    desenharDebug() {
         if (Debugger.isDebugModeOn()) {
             let typeMode = this.hud.debugText[Debugger.getDebugMode() - 1];
-
+    
             // Desenha menu debaixo
             this.ctx.font = "13px Arial Black";
             this.ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
@@ -339,10 +344,13 @@ export default class CenaJogo extends Cena {
         if (this.inputManager.foiPressionado("p")) {
             console.log("Clicou no P");
             Debugger.nextDebugMode();
+            this.levelAtual.iniciaRooms();
             return;
         }
+        
         if (this.inputManager.foiPressionado("o")) {
             Debugger.previousDebugMode();
+            this.levelAtual.iniciaRooms();
             return;
         }
         
@@ -350,10 +358,18 @@ export default class CenaJogo extends Cena {
         if (this.inputManager.foiPressionado("ALTERNA_CAMINHO")) {
             if (Debugger.isDebugModeOn()) {
                 Debugger.nextPath();
+                this.hud.atualizarGrafico(this.levelAtual);
             }
             return;
         }
         
+        if (this.inputManager.foiPressionado("ALTERNA_GRAFICO")) {
+            if (Debugger.isDebugModeOn()) {
+                this.hud.grafico.alternarModo();
+            }
+            return;
+        }
+
         if (this.inputManager.foiPressionado("+")) {
             if (Debugger.isDebugModeOn()) {
                 this.game.escala = this.game.escala + 0.025;

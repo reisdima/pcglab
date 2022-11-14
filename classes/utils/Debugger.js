@@ -1,24 +1,17 @@
 export const DEBUG_MODE = Object.freeze({
     DEBUG_OFF: 0,
-    TIPO_DA_CELULA: 1,
-    ROOM_DA_CELULA: 2,
-    LIGACAO_TELEPORTES: 3,
-    CAIXA_DE_COLISAO: 4,
-    DISTANCIA_TELEPORTES: 5,
-    DISTANCIA_FIREZONES: 6,
-    DISTANCIA_INIMIGOS: 7,
-    DISTANCIA_TESOUROS: 8,
-    DISTANCIA_INIMIGOS_TELEPORTES: 9,
-    DISTANCIA_INIMIGOS_TELEPORTES_FIREZONES: 10,
-    GPS_SAIDA_ROOM: 11,
-    CAMINHO_ENTRADA_SAIDA: 12,
-    CAMINHO_TESOUROS: 13,
-    CAMINHO_PLAYER: 14,
-    CAMINHO_SOBREPOSICAO: 15,
-    GRAFICO_ENTRADA_SAIDA: 16,
-    GRAFICO_ENTRADA_TESOURO_SAIDA: 17,
-    GRAFICO_CAMINHO_PLAYER: 18,
-    INFLUENCIA_PODER: 19,
+    SIMPLE_DEBUG: 1,
+    TIPO_DA_CELULA: 2,
+    ROOM_DA_CELULA: 3,
+    LIGACAO_TELEPORTES: 4,
+    CAIXA_DE_COLISAO: 5,
+    DISTANCIA_TELEPORTES: 6,
+    DISTANCIA_FIREZONES: 7,
+    DISTANCIA_INIMIGOS: 8,
+    DISTANCIA_TESOUROS: 9,
+    DISTANCIA_INIMIGOS_TELEPORTES: 10,
+    DISTANCIA_INIMIGOS_TELEPORTES_FIREZONES: 11,
+    INFLUENCIA_PODER: 12,
 });
 
 export const PATHS = Object.freeze({
@@ -30,10 +23,12 @@ export const PATHS = Object.freeze({
     CAMINHO_PLAYER: 5,
 });
 
+
 export default class Debugger {
     static _debugMode = DEBUG_MODE.DEBUG_OFF;
     static _pathSelecionado = PATHS.CAMINHO_OFF;
 
+    // Debug mode
     static setDebugMode(debugMode) {
         Debugger._debugMode = debugMode;
     }
@@ -64,6 +59,7 @@ export default class Debugger {
         }
     }
 
+    // Path
     static isPath(path) {
         return Debugger._pathSelecionado === path;
     }
