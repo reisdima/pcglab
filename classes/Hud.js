@@ -1,6 +1,7 @@
 import { converteTelaCheia, escreveTexto } from "./Utils.js";
 import { getPlayer } from "./Entities/Player.js";
 import Sprite from "./Sprite.js";
+import Barra from "./utils/Barra.js";
 
 // Main Menu campos
 const fontMainMenu = "30px Arial Black";
@@ -440,68 +441,26 @@ export default class Hud {
   }
 
   adicionarBarra(params) {
-    const barra = {
-      barraInterna: new Sprite({
-        x: params.x,
-        y: params.y,
-        w: params.width,
-        h: params.height,
-      }),
-      barraExterna: new Sprite({
-        x: params.x,
-        y: params.y,
-        w: params.width,
-        h: params.height,
-      }),
-      texto: params.texto,
-      corBarra: params.corBarra,
-      corFundo: params.corFundo,
-      corBorda: params.corBorda,
-      porcentagem: params.porcentagem ? params.porcentagem : () => 1,
-      tamanhoBorda: params.tamanhoBorda,
-      texto: params.texto,
-    }
+    const barra = new Barra();
+    barra
+      .setX(params.x)
+      .setY(params.y)
+      .setLargura(params.width)
+      .setAltura(params.height)
+      .setCorBarra(params.corBarra)
+      .setCorFundo(params.corFundo)
+      .setCorBorda(params.corBorda)
+      .setTamanhoBorda(params.tamanhoBorda)
+      .setTexto(params.texto)
+      .setPorcentagem(params.porcentagem)
+      .criarBarras();
     this.barras.push(barra);
     return barra;
   }
 
   desenharBarras(ctx) {
     this.barras.forEach(barra => {
-      // Barra de fundo
-      ctx.fillStyle = barra.corFundo;
-      ctx.fillRect(barra.barraInterna.x, barra.barraInterna.y, barra.barraInterna.w, barra.barraInterna.h);
-      // Barra de preenchimento
-      ctx.fillStyle = (typeof barra.corBarra === 'function') ? barra.corBarra() : barra.corBarra;
-      ctx.fillRect(
-        barra.barraExterna.x,
-        barra.barraExterna.y,
-        barra.barraExterna.w * barra.porcentagem(),
-        barra.barraExterna.h
-      );
-      // Linha de contorno
-      ctx.strokeStyle = barra.corBorda;
-      ctx.lineWidth = barra.tamanhoBorda;
-      ctx.strokeRect(barra.barraInterna.x, barra.barraInterna.y, barra.barraInterna.w, barra.barraInterna.h);
-
-      if (barra.texto) {
-        // Texto com o número no meio da barra
-        const texto = barra.texto;
-        ctx.font = texto.font;
-        ctx.fillStyle = texto.fillStyle,
-        ctx.textAlign = texto.textAlign; //alignMainMenu;
-        ctx.lineWidth = texto.lineWidth;
-        ctx.strokeStyle = texto.strokeStyle;
-        ctx.strokeText(
-            texto.valor(),
-            barra.barraInterna.x + barra.barraInterna.w / 2,
-            barra.barraInterna.y + barra.barraInterna.h / 2 + 4
-        );
-        ctx.fillText(
-            texto.valor(),
-            barra.barraInterna.x + barra.barraInterna.w / 2,
-            barra.barraInterna.y + barra.barraInterna.h / 2 + 4
-        );
-      }
+      barra.desenhar(ctx);
     });
   }
 
