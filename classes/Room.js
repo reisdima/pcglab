@@ -916,42 +916,35 @@ export default class Room {
 		}
 	};
 
-	defineVizinhos(bloco) {
-		bloco.vizinhos = [];
+	definirBlocosVizinhos() {
 		for (let i = 0; i < this.blocks.length; i++) {
-			if (
-				this.blocks[i].linha === bloco.linha - 1 &&
-				this.blocks[i].coluna === bloco.coluna
-			) {
-				bloco.vizinhos.push(i);
-			}
-			if (
-				this.blocks[i].linha === bloco.linha &&
-				this.blocks[i].coluna === bloco.coluna - 1
-			) {
-				bloco.vizinhos.push(i);
-			}
-			if (
-				this.blocks[i].linha === bloco.linha + 1 &&
-				this.blocks[i].coluna === bloco.coluna
-			) {
-				bloco.vizinhos.push(i);
-			}
-			if (
-				this.blocks[i].linha === bloco.linha &&
-				this.blocks[i].coluna === bloco.coluna + 1
-			) {
-				bloco.vizinhos.push(i);
-			}
-		}
-	};
+            const bloco = this.blocks[i];
+            bloco.indexRoom = i;
+            bloco.vizinhos = [];
+            for (let j = 0; j < this.blocks.length; j++) {
+                const blocoAux = this.blocks[j];
+                if (blocoAux.coluna === bloco.coluna) {
+                    if (blocoAux.linha === bloco.linha - 1) {
+                        bloco.vizinhos.push(j);
+                    } else if (blocoAux.linha === bloco.linha + 1) {
+                        bloco.vizinhos.push(j);
+                    }
+                } else if (blocoAux.linha === bloco.linha) {
+                    if (blocoAux.coluna === bloco.coluna - 1) {
+                        bloco.vizinhos.push(j);
+                    } else if (blocoAux.coluna === bloco.coluna + 1) {
+                        bloco.vizinhos.push(j);
+                    }
+                }
+                if (bloco.vizinhos.length === 4) {
+                    break;
+                }
+            }
+        }
+	}
 
 	init() {
-		for (let i = 0; i < this.blocks.length; i++) {
-			// this.defineIndexBlocos();
-			this.blocks[i].indexRoom = i;
-			this.defineVizinhos(this.blocks[i]);
-		}
+		this.definirBlocosVizinhos();
 		this.achaEntrada();
 		this.achaTesouros();
 		this.achaSaida();
