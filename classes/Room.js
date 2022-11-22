@@ -795,13 +795,13 @@ export default class Room {
 		this.teleporterFinal.copyTeleporte(room.teleporterFinal);
 
 		for (let i = 0; i < room.blocks.length; i++) {
-			let aux = new Cell();
-			aux.clone(mapa.getCell(room.blocks[i].linha, room.blocks[i].coluna));
-			this.blocks.push(aux);
+			let cellAux = mapa.getCell(room.blocks[i].linha, room.blocks[i].coluna); // BLOCKS[ID, LINHA/COLUNA]
+			cellAux.room = room.number;
+			this.blocks.push(cellAux);
 		}
 		this.metricas = {
 			mapaInfluencia: {
-				influenciaPoder: 0,
+				influenciaPoder: room.metricas.mapaInfluencia.influenciaPoder,
 			},
 			distancias: {
 				maxTeleportes: room.metricas.distancias.maxTeleportes,
@@ -818,6 +818,10 @@ export default class Room {
 				},
 			}
 		};
+		this.entrada = room.entrada;
+		this.saida = room.saida;
+		this.saida = room.saida;
+		this.pontosInteresse = room.pontosInteresse;
 		this.copyFireZones(room);
 		this.copyTreasures(room);
 		this.copyEnemies(room);
@@ -853,7 +857,7 @@ export default class Room {
 			this.enemies.push(newEnemy);
 		}
 	};
-
+	
 	apontarDirecoes() {
 		for (let i = 0; i < this.blocks.length; i++) {
 			if (this.blocks[i].distInundacaoSaida === 0) {
@@ -944,11 +948,6 @@ export default class Room {
 	}
 
 	init() {
-		this.definirBlocosVizinhos();
-		this.achaEntrada();
-		this.achaTesouros();
-		this.achaSaida();
-		this.inundaRecursivo(this.saida, 0);
 		this.apontarDirecoes();
 	};
 

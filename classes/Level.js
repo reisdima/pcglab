@@ -15,7 +15,7 @@ export default class Level {
 
   constructor(w, h, s, { hud, seedGen, assetsMng }) {
     this.mapa = new Map(w, h, s, assetsMng);
-    this.progressionaManager = new ProgressionManager(seedGen, this.mapa);
+    this.progressionManager = new ProgressionManager(seedGen, this.mapa);
     this.rooms = [];
     this.tempoFase = 0;
     this.tempoTotal = 0;
@@ -535,7 +535,7 @@ export default class Level {
   }
 
   posicionarInimigosTeste(params) {
-    this.progressionaManager.posicionarInimigos(params, this, this.rooms);
+    this.progressionManager.posicionarInimigos(params, this, this.rooms);
   }
 
   posicionarInimigos(params) {
@@ -616,8 +616,16 @@ export default class Level {
       opcaoMapaCircular: true
     });
     this.atualizaGradeTeleportes(params.dt);
+    
     this.posicionarPlayer(params.player);
     this.posicionarFireZones(25);          // Posiciona acima de 25 na distancia de firezones
+    
+    this.rooms.forEach(room => {
+      room.definirBlocosVizinhos();
+      room.achaEntrada();
+      room.achaSaida();
+      room.inundaRecursivo(room.saida, 0);
+    });
     
     this.posicionarInimigosTeste({
       porcentagemDistancia: 80,
@@ -634,11 +642,12 @@ export default class Level {
     //   //porcentagemDistancia: 90, qtdTesouros: 0, porcentagemTesourosPorSala: 5
     //   porcentagemDistancia: 80,
     //   porcentagemDistanciaComp: 50,
-      
     //   // porcentagemTesourosPorSala != 0 ==> Posiciona de acordo com o tamanho da sala
-      
     // });
-    
+
+    this.rooms.forEach(room => {
+      room.achaTesouros();
+    });
     
     /* Distancias maximas em cada sala */
     for (let i = 0; i < this.rooms.length; i++) {
@@ -843,7 +852,7 @@ export default class Level {
       this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
       this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
-      this.progressionaManager.calculaMapaDePoderSala(this.rooms[i]);
+      this.progressionManager.calculaMapaDePoderSala(this.rooms[i]);
       this.rooms[i].metricas.mapaInfluencia.influenciaPoder = this.rooms[i].getValorMaxMapaInfluencia('influenciaPoder');
     }
     this.roomIniciado = true;
