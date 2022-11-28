@@ -29,10 +29,11 @@ export default class Grafico {
         if (this.modo === MODO_GRAFICO.GRAFICO_OFF) {
             return;
         }
-        this.tamanhoEixoX = this.largura * 0.975;
-        this.tamanhoEixoY = this.altura * 0.89;
+        this.tamanhoEixoX = this.largura - this.inicioEixoX + this.x;
+        this.tamanhoEixoY = this.altura * 0.85;
         this.espacamentoX = this.tamanhoEixoX / this.escalaX;
-        this.espacamentoY = this.tamanhoEixoY / this.escalaY;
+        // this.espacamentoY = this.tamanhoEixoY / this.escalaY;
+        this.espacamentoY = this.tamanhoEixoY / 5;
 
         // Desenho do quadro do gráfico
         ctx.save();
@@ -61,11 +62,6 @@ export default class Grafico {
         ctx.font = "13px Arial Black";
         ctx.strokeStyle = "rgba(225, 225, 225, 0.9)";
         ctx.rotate((-Math.PI) / 2);
-        ctx.fillText(
-            "Distância (" + this.escalaY + ")",
-            (this.inicioEixoY - this.altura / 2) * -1,
-            this.inicioEixoX - (this.largura * 0.00625)
-        );
         ctx.restore();
 
         // Desenho dos eixos do gráfico
@@ -78,14 +74,18 @@ export default class Grafico {
         // Eixo Y
         ctx.moveTo(this.inicioEixoX, this.inicioEixoY);
         ctx.lineTo(this.inicioEixoX, this.inicioEixoY - this.tamanhoEixoY);
+        ctx.closePath();
+        ctx.stroke();
 
+        ctx.beginPath();
+        ctx.lineWidth = 2;
         // Marcações X
         if (this.escalaX <= 200) {
             let atualX = this.inicioEixoX;
             const tamanhoTraco = this.altura * 0.004;
             for (let i = 0; i < this.escalaX; i++) {
-                ctx.moveTo(atualX + this.espacamentoX, this.inicioEixoY - 2);
-                ctx.lineTo(atualX + this.espacamentoX, this.inicioEixoY + 2);
+                ctx.moveTo(atualX + this.espacamentoX, this.inicioEixoY - tamanhoTraco);
+                ctx.lineTo(atualX + this.espacamentoX, this.inicioEixoY + tamanhoTraco);
                 atualX = atualX + this.espacamentoX;
             }
         }
@@ -94,14 +94,17 @@ export default class Grafico {
         if (this.escalaY !== 999) {
             let atualY = this.inicioEixoY;
             const tamanhoTraco = this.largura * 0.0025;
-            for (let i = 0; i < this.escalaY; i++) {
+            for (let i = 0; i < 5; i++) {
                 ctx.moveTo(this.inicioEixoX - tamanhoTraco, atualY - this.espacamentoY);
                 ctx.lineTo(this.inicioEixoX + tamanhoTraco, atualY - this.espacamentoY);
+                ctx.fillText(
+                    ((1 / 5) * (i + 1)).toFixed(1),
+                    this.inicioEixoX - (this.largura * 0.025),
+                    atualY - this.espacamentoY + 5
+                )
                 atualY = atualY - this.espacamentoY;
             }
         }
-
-        // Fecha desenho do gráfico
         ctx.closePath();
         ctx.stroke();
 
@@ -138,6 +141,7 @@ export default class Grafico {
 
     desenharInformacoes(ctx) {
         ctx.lineWidth = 2;
+        this.espacamentoY = this.tamanhoEixoY;
         this.informacoes.forEach((informacao) => {
             // Posição 0,0 no gráfico
             let xAtual = this.inicioEixoX;
@@ -147,7 +151,7 @@ export default class Grafico {
             let valorAtual = valY;
             let muxY;
 
-            // Desenho da linha do gráfico de distância para tesouros
+            // Desenho da linha do gráfico
             ctx.beginPath();
             ctx.strokeStyle = informacao.cor;
             for (let i = 1; i < informacao.dados.length; i++) {
@@ -184,57 +188,61 @@ export default class Grafico {
         this.largura = 800;
         this.x = 20;
         this.y = 180;
-        this.inicioEixoX = this.x + (this.largura * 0.025);
+        this.inicioEixoX = this.x + (this.largura * 0.045);
         this.inicioEixoY = this.y + (this.altura * 0.89);
-        let maior = 1;
-        let maiorPoder = 1;
+        let maiorPoder = 0;
+        let maiorDistInimigos = 0;
+        let maiorDistFirezones = 0;
+        let maiorDistTesouros = 0;
         for (let i = 0; i < this.caminho.steps.length; i++) {
-            // if (this.caminho.steps[i].distTesouros > maior) {
-            // 	maior = this.caminho.steps[i].distTesouros;
+            // if (this.caminho.steps[i].distTesouros > maiorDistTesouros) {
+            // 	maiorDistTesouros = this.caminho.steps[i].distTesouros;
             // }
-            if (this.caminho.steps[i].distInimigos > maior) {
-                maior = this.caminho.steps[i].distInimigos;
+            if (this.caminho.steps[i].distInimigos > maiorDistInimigos) {
+                maiorDistInimigos = this.caminho.steps[i].distInimigos;
             }
-            if (this.caminho.steps[i].distFirezones > maior) {
-                maior = this.caminho.steps[i].distFirezones;
+            if (this.caminho.steps[i].distFirezones > maiorDistFirezones) {
+                maiorDistFirezones = this.caminho.steps[i].distFirezones;
             }
             if (this.caminho.steps[i].influenciaPoder > maiorPoder) {
                 maiorPoder = this.caminho.steps[i].influenciaPoder;
             }
         }
         const influenciaPoderEmEscala = this.caminho.steps.map(step => {
-            return (step.influenciaPoder * maior) / maiorPoder;
+            return (step.influenciaPoder) / maiorPoder;
+        });
+        const distInimigosEmEscala = this.caminho.steps.map(step => {
+            return (step.distInimigos) / maiorDistInimigos;
+        });
+        const distFirezonesEmEscala = this.caminho.steps.map(step => {
+            return (step.distFirezones) / maiorDistFirezones;
+        });
+        const distTesourosEmEscala = this.caminho.steps.map(step => {
+            return (step.distTesouros) / maiorDistTesouros;
         });
 
         this.escalaX = this.caminho.steps.length - 1;
-        this.escalaY = maior;
+        this.escalaY = 1;
         if (this.escalaX > 999) {
             this.largura = 610;
         }
-        const valoresDistTesouros = [];
-        const valoresDistFirezones = [];
-        const valoresDistInimigos = [];
-        const valoresInfluenciaPoder = [];
-        this.caminho.steps.forEach((step) => {
-            valoresDistTesouros.push(step.distTesouros);
-            valoresDistFirezones.push(step.distFirezones);
-            valoresDistInimigos.push(step.distInimigos);
-            valoresInfluenciaPoder.push(step.influenciaPoder);
-        })
         this.adicionarInformacao({
             titulo: "Dist Tesouro",
             cor: COR_TESOURO,
-            dados: valoresDistTesouros
+            dados: distTesourosEmEscala,
+            escala: maiorDistTesouros
         });
         this.adicionarInformacao({
             titulo: "Dist Firezone",
             cor: COR_FIREZONE,
-            dados: valoresDistFirezones
+            dados: distFirezonesEmEscala,
+            escala: maiorDistFirezones
         });
         this.adicionarInformacao({
             titulo: "Dist Inimigo",
             cor: COR_INIMIGO,
-            dados: valoresDistInimigos
+            dados: distInimigosEmEscala,
+            escala: maiorDistInimigos
         });
         this.adicionarInformacao({
             titulo: "Poder",
