@@ -1,7 +1,24 @@
+import ProgressionManager from "../ProgressionManager.js";
+import Character from "./Character.js";
 import { slime_atributos_base, slime_crescimento_por_nivel } from "./EnemiesBaseAttributes.js";
 import Enemy from "./Enemy.js";
 
 export default class Slime extends Enemy {
+
+    static getAtributosBase() {
+        const atributos = Object.assign({}, slime_atributos_base);
+        return atributos;
+    }
+
+    static getTaxaCrescimentoAtributos() {
+        const taxasCrescimento = Object.assign({}, slime_crescimento_por_nivel);
+        return taxasCrescimento;
+    }
+
+    static getPoderBase() {
+        return ProgressionManager.calcularPoderTotal(Slime.getAtributosBase(), Slime.getTaxaCrescimentoAtributos());
+    }
+
     constructor(nivel) {
         super({ s: 22, w: 22, h: 10, nomeImagem: "slime", sizeImagem: 22 }, nivel);
         this.matrizImagem = {
@@ -14,37 +31,43 @@ export default class Slime extends Enemy {
         this.speedAnimation = 11.49; //1.2;
         this.xpFornecida = 50;
         this.cooldownAtaque = 8;                  //Tempo travado até terminar o ataque            
-        this.atributos = Object.assign({}, slime_atributos_base);
-        this.taxas_crescimento = Object.assign({}, slime_crescimento_por_nivel);
+        this.atributos = Slime.getAtributosBase();
+        this.taxasCrescimento = Slime.getTaxaCrescimentoAtributos();
         this.criarAnimacoes();
     }
 
-    balancearDificuldade() {
-        for (const keyAtributo in this.atributos) {
-            const valorBase = this.atributos[keyAtributo];
-            let novoValor = Math.round(valorBase * Math.pow(slime_crescimento_por_nivel[keyAtributo], (this.nivel - 1)));
-            this.atributos[keyAtributo] = novoValor;
+    distribuirPoder(poder, seedGen) {
+        let podeFazerUpgrade = true;
+        const keys = Object.keys(this.atributos);
+        let atributosVisitados = keys.map((k, index) => {
+            if (index < 3)
+                return 0;
+            return 1;
+        });
+        while (poder > 0 && podeFazerUpgrade) {
+            let indexAtributo = seedGen.nextRandInt(0, 3);
+            let valorAtual = this.atributos[keys[indexAtributo]];
+            let custoUpgrade = ProgressionManager.aplicarFuncaoDeProgressao(
+                valorAtual,
+                1,
+                "cookie",
+                this.taxasCrescimento[keys[indexAtributo]]
+            );
+            if (poder < custoUpgrade) {
+                atributosVisitados[indexAtributo] = 1;
+                if (atributosVisitados.filter(atributo => atributo === 0).length === 0) {
+                    podeFazerUpgrade = false;
+                }
+            } else {
+                poder -= custoUpgrade;
+                this.atributos[keys[indexAtributo]] += 1;
+            }
         }
-        this.hpAtual = this.atributos.hpMax;
-        this.calcularPoderTotal();
     }
 
-    // distribuirPoder(poder) {
-    //     let velocidade = this.getRandomInt(1, poder);
-    //     while ((velocidade / 2) + inimigo.atributos.velocidade > inimigo.atributos.velocidadeMaxima) {
-    //         velocidade = this.getRandomInt(1, poder);
-    //     }
-    //     poder -= velocidade;
-        
-    //     let ataque = this.getRandomInt(1, poder);
-    //     poder -= ataque;
-        
-    //     let hp = poder;
-        
-    //     this.atributos.ataque = ataque;
-    //     this.atributos.velocidade += velocidade / 2;
-    //     this.atributos.hpMax = hp / 2;
-    //     this.hpAtual = hp / 2;
-    //     this.calcularPoderTotal();
-    // }
+    calcularNivel(poder) {
+        // this.poderTotal = poder;
+        this.nivel = (Math.log10(poder) / (Math.log10(1.5)) << 0) - 2;
+    }
+
 }

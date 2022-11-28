@@ -35,6 +35,17 @@ export default class Cell {
             (this.distTesouros / maxTesouro)) / 2;
     }
 
+    // Média entre as distências normalizadas da célula até inimigo e teleporte e o valor
+    // normalizado de poder
+    mediaInimigo_Teleporte_Poder(maxInimigo = 1, maxTeleporte = 1, maxPoder = 1) {
+        let poder = this.influenciaPoder / maxPoder;
+        if (this.influenciaPoder === 0 || maxPoder === 0) {
+            poder = 0;
+        }
+        return ((this.distInimigos / maxInimigo) + (this.distTeleportes / maxTeleporte) +
+            1 - poder) / 3;
+    }
+
     clone(celula) {
         this.tipo = celula.tipo;
         this.room = celula.room;
@@ -45,5 +56,6 @@ export default class Cell {
         this.linha = celula.linha;
         this.coluna = celula.coluna;
         this.influenciaPoder = celula.influenciaPoder;
+        this.vizinhos = celula.vizinhos;
     }
 }

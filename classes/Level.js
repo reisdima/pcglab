@@ -589,7 +589,6 @@ export default class Level {
     inimigo.x = celula.coluna * this.mapa.s + this.mapa.s / 2;
     inimigo.y = celula.linha * this.mapa.s + this.mapa.s / 2;
     inimigo.map = this.mapa;
-    inimigo.balancearDificuldade();
     room.enemies.push(inimigo);
     return inimigo;
   }
@@ -647,12 +646,9 @@ export default class Level {
 
     this.rooms.forEach(room => {
       room.achaTesouros();
+      room.maxCamadaDistancias();
     });
     
-    /* Distancias maximas em cada sala */
-    for (let i = 0; i < this.rooms.length; i++) {
-      this.rooms[i].maxCamadaDistancias();
-    }
 
     this.mapa.camadaDistCompostas();
   }

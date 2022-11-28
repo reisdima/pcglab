@@ -37,6 +37,11 @@ export default class Room {
 		this.metricas = {
 			mapaInfluencia: {
 				influenciaPoder: 0,
+				compostas: {
+					inimigosTeleportesPoder: {
+						max: 999,
+					}
+				}
 			},
             distancias: {
                 maxTeleportes: 999,
@@ -296,13 +301,22 @@ export default class Room {
 
 	getValorMaxMapaInfluencia(opcao) {
 		let valor = 0;
-		for (let i = 0; i < this.blocks.length; i++) {
-			let bloco = this.blocks[i];
-			if (bloco[opcao] > valor) {
-				valor = bloco[opcao];
-			}
-		}
-		return valor;
+        this.blocks.forEach((bloco) => {
+            switch (opcao) {
+                case "influenciaInimigosTeleportesPoder":
+                    let aux = bloco.mediaInimigo_Teleporte_Poder();
+                    if (aux >= valor) {
+                        valor = aux;
+                    }
+                    break;
+				default:
+                    if (bloco[opcao] > valor) {
+                        valor = bloco[opcao];
+                    }
+                    break;
+            }
+        });
+        return valor;
 	}
 
 	// Reseta a distancias da sala com o valor 999
@@ -332,24 +346,16 @@ export default class Room {
 	};
 
 	maxCamadaDistancias() {
-		/*if(this.metricas.distancias.maxTeleportes === 0){
-			this.metricas.distancias.maxTeleportes = this.getMaxDist(0);
-			this.metricas.distancias.maxFirezones = this.getMaxDist(1);
-			this.metricas.distancias.maxInimigos = this.getMaxDist(2);
-			this.metricas.distancias.maxTesouros = this.getMaxDist(3);
-	  
-			// Distancias compostas
-			this.metricas.distancias.compostas.inimigosTeleportes.max = this.getMaxDist(4);
-		  }*/
-
 		this.metricas.distancias.maxTeleportes = this.getMaxDist(0);
 		this.metricas.distancias.maxFirezones = this.getMaxDist(1);
 		this.metricas.distancias.maxInimigos = this.getMaxDist(2);
 		this.metricas.distancias.maxTesouros = this.getMaxDist(3);
 
-		// Distancias compostas
+		// Métricas compostas
 		this.metricas.distancias.compostas.inimigosTeleportes.max = this.getMaxDist(4);
 		this.metricas.distancias.compostas.inimigo_Tesouro_Teleporte.max = this.getMaxDist(5);
+		this.metricas.mapaInfluencia.compostas.inimigosTeleportesPoder.max =
+			this.getValorMaxMapaInfluencia("influenciaInimigosTeleportesPoder");
 	};
 
 	move(dt, player) {
@@ -470,13 +476,13 @@ export default class Room {
 			params.ctx.linewidth = 1;
 			params.ctx.globalAlpha = 0.3;
 			params.ctx.fillRect(
-						this.blocks[i].coluna * params.s,
-						this.blocks[i].linha * params.s,
-						params.s,
-						params.s
-					);
-					params.ctx.restore();
-					params.ctx.fillStyle = "yellow";
+				this.blocks[i].coluna * params.s,
+				this.blocks[i].linha * params.s,
+				params.s,
+				params.s
+			);
+			params.ctx.restore();
+			params.ctx.fillStyle = "yellow";
 			params.ctx.strokeStyle = "black";
 			this.escreveTexto(
 				params.ctx,
@@ -579,7 +585,12 @@ export default class Room {
 
 		this.metricas = {
 			mapaInfluencia: {
-				influenciaPoder: 0,
+				influenciaPoder: room.metricas.mapaInfluencia.influenciaPoder,
+				compostas: {
+					inimigosTeleportesPoder: {
+						max: room.metricas.mapaInfluencia.compostas.inimigosTeleportesPoder.max,
+					}
+				}
 			},
 			distancias: {
 				maxTeleportes: room.metricas.distancias.maxTeleportes,
@@ -611,6 +622,11 @@ export default class Room {
 		this.metricas = {
 			mapaInfluencia: {
 				influenciaPoder: 0,
+				compostas: {
+					inimigosTeleportesPoder: {
+						max: room.metricas.mapaInfluencia.compostas.inimigosTeleportesPoder.max,
+					}
+				}
 			},
 			distancias: {
 				maxTeleportes: room.metricas.distancias.maxTeleportes,
@@ -646,6 +662,11 @@ export default class Room {
 		this.metricas = {
 			mapaInfluencia: {
 				influenciaPoder: room.metricas.mapaInfluencia.influenciaPoder,
+				compostas: {
+					inimigosTeleportesPoder: {
+						max: room.metricas.mapaInfluencia.compostas.inimigosTeleportesPoder.max,
+					}
+				}
 			},
 			distancias: {
 				maxTeleportes: room.metricas.distancias.maxTeleportes,

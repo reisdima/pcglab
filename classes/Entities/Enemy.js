@@ -96,12 +96,4 @@ export default class Enemy extends Character {
         return true;
     }
 
-    balancearDificuldade() {
-        for (const keyAtributo in this.atributos) {
-            const valorBase = this.atributos[keyAtributo];
-            let novoValor = valorBase * Math.pow(slime_crescimento_por_nivel[keyAtributo], (this.nivel - 1));
-            this.atributos[keyAtributo] = novoValor;
-        }
-        this.hpAtual = this.atributos.hpMax;
-    }
 }

@@ -1,61 +1,42 @@
-import Enemy from "./Entities/Enemy.js";
 import { getPlayer } from "./Entities/Player.js";
 import Slime from "./Entities/Slime.js";
-import Debugger from "./utils/Debugger.js";
-import SeedGenerator from "./SeedGenerator.js";
 
-const debug = Debugger.debug;
+const RATE = 1.07;
 
 export default class ProgressionManager {
-
     constructor(seedGen, mapa) {
         this.seedGen = seedGen;
         this.mapa = mapa;
-        this.inimigoBase = this.criarInimigoBase();
+        this.poderBase = Slime.getPoderBase();
+        this.contadorInimigos = 0;
     }
 
     posicionarInimigos(params, level, rooms) {
-        // Debugger.setDebugMode(true);
-        console.log('============= Posicionar inimigos Teste =============');
+        console.log('===== Posicionar inimigos =====');
         let indexRoomPlayer = level.ondeEstaOPlayer();
         let roomAtual = rooms[indexRoomPlayer];
         let roomInicial = roomAtual;
         let poderJogador = getPlayer().poderTotal;
-        let poderSala = poderJogador * 0.25; // Precisa ser proporcional ao tamanho
         let celulasDisponiveis = [];
-        let poderAtual = poderSala;
-        poderAtual = 0;
+        let poderAtual = Slime.getPoderBase();
         console.log("Poder jogador: ", poderJogador);
-        
         do {
-            console.log('====== Room ' + roomAtual.number + ' ======');
-            // this.distribuirPoder(null, 500);
-            console.log("Poder Sala: ", poderSala);
             let numeroInimigos = this.getNumeroInimigosNaSala(roomAtual, level);
-            console.log("Número inimigos: ", numeroInimigos);
             do {
                 celulasDisponiveis = this.getCelulasDisponiveis(roomAtual, params);
                 if (celulasDisponiveis.length > 0) {
                     let celula = celulasDisponiveis[this.getRandomInt(0, celulasDisponiveis.length - 1)];
                     const inimigo = this.criarInimigo(celula, roomAtual, level);
-                    // this.distribuirPoder(inimigo, poderSala);
-                    this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distInimigos');     // Recalcula
+                    this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distInimigos');     // Recalcula distância de inimigos
+                    roomAtual.maxCamadaDistancias(); // Recalcula maior poder da sala
                 }
             } while (--numeroInimigos > 0 && celulasDisponiveis.length > 0);
 
-            poderAtual = this.distribuirPoderTeste(roomAtual, poderAtual);
+            poderAtual = this.distribuirPoderEntreInimigos(roomAtual, poderAtual);
+            this.calculaMapaDePoderSala(roomAtual);
 
             roomAtual = rooms[roomAtual.teleporterFinal.proximoTeleporte.roomNumber - 1];
-            // poderSala = poderSala * 1.25;
-            // poderAtual = poderSala;
         } while (roomAtual.number != roomInicial.number);
-        console.log("Poder jogador: ", poderJogador);
-    }
-
-    calcularPoderSala(room) {
-        let inimigos = room.enemies;
-        let poderTotalSala = inimigos.recude((soma, inimigo) => soma + inimigo.poderTotal);
-        return poderTotalSala;
     }
 
     getRandomInt(min, max) {
@@ -67,20 +48,10 @@ export default class ProgressionManager {
     }
 
     getNumeroInimigosNaSala(room, level) {
-        // let maximoPorTamanho = Math.round(room.blocks.length / level.tamanhoSalasMinimo);
-        // let maximoPorPoder = Math.round(poderTotalSala / this.inimigoBase.poderTotal);
-        // let numeroMaximoInimigos = Math.min(maximoPorPoder, maximoPorTamanho);
-        // console.log('Maximo inimigos: ', numeroMaximoInimigos);
-        // let numeroInimigos = this.getRandomInt(1, numeroMaximoInimigos);
         let numeroInimigos = Math.round(room.blocks.length / level.tamanhoSalasMinimo);
         return numeroInimigos;
     }
     
-    criarInimigoBase() {
-        const inimigo = new Enemy(1);
-        return inimigo;
-    }
-
     criarInimigo(celula, room, level) {
         const inimigo = new Slime(1);
         inimigo.room = room;
@@ -93,91 +64,61 @@ export default class ProgressionManager {
         return inimigo;
     }
 
-    distribuirPoder(inimigo, poder) {
-        let velocidade = this.getRandomInt(1, poder);
-        while ((velocidade / 2) + inimigo.atributos.velocidade > inimigo.atributos.velocidadeMaxima) {
-            velocidade = this.getRandomInt(1, poder);
-        }
-        poder -= velocidade;
-
-        let ataque = this.getRandomInt(1, poder);
-        poder -= ataque;
-
-        let hp = poder;
-
-        inimigo.atributos.ataque += ataque;
-        inimigo.atributos.velocidade += velocidade / 2;
-        inimigo.atributos.hpMax += hp / 2;
-        inimigo.hpAtual = inimigo.atributos.hpMax;
-        inimigo.calcularPoderTotal();
-    }
-
-    distribuirPoderTeste(room, poderInicial) {
-        const inimigos = room.enemies.sort((a, b) => {
+    distribuirPoderEntreInimigos(room, poder) {
+        const inimigosOrdenados = room.enemies.sort((a, b) => {
             const celulaA = this.mapa.getCell(a.gy, a.gx);
             const celulaB = this.mapa.getCell(b.gy, b.gx);
             return celulaB.distInundacaoSaida - celulaA.distInundacaoSaida;
         });
-        inimigos.forEach(inimigo => {
-            let poder = poderInicial;
-            // inimigo.distribuirPoder(poder);
-            let velocidade = this.getRandomInt(1, poder);
-            while ((velocidade / 2) + inimigo.atributos.velocidade > inimigo.atributos.velocidadeMaxima) {
-                velocidade = this.getRandomInt(1, poder);
-            }
-            poder -= velocidade;
-            
-            let ataque = this.getRandomInt(1, poder);
-            if (room.number == 13) {
-                console.log(ataque)
-            }
-            poder -= ataque;
-            
-            let hp = poder;
-            
-            inimigo.atributos.ataque += ataque;
-            inimigo.atributos.velocidade += velocidade / 2;
-            inimigo.atributos.hpMax += hp / 2;
+        inimigosOrdenados.forEach(inimigo => {
+            poder = ProgressionManager.aplicarFuncaoDeProgressao(this.contadorInimigos, this.poderBase, 'cookie');
+            this.contadorInimigos++;
+            const poderAcimaDoBase = poder - this.poderBase;
+            inimigo.distribuirPoder(poderAcimaDoBase, this.seedGen);
             inimigo.hpAtual = inimigo.atributos.hpMax;
-            inimigo.calcularPoderTotal();
-            poderInicial = poderInicial * 1.05;
+            inimigo.poderTotal = ProgressionManager.calcularPoderTotal(inimigo.atributos, inimigo.taxasCrescimento);
+            inimigo.calcularNivel(poder);
         });
-        return poderInicial;
+        return poder;
+    }
+
+    static aplicarFuncaoDeProgressao(valorAtual, valorBase, funcao, multiplicador = RATE) {
+        switch (funcao) {
+            case 'cookie':
+                return (valorBase * Math.pow(multiplicador, valorAtual));
+            case 'incremental':
+                return Math.round(valorBase * ((1 - Math.pow(RATE, valorAtual)) / (1 - multiplicador)));
+            default:
+                return valorAtual * 1.05;
+        }
     }
     
     getCelulasDisponiveis(room, params) {
         let distMaxTeleporte = room.getMaxDist(0);
         let maxDistInimigos = room.getMaxDist(2);
-        let listaCelulas = [...room.blocks.filter((b) => ((b.distTeleportes >= 5) && (b.distFirezones > 0) && b.distInimigos > 5))];
-        // let listaCelulas = [...room.blocks.filter((b) => ((b.distTeleportes >= 5) && (b.distFirezones > 0)))];
-        let minimalValueComposto = (params.porcentagemDistanciaComp) / 100; // Menor elemento no intervalo para o DistInimigos
+        let maxPoder = room.getValorMaxMapaInfluencia("influenciaPoder");
+        let listaCelulas = [
+            ...room.blocks.filter(
+                (b) =>
+                    b.distTeleportes >= 5 &&
+                    b.distFirezones > 0 &&
+                    b.distInimigos > 5
+            ),
+        ];
+        let minimalValueComposto = params.porcentagemDistanciaComp / 100;
         let listaCelulasFinal = [];
-        let listaCelulasFinalErrado = [];
-        let auxDistanciaNormalizadaLista = [];
-        for (let i = 0; i < listaCelulas.length; i++) {       // preenche a lista de celulas disponiveis --- Dist Inimigos
-            // if (listaCelulas[i].distInimigos <= 5) { // Evita inimigos muito próximos
-            //     continue;
-            // }
-            let auxDistanciaNormalizada = listaCelulas[i].distInimigoTeleporte(maxDistInimigos, distMaxTeleporte);
+        for (let i = 0; i < listaCelulas.length; i++) {
+            let auxDistanciaNormalizada = listaCelulas[i].mediaInimigo_Teleporte_Poder(
+                maxDistInimigos,
+                distMaxTeleporte,
+                maxPoder
+            );
             if (minimalValueComposto <= auxDistanciaNormalizada) {
                 listaCelulasFinal.push(listaCelulas[i]);
-            } else {
-                listaCelulasFinalErrado.push(listaCelulas[i]);
-                auxDistanciaNormalizadaLista.push(auxDistanciaNormalizada)
             }
         }
-        // if (room.number == 1 && listaCelulasFinal.length == 0) {
-        //     debug("getCelulasDisponiveis");
-        //     debug("maxDistInimigos ", maxDistInimigos);
-        //     debug("distMaxTeleporte", distMaxTeleporte);
-        //     debug("minimalValueComposto", minimalValueComposto);
-        //     debug(listaCelulas);
-        //     debug(listaCelulasFinalErrado);
-        //     debug(auxDistanciaNormalizadaLista);
-        // }
         return listaCelulasFinal;
     }
-
 
     calculaMapaDePoderSala(room) {
         if (room == null) {
@@ -187,7 +128,7 @@ export default class ProgressionManager {
         inimigos.forEach((inimigo, index) => {
             const celula = room.blocks.find(block => {
                 return (block.linha == inimigo.gy && block.coluna == inimigo.gx);
-        });
+            });
             if (celula) {
                 let poderInimigo = inimigo.poderTotal;
                 const avaliar = [{ celula: celula, poder: poderInimigo}];
@@ -201,12 +142,26 @@ export default class ProgressionManager {
                     for (let i = 0; i < aux.celula.vizinhos.length; i++) {
                         avaliar.push({
                             celula: room.blocks[aux.celula.vizinhos[i]],
-                            poder: aux.poder - (poderInimigo * 0.2)
+                            poder: Math.floor(aux.poder - (poderInimigo * 0.2))
                         });
                     }
                 }
             }
         });
+        room.maxCamadaDistancias();
+    }
+
+    static calcularPoderTotal(atributos, taxaCrescimento) {
+        let somaPoder = 0;
+        Object.keys(atributos).forEach((key) => {
+            let somaAtributo = 0;
+            for (let i = 1; i <= atributos[key]; i++) {
+                let custoAtributo = ProgressionManager.aplicarFuncaoDeProgressao(i, 1, "cookie", taxaCrescimento[key]);
+                somaAtributo += custoAtributo;
+            }
+            somaPoder += somaAtributo;
+        });
+        return somaPoder << 0;
     }
 
     inundarPoder() {

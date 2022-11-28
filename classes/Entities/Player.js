@@ -2,6 +2,8 @@ import Sprite from "../Sprite.js";
 import assetsMng from "../AssetsMng.js";
 import Character from "./Character.js";
 import Debugger, { DEBUG_MODE } from "../utils/Debugger.js";
+import ProgressionManager from "../ProgressionManager.js";
+import Slime from "./Slime.js";
 
 let _player = null;
 
@@ -62,7 +64,7 @@ export default class Player extends Character {
 
         Object.assign(this, exemplo, params);   // Sobrescreve os atributos de params e exemplo na classe
         this.hpAtual = this.atributos.hpMax;
-        this.calcularPoderTotal();
+        this.poderTotal = ProgressionManager.calcularPoderTotal(this.atributos, Slime.getTaxaCrescimentoAtributos());
         this.criarAnimacoes();
     }
 
@@ -458,4 +460,5 @@ export default class Player extends Character {
         super.sofrerAtaque(dano);
         this.ativarInvencibilidade();
     }
+
 }
