@@ -19,15 +19,15 @@ export default class Character extends Sprite {
         this.pose = 0;
         this.raioAtaque = 5;
         this.imune = false;
-        this.atributos = {
-            hpMax: 200,
-            hpAtual: 200,
-            ataque: 40,
-            velocidade: 0,
-            raioAtaque: 5,
-            cooldownAtaque: 0,
-            cooldownImune: 0
-        }
+        // this.atributos = {
+        //     hpMax: 200,
+        //     hpAtual: 200,
+        //     ataque: 40,
+        //     velocidade: 0,
+        //     raioAtaque: 5,
+        //     cooldownAtaque: 0,
+        //     cooldownImune: 0
+        // }
         this.criarAnimacoes();
     }
 
@@ -45,6 +45,7 @@ export default class Character extends Sprite {
         if (this.direcaoX == 0 && this.direcaoY == 0) {
             return;
         }
+        const velocidade = this.calcularVelocidade();
         this.gx = Math.floor(this.x / this.map.s);
         this.gy = Math.floor(this.y / this.map.s);
 
@@ -54,9 +55,9 @@ export default class Character extends Sprite {
         ) || 1; // se for 0, coloca 1 pra não dar exceção
 
         let newX = this.x + (this.direcaoX / vetorNormalizado) *
-            this.atributos.velocidade * dt;
+            velocidade * dt;
         let newY = this.y + (this.direcaoY / vetorNormalizado) *
-            this.atributos.velocidade * dt
+            velocidade * dt
         if (Debugger.isDebugMode(DEBUG_MODE.DEBUG_OFF) ||
             Debugger.isDebugMode(DEBUG_MODE.CAIXA_DE_COLISAO)) {
             newX = this.restricoesHorizontal(newX);
@@ -321,15 +322,12 @@ export default class Character extends Sprite {
         console.log('Morrer do Character');
     }
 
-    calcularPoderTotal() {
-        this.poderTotal = 0;
-        this.poderTotal += this.atributos.hpMax * 2;
-        this.poderTotal += this.atributos.ataque;
-        this.poderTotal += this.atributos.velocidade * 2;
-    }
-
     getPorcentagemVida() {
         return Math.max(0, this.hpAtual) / this.atributos.hpMax;
+    }
+
+    calcularVelocidade() {
+        return 30 + (Math.pow(this.atributos.velocidade, 1.25) - 1);
     }
 
 }
