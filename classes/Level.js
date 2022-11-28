@@ -713,7 +713,7 @@ export default class Level {
         this.rooms[playerPresente].getPathPlayer(this.player.gx, this.player.gy);
       }
     }
-    if (Debugger.getDebugMode() > DEBUG_MODE.LIGACAO_TELEPORTES) {
+    if (Debugger.getDebugMode() > DEBUG_MODE.CAIXA_DE_COLISAO) {
       for (let i = 0; i < this.rooms.length; i++) {
         this.rooms[i].desenharCamadas({
           ctx: ctx, s: this.mapa.s

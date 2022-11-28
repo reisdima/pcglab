@@ -404,207 +404,72 @@ export default class Room {
 		params.ctx.strokeStyle = "black";
 		params.ctx.lineWidth = 2;
 		params.ctx.font = "10px Arial Black";
+		const COR_HSL = 120;
 
-		switch (Debugger.getDebugMode()) {
-			case DEBUG_MODE.DISTANCIA_TELEPORTES: // Teleportes
-				for (let i = 0; i < this.blocks.length; i++) {
-					//this.escreveTexto(params.ctx, this.blocks[i].distTeleportes + "", this.blocks[i].coluna * params.s + params.s / 2, this.blocks[i].linha * params.s + params.s / 2);
-
-					params.ctx.save();
-					params.ctx.fillStyle = `hsl(${(150 * this.blocks[i].distTeleportes) / this.metricas.distancias.maxTeleportes
-						}, 100%, 50%)`;
-					/*if(this.blocks[i].distTeleportes < Math.floor((25 * this.metricas.distancias.maxTeleportes)/100)){
-								params.ctx.fillStyle = "rgb(153, 255, 51)";
-							}
-							else{
-								if(this.blocks[i].distTeleportes < Math.floor((50 * this.metricas.distancias.maxTeleportes)/100)){
-									params.ctx.fillStyle = "rgb(253, 253, 127)";
-								}
-								else{
-									if(this.blocks[i].distTeleportes < Math.floor((75 * this.metricas.distancias.maxTeleportes)/100)){
-										params.ctx.fillStyle = "rgb(255, 153, 51)";
-									}
-									else{
-										params.ctx.fillStyle = "rgb(153, 0, 0)";
-									}
-								}
-							}*/
-					params.ctx.linewidth = 1;
-					params.ctx.globalAlpha = 0.3;
-					//ctx.fillStyle = "rgba(10, 10, 10, 0.4)";
-					params.ctx.fillRect(
-						this.blocks[i].coluna * params.s,
-						this.blocks[i].linha * params.s,
-						params.s,
-						params.s
-					);
-					//ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
-					params.ctx.restore();
-					params.ctx.fillStyle = "yellow";
-					params.ctx.strokeStyle = "black";
-					this.escreveTexto(
-						params.ctx,
-						this.blocks[i].distTeleportes,
-						this.blocks[i].coluna * params.s + params.s / 2,
-						this.blocks[i].linha * params.s + params.s / 2
-					);
+		for (let i = 0; i < this.blocks.length; i++) {
+			let valorMapaCalor = 0;
+			let valor = 0;
+			let influenciaNegativa = false;
+			switch (Debugger.getDebugMode()) {
+				case DEBUG_MODE.DISTANCIA_TELEPORTES:
+					valor = this.blocks[i].distTeleportes;
+					valorMapaCalor = valor / this.metricas.distancias.maxTeleportes;
+					break;
+				case DEBUG_MODE.DISTANCIA_FIREZONES:
+					valor = this.blocks[i].distFirezones;
+					valorMapaCalor = valor / this.metricas.distancias.maxFirezones;
+					break;
+				case DEBUG_MODE.DISTANCIA_INIMIGOS:
+					valor = this.blocks[i].distInimigos;
+					valorMapaCalor = valor / this.metricas.distancias.maxInimigos;
+					break;
+				case DEBUG_MODE.DISTANCIA_TESOUROS:
+					valor = this.blocks[i].distTesouros;
+					valorMapaCalor = valor / this.metricas.distancias.maxTesouros;
+					break;
+				case DEBUG_MODE.DISTANCIA_INIMIGOS_TELEPORTES: {
+					valor = this.blocks[i].distInimigoTeleporte(
+						this.metricas.distancias.maxInimigos,
+						this.metricas.distancias.maxTeleportes
+					).toFixed(3);
+					valorMapaCalor = valor;
+					break;
 				}
-				break;
-			case DEBUG_MODE.DISTANCIA_FIREZONES: // Firezones
-				for (let i = 0; i < this.blocks.length; i++) {
-					params.ctx.save();
-					params.ctx.fillStyle = `hsl(${(150 * this.blocks[i].distFirezones) / this.metricas.distancias.maxFirezones
-						}, 100%, 50%)`;
-					params.ctx.linewidth = 1;
-					params.ctx.globalAlpha = 0.3;
-					//ctx.fillStyle = "rgba(10, 10, 10, 0.4)";
-					params.ctx.fillRect(
-						this.blocks[i].coluna * params.s,
-						this.blocks[i].linha * params.s,
-						params.s,
-						params.s
-					);
-					//ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
-					params.ctx.restore();
-					params.ctx.fillStyle = "yellow";
-					params.ctx.strokeStyle = "black";
-					this.escreveTexto(
-						params.ctx,
-						this.blocks[i].distFirezones,
-						this.blocks[i].coluna * params.s + params.s / 2,
-						this.blocks[i].linha * params.s + params.s / 2
-					);
+				case DEBUG_MODE.DISTANCIA_INIMIGOS_TELEPORTES_FIREZONES: {
+					valor = this.blocks[i].distInimigo_Tesouro_Teleporte(
+						this.metricas.distancias.maxInimigos,
+						this.metricas.distancias.maxTeleportes,
+						this.metricas.distancias.maxTesouros
+					).toFixed(3);
+					valorMapaCalor = valor;
+					break;
 				}
-				break;
-			case DEBUG_MODE.DISTANCIA_INIMIGOS: // Inimigos
-				for (let i = 0; i < this.blocks.length; i++) {
-					params.ctx.save();
-					params.ctx.fillStyle = `hsl(${(150 * this.blocks[i].distInimigos) / this.metricas.distancias.maxInimigos
-						}, 100%, 50%)`;
-					params.ctx.linewidth = 1;
-					params.ctx.globalAlpha = 0.3;
-					//ctx.fillStyle = "rgba(10, 10, 10, 0.4)";
-					params.ctx.fillRect(
-						this.blocks[i].coluna * params.s,
-						this.blocks[i].linha * params.s,
-						params.s,
-						params.s
-					);
-					//ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
-					params.ctx.restore();
-					params.ctx.fillStyle = "yellow";
-					params.ctx.strokeStyle = "black";
-					this.escreveTexto(
-						params.ctx,
-						this.blocks[i].distInimigos,
-						this.blocks[i].coluna * params.s + params.s / 2,
-						this.blocks[i].linha * params.s + params.s / 2
-					);
+				case DEBUG_MODE.INFLUENCIA_PODER: {
+					influenciaNegativa = true;
+					valor = this.blocks[i].influenciaPoder;
+					valorMapaCalor = this.blocks[i].influenciaPoder /
+						this.metricas.mapaInfluencia.influenciaPoder;
+					break;
 				}
-				break;
-			case DEBUG_MODE.DISTANCIA_TESOUROS: // Tesouros
-				for (let i = 0; i < this.blocks.length; i++) {
-					params.ctx.save();
-					params.ctx.fillStyle = `hsl(${(150 * this.blocks[i].distTesouros) / this.metricas.distancias.maxTesouros
-						}, 100%, 50%)`;
-					params.ctx.linewidth = 1;
-					params.ctx.globalAlpha = 0.3;
-					//ctx.fillStyle = "rgba(10, 10, 10, 0.4)";
-					params.ctx.fillRect(
-						this.blocks[i].coluna * params.s,
-						this.blocks[i].linha * params.s,
-						params.s,
-						params.s
-					);
-					//ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
-					params.ctx.restore();
-					params.ctx.fillStyle = "yellow";
-					params.ctx.strokeStyle = "black";
-					this.escreveTexto(
-						params.ctx,
-						this.blocks[i].distTesouros,
-						this.blocks[i].coluna * params.s + params.s / 2,
-						this.blocks[i].linha * params.s + params.s / 2
-					);
+				case DEBUG_MODE.MAPA_INIMIGOS_TELEPORTES_PODER: {
+					valor = this.blocks[i].mediaInimigo_Teleporte_Poder(
+						this.metricas.distancias.maxInimigos,
+						this.metricas.distancias.maxTeleportes,
+						this.metricas.mapaInfluencia.influenciaPoder
+					).toFixed(3);
+					valorMapaCalor = valor;
+					break;
 				}
-				break;
-			case DEBUG_MODE.DISTANCIA_INIMIGOS_TELEPORTES: {
-				// distinimigosTeleportes
-				for (let i = 0; i < this.blocks.length; i++) {
-					params.ctx.save();
-					params.ctx.fillStyle = `hsl(${(150 * this.blocks[i].distInimigoTeleporte()) /
-						this.metricas.distancias.compostas.inimigosTeleportes.max
-						}, 100%, 50%)`;
-					params.ctx.linewidth = 1;
-					params.ctx.globalAlpha = 0.3;
-					//ctx.fillStyle = "rgba(10, 10, 10, 0.4)";
-					params.ctx.fillRect(
-						this.blocks[i].coluna * params.s,
-						this.blocks[i].linha * params.s,
-						params.s,
-						params.s
-					);
-					//ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
-					params.ctx.restore();
-					params.ctx.fillStyle = "yellow";
-					params.ctx.strokeStyle = "black";
-					this.escreveTexto(
-						params.ctx,
-						this.blocks[i]
-							.distInimigoTeleporte(
-								this.metricas.distancias.maxInimigos,
-								this.metricas.distancias.maxTeleportes
-							)
-							.toFixed(3),
-						this.blocks[i].coluna * params.s + params.s / 2,
-						this.blocks[i].linha * params.s + params.s / 2
-					);
-				}
-				break;
+				default:
+					break;
 			}
-			case DEBUG_MODE.DISTANCIA_INIMIGOS_TELEPORTES_FIREZONES: {
-				// distinimigo_Tesouro_Teleporte
-				for (let i = 0; i < this.blocks.length; i++) {
-					params.ctx.save();
-					params.ctx.fillStyle = `hsl(${(150 * this.blocks[i].distInimigo_Tesouro_Teleporte()) /
-						this.metricas.distancias.compostas.inimigo_Tesouro_Teleporte.max
-						}, 100%, 50%)`;
-					params.ctx.linewidth = 1;
-					params.ctx.globalAlpha = 0.3;
-					//ctx.fillStyle = "rgba(10, 10, 10, 0.4)";
-					params.ctx.fillRect(
-						this.blocks[i].coluna * params.s,
-						this.blocks[i].linha * params.s,
-						params.s,
-						params.s
-					);
-					//ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
-					params.ctx.restore();
-					params.ctx.fillStyle = "yellow";
-					params.ctx.strokeStyle = "black";
-					this.escreveTexto(
-						params.ctx,
-						this.blocks[i]
-							.distInimigo_Tesouro_Teleporte(
-								this.metricas.distancias.maxInimigos,
-								this.metricas.distancias.maxTeleportes,
-								this.metricas.distancias.maxTesouros
-							)
-							.toFixed(3),
-						this.blocks[i].coluna * params.s + params.s / 2,
-						this.blocks[i].linha * params.s + params.s / 2
-					);
-				}
-				break;
-			}
-			case DEBUG_MODE.INFLUENCIA_PODER: {
-				for (let i = 0; i < this.blocks.length; i++) {
-					params.ctx.save();
-					params.ctx.fillStyle = `hsl(${150 - (150 * this.blocks[i].influenciaPoder /
-						this.metricas.mapaInfluencia.influenciaPoder)}, 100%, 50%)`;
-					params.ctx.linewidth = 1;
-					params.ctx.globalAlpha = 0.3;
-					params.ctx.fillRect(
+			valorMapaCalor = COR_HSL * valorMapaCalor;
+			params.ctx.save();
+			params.ctx.fillStyle = `hsl(${(influenciaNegativa ? 150 - valorMapaCalor : valorMapaCalor)
+				}, 100%, 50%)`;
+			params.ctx.linewidth = 1;
+			params.ctx.globalAlpha = 0.3;
+			params.ctx.fillRect(
 						this.blocks[i].coluna * params.s,
 						this.blocks[i].linha * params.s,
 						params.s,
@@ -612,34 +477,13 @@ export default class Room {
 					);
 					params.ctx.restore();
 					params.ctx.fillStyle = "yellow";
-					params.ctx.strokeStyle = "black";
-					this.escreveTexto(
-						params.ctx,
-						this.blocks[i].influenciaPoder,
-						this.blocks[i].coluna * params.s + params.s / 2,
-						this.blocks[i].linha * params.s + params.s / 2
-					);
-				}
-				break;
-			}
-			case 20: { // Pintar área de room específico 
-				for (let i = 0; i < this.blocks.length; i++) {
-					if (this.number === 1) { // Informar número do room
-						params.ctx.save();
-						params.ctx.fillStyle = "lime";
-						params.ctx.linewidth = 1;
-						params.ctx.globalAlpha = 0.5;
-						params.ctx.fillRect(
-							this.blocks[i].coluna * params.s,
-							this.blocks[i].linha * params.s,
-							params.s,
-							params.s
-						);
-						params.ctx.restore();
-					}
-				}
-				break;
-			}
+			params.ctx.strokeStyle = "black";
+			this.escreveTexto(
+				params.ctx,
+				valor,
+				this.blocks[i].coluna * params.s + params.s / 2,
+				this.blocks[i].linha * params.s + params.s / 2
+			);
 		}
 	};
 
