@@ -365,6 +365,11 @@ export default class CenaJogo extends Cena {
             return;
         }
 
+        if (this.inputManager.foiPressionado("t")) {
+            this.levelAtual.posicionarInimigoDebug();
+            return;
+        }
+
         if (this.inputManager.foiPressionado("+")) {
             if (Debugger.isDebugModeOn()) {
                 this.game.escala = this.game.escala + 0.025;

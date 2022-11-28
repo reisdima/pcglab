@@ -120,6 +120,28 @@ export default class ProgressionManager {
         return listaCelulasFinal;
     }
 
+    posicionarUmInimigo(params, level, roomAtual) {
+        console.log(roomAtual);
+        console.log('==== Posicionar inimigos Um Por Um ====');
+        let celulasDisponiveis = [];
+        let poderAtual = Slime.getPoderBase();
+        let numeroInimigosMaximo = this.getNumeroInimigosNaSala(roomAtual, level);
+        let numeroInimigosAtual = roomAtual.enemies.length;
+        console.log("Número inimigos máximo: " + numeroInimigosMaximo);
+        console.log("Número inimigos: " + numeroInimigosAtual);
+        celulasDisponiveis = this.getCelulasDisponiveis(roomAtual, params);
+        if (numeroInimigosAtual < numeroInimigosMaximo && celulasDisponiveis.length > 0) {
+            if (celulasDisponiveis.length > 0) {
+                let celula = celulasDisponiveis[this.getRandomInt(0, celulasDisponiveis.length - 1)];
+                const inimigo = this.criarInimigo(celula, roomAtual, level);
+                this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distInimigos');     // Recalcula
+                roomAtual.maxCamadaDistancias();
+            }
+        }
+        poderAtual = this.distribuirPoderEntreInimigos(roomAtual, poderAtual);
+        this.calculaMapaDePoderSala(roomAtual);
+    }
+
     calculaMapaDePoderSala(room) {
         if (room == null) {
             return;

@@ -8,6 +8,7 @@ import Ordenacao from "./Ordenacao.js";
 import ProgressionManager from "./ProgressionManager.js";
 import Slime from "./Entities/Slime.js";
 import Debugger, { DEBUG_MODE, PATHS } from "./utils/Debugger.js";
+import { getPlayer } from "./Entities/Player.js";
 
 
 //TODO Fix parametro
@@ -867,4 +868,15 @@ export default class Level {
 
     return -1;
   }
+
+  posicionarInimigoDebug() {
+    let roomAtual = this.rooms[getPlayer().room - 1];
+    this.progressionManager.posicionarUmInimigo({
+      porcentagemDistancia: 80,
+      porcentagemDistanciaComp: 50,
+      distanciaMinimaEntreInimigos: 3
+    }, this, roomAtual);
+    roomAtual.metricas.mapaInfluencia.influenciaPoder = roomAtual.getValorMaxMapaInfluencia('influenciaPoder');
+  }
+
 }
