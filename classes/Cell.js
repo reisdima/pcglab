@@ -19,9 +19,14 @@ export default class Cell {
             vizinhos: [],
             influenciaPoder: 0,
             idObjetoInundacao: -1,
+            podePosicionarInimigo: false
         };
 
         Object.assign(this, exemplo, params);   // Sobrescreve os atributos de params e exemplo na classe
+
+        this.metricas = {
+            mediaInimigoTeleportePoder: -1
+        }
     }
 
     // Média entre as distências da célula até inimigo e teleporte

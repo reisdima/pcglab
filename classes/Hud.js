@@ -377,6 +377,7 @@ export default class Hud {
     this.debugText.push("Mode 11 - Dist - Inimigos + Telep.. + Fire.."); // Dados das celulas -- DistInimigosTeleporte
     this.debugText.push("Mode 12 - Influência - poder");
     this.debugText.push("Mode 13 - Influência - inimigo-teleporte-poder");
+    this.debugText.push("Mode 14 - Blocos disponíveis para inimigos");
     this.updateElementos(canvas);
     this.bussola.init();
     

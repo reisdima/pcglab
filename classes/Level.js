@@ -535,8 +535,8 @@ export default class Level {
     }
   }
 
-  posicionarInimigosTeste(params) {
-    this.progressionManager.posicionarInimigos(params, this, this.rooms);
+  posicionarInimigosTeste() {
+    this.progressionManager.posicionarInimigos(this, this.rooms);
   }
 
   posicionarInimigos(params) {
@@ -627,15 +627,11 @@ export default class Level {
       room.inundaRecursivo(room.saida, 0);
     });
     
-    this.posicionarInimigosTeste({
-      porcentagemDistancia: 80,
-      porcentagemDistanciaComp: 50,
-      distanciaMinimaEntreInimigos: 3
-    });
+    // this.posicionarInimigosTeste();
 
     // this.posicionarInimigos({
     //   porcentagemDistancia: 80,
-    //   porcentagemDistanciaComp: 50,
+    //   porcentagemDistanciaComp: 30,
     // });
     
     // this.posicionarTesouros({
@@ -849,7 +845,8 @@ export default class Level {
       this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
       this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
-      this.progressionManager.calculaMapaDePoderSala(this.rooms[i]);
+      this.rooms[i].atualizaMetricaCelula("mediaInimigoTeleportePoder");
+      this.progressionManager.marcarCelulasDisponiveisParaInimigos(this.rooms[i]);
       this.rooms[i].metricas.mapaInfluencia.influenciaPoder = this.rooms[i].getValorMaxMapaInfluencia('influenciaPoder');
     }
     this.roomIniciado = true;
@@ -871,11 +868,8 @@ export default class Level {
 
   posicionarInimigoDebug() {
     let roomAtual = this.rooms[getPlayer().room - 1];
-    this.progressionManager.posicionarUmInimigo({
-      porcentagemDistancia: 80,
-      porcentagemDistanciaComp: 50,
-      distanciaMinimaEntreInimigos: 3
-    }, this, roomAtual);
+    this.progressionManager.posicionarUmInimigo(this, roomAtual);
+    roomAtual.atualizaMetricaCelula("mediaInimigoTeleportePoder");
     roomAtual.metricas.mapaInfluencia.influenciaPoder = roomAtual.getValorMaxMapaInfluencia('influenciaPoder');
   }
 

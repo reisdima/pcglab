@@ -305,6 +305,14 @@ export default class Map {
         case DEBUG_MODE.ROOM_DA_CELULA:                   // Rooms
           this.escreveTexto(ctx, this.cell[l][c].room + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
           break;
+        case DEBUG_MODE.POSICIONAMENTO_INIMIGO:
+          if (this.cell[l][c].podePosicionarInimigo) {
+            ctx.fillStyle = `hsl(${120}, 100%, 50%)`;
+            ctx.linewidth = 1;
+            ctx.globalAlpha = 0.4;
+            ctx.fillRect(c * this.s, l * this.s, this.s, this.s);
+          }
+          break;
         /*case 5:                   // Teleportes
           this.escreveTexto(ctx, this.cell[l][c].distTeleportes + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
           break;

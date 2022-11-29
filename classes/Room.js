@@ -458,20 +458,16 @@ export default class Room {
 					break;
 				}
 				case DEBUG_MODE.MAPA_INIMIGOS_TELEPORTES_PODER: {
-					valor = this.blocks[i].mediaInimigo_Teleporte_Poder(
-						this.metricas.distancias.maxInimigos,
-						this.metricas.distancias.maxTeleportes,
-						this.metricas.mapaInfluencia.influenciaPoder
-					).toFixed(3);
-					valorMapaCalor = valor;
+					valor = this.blocks[i].metricas.mediaInimigoTeleportePoder.toFixed(3);
+					valorMapaCalor = this.blocks[i].metricas.mediaInimigoTeleportePoder;
 					break;
 				}
 				default:
-					break;
+					return;
 			}
 			valorMapaCalor = COR_HSL * valorMapaCalor;
 			params.ctx.save();
-			params.ctx.fillStyle = `hsl(${(influenciaNegativa ? 150 - valorMapaCalor : valorMapaCalor)
+			params.ctx.fillStyle = `hsl(${(influenciaNegativa ? COR_HSL - valorMapaCalor : valorMapaCalor)
 				}, 100%, 50%)`;
 			params.ctx.linewidth = 1;
 			params.ctx.globalAlpha = 0.3;
@@ -1260,5 +1256,26 @@ export default class Room {
 			}
 		}
 	};
+
+	atualizaMetricaCelula(metrica) {
+		let distMaxTeleporte = this.getMaxDist(0);
+        let maxDistInimigos = this.getMaxDist(2);
+        let maxPoder = this.getValorMaxMapaInfluencia("influenciaPoder");
+		this.blocks.forEach((block) => {
+            switch (metrica) {
+                case "mediaInimigoTeleportePoder":
+                    block.metricas.mediaInimigoTeleportePoder =
+                        block.mediaInimigo_Teleporte_Poder(
+                            maxDistInimigos,
+                            distMaxTeleporte,
+                            maxPoder
+                        );
+                    break;
+                default:
+                    break;
+            }
+        });
+
+	}
 
 }
