@@ -278,52 +278,46 @@ export default class Map {
 
   desenharCell(ctx, l, c) {
     if (this.cell[l][c].tipo != 0) {    // Não coloca as distancias nas cavernas
-      ctx.fillStyle = "yellow";
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 2;
-      ctx.font = "10px Arial Black";
-
       switch (Debugger.getDebugMode()) {
         case DEBUG_MODE.TIPO_DA_CELULA:                   // Tipos
-          this.escreveTexto(ctx, this.cell[l][c].tipo + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
+          this.escreveTexto(ctx, this.cell[l][c].tipo + "", c, l);
           break;
         case DEBUG_MODE.ROOM_DA_CELULA:                   // Rooms
-          this.escreveTexto(ctx, this.cell[l][c].room + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
+          this.escreveTexto(ctx, this.cell[l][c].room + "", c, l);
           break;
       }
     }
     else {
-      ctx.fillStyle = "yellow";
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 2;
-      ctx.font = "10px Arial Black";
-
       switch (Debugger.getDebugMode()) {
         case DEBUG_MODE.TIPO_DA_CELULA:                   // Tipos
-          this.escreveTexto(ctx, this.cell[l][c].tipo + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
+          this.escreveTexto(ctx, this.cell[l][c].tipo + "", c, l);
           break;
         case DEBUG_MODE.ROOM_DA_CELULA:                   // Rooms
-          this.escreveTexto(ctx, this.cell[l][c].room + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
+          this.escreveTexto(ctx, this.cell[l][c].room + "", c, l);
           break;
-        case DEBUG_MODE.POSICIONAMENTO_INIMIGO:
+          case DEBUG_MODE.POSICIONAMENTO_INIMIGO:
           if (this.cell[l][c].podePosicionarInimigo) {
+            const texto = this.cell[l][c].metricas.mediaInimigoTeleportePoder.toFixed(3);
+            ctx.save();
             ctx.fillStyle = `hsl(${120}, 100%, 50%)`;
             ctx.linewidth = 1;
             ctx.globalAlpha = 0.4;
             ctx.fillRect(c * this.s, l * this.s, this.s, this.s);
+            ctx.restore();
+            this.escreveTexto(ctx, texto + "", c, l);
           }
           break;
         /*case 5:                   // Teleportes
-          this.escreveTexto(ctx, this.cell[l][c].distTeleportes + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
+          this.escreveTexto(ctx, this.cell[l][c].distTeleportes + "", c, l);
           break;
         case 6:                   // Firezones
-          this.escreveTexto(ctx, this.cell[l][c].distFirezones + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
+          this.escreveTexto(ctx, this.cell[l][c].distFirezones + "", c, l);
           break;
         case 7:                   // Inimigos
-          this.escreveTexto(ctx, this.cell[l][c].distInimigos + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
+          this.escreveTexto(ctx, this.cell[l][c].distInimigos + "", c, l);
           break;
         case 8:                   // Tesouros
-          this.escreveTexto(ctx, this.cell[l][c].distTesouros + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
+          this.escreveTexto(ctx, this.cell[l][c].distTesouros + "", c, l);
           break;*/
         /*case 9:                   // distInimigosTesouros
           let aux = this.getDistInimigosTesouros(l, c);
@@ -337,7 +331,7 @@ export default class Map {
           ctx.restore();
           ctx.fillStyle = "yellow";
           ctx.strokeStyle = "black";
-          this.escreveTexto(ctx, this.getDistInimigosTesouros(l, c) + "", c * this.s + this.s / 2, l * this.s + this.s / 2);
+          this.escreveTexto(ctx, this.getDistInimigosTesouros(l, c) + "", c, l);
           break;
         case 10:                   // distInimigosTeleportes
         {
@@ -351,7 +345,7 @@ export default class Map {
           ctx.restore();
           ctx.fillStyle = "yellow";
           ctx.strokeStyle = "black";
-          this.escreveTexto(ctx, this.cell[l][c].distInimigoTeleporte(), c * this.s + this.s / 2, l * this.s + this.s / 2);
+          this.escreveTexto(ctx, this.cell[l][c].distInimigoTeleporte(), c, l);
           break;
         }*/
       }
@@ -366,8 +360,13 @@ export default class Map {
   };
 
   escreveTexto(ctx, texto, x, y) {
-    ctx.strokeText(texto, x, y);
-    ctx.fillText(texto, x, y);
+    ctx.fillStyle = "yellow";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = 1;
+    ctx.font = "10px Arial Black";
+    ctx.strokeText(texto, x * this.s + this.s / 2, y * this.s + this.s / 2, y * this.s + this.s / 2);
+    ctx.fillText(texto, x * this.s + this.s / 2, y * this.s + this.s / 2, y * this.s + this.s / 2);
   }
 
   // Matriz de distancias: Calcula a distancia em relação a uma linha, coluna e valor inicial
