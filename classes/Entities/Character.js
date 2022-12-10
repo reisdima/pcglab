@@ -271,8 +271,6 @@ export default class Character extends Sprite {
 
     }
 
-
-
     persegue(alvo) {
         if (alvo == null) {
             return;
@@ -333,8 +331,6 @@ export default class Character extends Sprite {
     }
 
     sofrerAtaque(dano) {
-        console.log("Sofrer ataque Character");
-        console.log(this);
         this.hpAtual -= dano;
         if (this.hpAtual <= 0) {
             return this.morrer();

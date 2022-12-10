@@ -182,11 +182,11 @@ export default class Level {
       let maxDist = roomAtual.getMaxDist(0);
       let celulas = roomAtual.getCellsByDist(maxDist, 0);
       sortPosition = this.getRandomInt(0, (celulas.length - 1));
-        roomAtual.resetDistancia(0);
+      roomAtual.resetDistancia(0);
 
-        // Posicionamento teleporte de inicio de sala
-        roomAtual.teleporterInitial.setPosition(celulas[sortPosition]);
-        roomAtual.teleporterInitial.roomNumber = celulas[sortPosition].room;
+      // Posicionamento teleporte de inicio de sala
+      roomAtual.teleporterInitial.setPosition(celulas[sortPosition]);
+      roomAtual.teleporterInitial.roomNumber = celulas[sortPosition].room;
       roomAtual.teleporterInitial.gy = celulas[sortPosition].linha;
       roomAtual.teleporterInitial.gx = celulas[sortPosition].coluna;
       roomAtual.teleporterInitial.map = this.mapa;
@@ -194,7 +194,6 @@ export default class Level {
       // roomAtual.resetDistancia(0);
       // roomAtual.teleporterInitial = this.criaTeleporte(roomAtual, 100).setType(TeleporterType.InicioSala);
       roomAtual.teleporterFinal = this.criaTeleporte(roomAtual, params.porcentagem).setType(TeleporterType.FimSala);
-      this.mapa.atualizaDist(roomAtual.teleporterFinal.gy, roomAtual.teleporterFinal.gx, 0, 4);
       roomsAvailable.push(roomAtual.number);
     }
 
@@ -604,7 +603,7 @@ export default class Level {
       this.rooms[this.player.room - 1].attackEnemiesPlayer(this.player);      // Ataque somente na sala do player
     }
     for (let i = 0; i < this.rooms.length; i++) {
-      this.rooms[i].move(dt, this.player);
+      this.rooms[i].move(dt);
     }
     // this.removerInimigos();
     this.criarFilaDesenho();
@@ -624,7 +623,8 @@ export default class Level {
       room.definirBlocosVizinhos();
       room.achaEntrada();
       room.achaSaida();
-      room.inundaRecursivo(room.saida, 0);
+      room.inundar(room.saida, 0, 'distInundacaoSaida');
+      
     });
     
     // this.posicionarInimigosTeste();
@@ -840,12 +840,13 @@ export default class Level {
     }
     for (let i = 0; i < this.rooms.length; i++) {
       this.rooms[i].init();
+      this.rooms[i].adicionarPontosDeInteresse();
       this.rooms[i].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
       this.rooms[i].constroiRota();
       this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
       this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
-      this.rooms[i].atualizaMetricaCelula("mediaInimigoTeleportePoder");
+      this.rooms[i].atualizaMetricaCelulas("mediaInimigoTeleportePoder");
       this.progressionManager.marcarCelulasDisponiveisParaInimigos(this.rooms[i]);
       this.rooms[i].metricas.mapaInfluencia.influenciaPoder = this.rooms[i].getValorMaxMapaInfluencia('influenciaPoder');
     }
@@ -867,9 +868,9 @@ export default class Level {
   }
 
   posicionarInimigoDebug() {
-    let roomAtual = this.rooms[getPlayer().room - 1];
+    let roomAtual = this.getPlayerRoom();
     this.progressionManager.posicionarUmInimigo(this, roomAtual);
-    roomAtual.atualizaMetricaCelula("mediaInimigoTeleportePoder");
+    roomAtual.atualizaMetricaCelulas("mediaInimigoTeleportePoder");
     roomAtual.metricas.mapaInfluencia.influenciaPoder = roomAtual.getValorMaxMapaInfluencia('influenciaPoder');
   }
 

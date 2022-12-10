@@ -375,7 +375,7 @@ export default class Map {
 
     }
 
-    if (Debugger.getDebugMode() < 16) {
+    if (Debugger.isDebugModeOn()) {
       ctx.strokeStyle = "white";
       ctx.lineWidth = 1;
       ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);

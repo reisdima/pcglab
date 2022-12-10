@@ -315,7 +315,7 @@ export default class Room {
                     }
                     break;
             }
-        });
+		});
         return valor;
 	}
 
@@ -717,7 +717,8 @@ export default class Room {
 		}
 	};
 	
-	apontarDirecoes() {
+	// Direção pra saida
+	apontarDirecoesParaSaida() {
 		for (let i = 0; i < this.blocks.length; i++) {
 			if (this.blocks[i].distInundacaoSaida === 0) {
 				this.blocks[i].direcaoSaida = "X";
@@ -761,24 +762,6 @@ export default class Room {
 		}
 	};
 
-	inundaRecursivo(origem, val) {
-		if (this.blocks[origem].distInundacaoSaida === -1) {
-			this.blocks[origem].distInundacaoSaida = val;
-			val++;
-			for (let i = 0; i < this.blocks[origem].vizinhos.length; i++) {
-				this.inundaRecursivo(this.blocks[origem].vizinhos[i], val);
-			}
-		} else {
-			if (val < this.blocks[origem].distInundacaoSaida) {
-				this.blocks[origem].distInundacaoSaida = val;
-				val++;
-				for (let i = 0; i < this.blocks[origem].vizinhos.length; i++) {
-					this.inundaRecursivo(this.blocks[origem].vizinhos[i], val);
-				}
-			}
-		}
-	};
-
 	definirBlocosVizinhos() {
 		for (let i = 0; i < this.blocks.length; i++) {
             const bloco = this.blocks[i];
@@ -807,7 +790,13 @@ export default class Room {
 	}
 
 	init() {
-		this.apontarDirecoes();
+		this.apontarDirecoesParaSaida();
+	};
+	
+	adicionarPontosDeInteresse() {
+		this.pontosInteresse.push(this.entrada);
+		this.achaTesouros();
+		this.pontosInteresse.push(this.saida);
 	};
 
 	achaSaida() {
@@ -820,7 +809,6 @@ export default class Room {
 				break;
 			}
 		}
-		this.pontosInteresse.push(this.saida);
 	};
 
 	achaEntrada() {
@@ -833,7 +821,6 @@ export default class Room {
 				break;
 			}
 		}
-		this.pontosInteresse.push(this.entrada);
 	};
 
 	achaTesouros() {
@@ -928,18 +915,10 @@ export default class Room {
 		}
 	};
 
-	getPathRoom(gx, gy) {
+	getPathRoom() {
 		this.pathRoom.steps = [];
 		let indexAtual = this.entrada;
 
-		let indexPlayer = -1; // Index -1 indica que o player não está nessa room
-		for (let i = 0; i < this.blocks.length; i++) {
-			if (this.blocks[i].linha === gy && this.blocks[i].coluna === gx) {
-				indexPlayer = i;
-			}
-		}
-
-		//if(indexPlayer !== -1){
 		this.pathRoom.addStep(this.blocks[indexAtual]);
 		for (let i = 0; i < this.blocks[this.entrada].distInundacaoSaida; i++) {
 			if (this.blocks[indexAtual].direcaoSaida === "^") {
@@ -1008,30 +987,27 @@ export default class Room {
 				}
 			}
 		}
-		//}
 	};
-
-	inundar(origem, val) {
-		if (this.blocks[origem].distInundacaoTemp === -1) {
-			this.blocks[origem].distInundacaoTemp = val;
-			val++;
-			for (let i = 0; i < this.blocks[origem].vizinhos.length; i++) {
-				this.inundar(this.blocks[origem].vizinhos[i], val);
-			}
-		} else {
-			if (val < this.blocks[origem].distInundacaoTemp) {
-				this.blocks[origem].distInundacaoTemp = val;
-				val++;
-				for (let i = 0; i < this.blocks[origem].vizinhos.length; i++) {
-					this.inundar(this.blocks[origem].vizinhos[i], val);
+	
+	inundar(origem, val, propriedade) {
+		const avaliar = [{ celula: this.blocks[origem], valor: val}];
+		let aux;
+		while (aux = avaliar.shift()) {
+			if (aux.valor < aux.celula[propriedade]) {
+				aux.celula[propriedade] = aux.valor;
+				for (let i = 0; i < aux.celula.vizinhos.length; i++) {
+					avaliar.push({
+						celula: this.blocks[aux.celula.vizinhos[i]],
+						valor: aux.valor + 1
+					});
 				}
 			}
 		}
 	};
-
+	
 	resetaDistanciaInundacaoTemp() {
 		for (let i = 0; i < this.blocks.length; i++) {
-			this.blocks[i].distInundacaoTemp = -1;
+			this.blocks[i].distInundacaoTemp = Infinity;
 		}
 	};
 
@@ -1079,11 +1055,15 @@ export default class Room {
 		}
 	};
 
+	/**
+	 * Calcula a distancia entre os pontos de interesse, colocando
+	 * a informação em uma matriz
+	 */
 	calculaDistPontosInteresse() {
 		console.log("Room " + this.number + ": " + this.pontosInteresse.length);
 		for (let i = 0; i < this.pontosInteresse.length; i++) {
 			this.resetaDistanciaInundacaoTemp();
-			this.inundar(this.pontosInteresse[i], 0);
+			this.inundar(this.pontosInteresse[i], 0, 'distInundacaoTemp');
 			this.matrizDistancias[i] = [];
 			for (let j = 0; j < this.pontosInteresse.length; j++) {
 				if (i === j) {
@@ -1099,6 +1079,13 @@ export default class Room {
 		//console.log(this.pontosInteresse)
 	};
 
+	/**
+	 * Adiciona ao array rotaPercurso os índices dos blocos que contêm os pontos de interesse.
+	 * A ordem em que são inseridos é o de menor distância para o ponto atual.
+	 * Ou seja, começando do teleporte de entrada, é adicionado sempre o pronto de interesse
+	 * de menor distância daquele ponto.
+	 * 
+	 */
 	constroiRota() {
 		let index = 0;
 		let indexAux = 0;
@@ -1113,7 +1100,7 @@ export default class Room {
 			let menor = Infinity;
 			for (let i = 0; i < this.pontosInteresse.length; i++) {
 				if (
-					index !== i &&
+					// index !== i &&
 					this.matrizDistancias[index][i] < menor &&
 					jaFoi.indexOf(this.pontosInteresse[i]) === -1
 				) {
@@ -1131,7 +1118,6 @@ export default class Room {
 			faltam--;
 		}
 
-		//console.log(this.rotaPercurso);
 	};
 
 	getPathTesouros(gx, gy) {
@@ -1149,7 +1135,7 @@ export default class Room {
 
 		for (let i = atual; i < this.rotaPercurso.length - 1; i++) {
 			this.resetaDistanciaInundacaoTemp();
-			this.inundar(this.rotaPercurso[proximo], 0);
+			this.inundar(this.rotaPercurso[proximo], 0, 'distInundacaoTemp');
 			this.apontarDirecoesTemp();
 			this.constroiPathDoisPontos(this.rotaPercurso[atual]);
 			atual++;
@@ -1255,16 +1241,17 @@ export default class Room {
 		}
 	};
 
-	atualizaMetricaCelula(metrica) {
-		let distMaxTeleporte = this.getMaxDist(0);
-        let maxDistInimigos = this.getMaxDist(2);
-        let maxPoder = this.getValorMaxMapaInfluencia("influenciaPoder");
+	atualizaMetricaCelulas(metrica) {
+		let distMaxTeleporte = this.metricas.distancias.maxTeleportes;
+		let distMaxFirezones = this.metricas.distancias.maxFirezones;
+        let distMaxInimigos = this.metricas.distancias.maxInimigos;
+        let maxPoder = this.metricas.mapaInfluencia.influenciaPoder;
 		this.blocks.forEach((block) => {
             switch (metrica) {
                 case "mediaInimigoTeleportePoder":
                     block.metricas.mediaInimigoTeleportePoder =
                         block.mediaInimigo_Teleporte_Poder(
-                            maxDistInimigos,
+                            distMaxInimigos,
                             distMaxTeleporte,
                             maxPoder
                         );

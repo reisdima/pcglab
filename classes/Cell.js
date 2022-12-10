@@ -13,7 +13,7 @@ export default class Cell {
             direcaoTesouros: "V",
             notacaoTesouros: ".",
             notacaoPlayer: ".   .",
-            distInundacaoSaida: -1,
+            distInundacaoSaida: Infinity,
             distInundacaoTemp: -1,
             indexRoom: -1,
             vizinhos: [],
@@ -62,5 +62,7 @@ export default class Cell {
         this.coluna = celula.coluna;
         this.influenciaPoder = celula.influenciaPoder;
         this.vizinhos = celula.vizinhos;
+        this.distInundacaoSaida = celula.distInundacaoSaida;
+        this.metricas = celula.metricas;
     }
 }
