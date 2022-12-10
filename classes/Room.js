@@ -380,11 +380,9 @@ export default class Room {
 				this.treasures[i].mover(dt);
 			}
 
-			for (const indiceInimigo in this.enemies) {
-				const enemy = this.enemies[indiceInimigo]
-				enemy.persegue(player);
-				enemy.movimento(dt);
-			}
+			this.enemies.forEach(enemy => {
+				enemy.passo(dt);
+			});
 		}
 	};
 

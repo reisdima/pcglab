@@ -103,6 +103,29 @@ export default class Map {
     return null;                // Não encontrou nenhuma celula com a caracteristica
   }
 
+  getCellsByDist(x, y, dist) {
+    const celulas = [];
+    console.log(x, y, dist);
+    
+    for (let i = y - dist; i <= y + dist; i++) {
+      if (i < 0 && i >= this.h) {
+        continue;
+      }
+      for (let j = x - dist; j <= x + dist; j++) {
+        if (j < 0 && j >= this.w) {
+          continue;
+        }
+        if (i == y && j == x) {
+          continue;
+        }
+        if (this.cell[i][j].tipo === 0) {
+          celulas.push(this.cell[i][j]);
+        }
+      }
+    }
+    return celulas;
+  }
+
   getCell(row, column) {
     return this.cell[row][column];
   }
