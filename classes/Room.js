@@ -358,7 +358,59 @@ export default class Room {
 			this.getValorMaxMapaInfluencia("influenciaInimigosTeleportesPoder");
 	};
 
-	move(dt, player) {
+	atualizaMetricas(metricas = []) {
+		if (metricas.length === 0) {
+			this.metricas.distancias.maxTeleportes = this.getMaxDist(0);
+			this.metricas.distancias.maxFirezones = this.getMaxDist(1);
+			this.metricas.distancias.maxInimigos = this.getMaxDist(2);
+			this.metricas.distancias.maxTesouros = this.getMaxDist(3);
+	
+			// Métricas compostas
+			this.metricas.distancias.compostas.inimigosTeleportes.max = this.getMaxDist(4);
+			this.metricas.distancias.compostas.inimigo_Tesouro_Teleporte.max = this.getMaxDist(5);
+			this.metricas.mapaInfluencia.compostas.inimigosTeleportesPoder.max =
+				this.getValorMaxMapaInfluencia("influenciaInimigosTeleportesPoder");
+			this.metricas.distancias.maxCaminhoEntradaSaida = this.getValorMaxMapaInfluencia("distCaminhoEntradaSaida");
+		} else {
+			metricas.forEach(metrica => {
+				switch (metrica) {
+					case 'maxTeleportes':
+						this.metricas.distancias.maxTeleportes = this.getMaxDist(0);
+						break;
+					case 'maxFirezones':
+						this.metricas.distancias.maxFirezones = this.getMaxDist(1);
+						break;
+					case 'maxInimigos':
+						this.metricas.distancias.maxInimigos = this.getMaxDist(2);
+						break;
+					case 'maxTesouros':
+						this.metricas.distancias.maxTesouros = this.getMaxDist(3);
+						break;
+					case 'inimigosTeleportes':
+						this.metricas.distancias.compostas.inimigosTeleportes.max = this.getMaxDist(4);
+						break;
+					case 'influenciaPoder':
+						this.metricas.mapaInfluencia.influenciaPoder = this.getValorMaxMapaInfluencia("influenciaPoder");
+						break;
+					case 'inimigo_Tesouro_Teleporte':
+						this.metricas.distancias.compostas.inimigo_Tesouro_Teleporte.max = this.getMaxDist(5);
+						break;
+					case 'inimigosTeleportesPoder':
+						this.metricas.mapaInfluencia.compostas.inimigosTeleportesPoder.max =
+							this.getValorMaxMapaInfluencia("influenciaInimigosTeleportesPoder");
+						break;
+					default:
+						break;
+				}
+			});
+		}
+		// if (this.number === 12) {
+		// 	console.log('max camada distancias');
+		// 	console.log(this.metricas.distancias.maxCaminhoEntradaSaida);
+		// }
+	};
+
+	move(dt) {
 		if (Debugger.isDebugModeOn()) {
 			for (let i = 0; i < this.fireZones.length; i++) {
 				this.fireZones[i].mover(dt);

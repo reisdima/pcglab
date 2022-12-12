@@ -9,6 +9,7 @@ import ProgressionManager from "./ProgressionManager.js";
 import Slime from "./Entities/Slime.js";
 import Debugger, { DEBUG_MODE, PATHS } from "./utils/Debugger.js";
 import { getPlayer } from "./Entities/Player.js";
+import EnemyPositioningManager from "./EnemyPositioningManager.js";
 
 
 //TODO Fix parametro
@@ -16,7 +17,8 @@ export default class Level {
 
   constructor(w, h, s, { hud, seedGen, assetsMng }) {
     this.mapa = new Map(w, h, s, assetsMng);
-    this.progressionManager = new ProgressionManager(seedGen, this.mapa);
+    this.progressionManager = new ProgressionManager();
+    this.enemyPositioningManager = new EnemyPositioningManager(seedGen, this.mapa);
     this.rooms = [];
     this.tempoFase = 0;
     this.tempoTotal = 0;
@@ -534,10 +536,6 @@ export default class Level {
     }
   }
 
-  posicionarInimigosTeste() {
-    this.progressionManager.posicionarInimigos(this, this.rooms);
-  }
-
   posicionarInimigos(params) {
     for (let indiceSala = 0; indiceSala < this.rooms.length; indiceSala++) {
       let auxRoom = this.rooms[indiceSala];
@@ -627,7 +625,7 @@ export default class Level {
       
     });
     
-    // this.posicionarInimigosTeste();
+    this.enemyPositioningManager.posicionar(this);
 
     // this.posicionarInimigos({
     //   porcentagemDistancia: 80,
@@ -847,7 +845,7 @@ export default class Level {
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
       this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
       this.rooms[i].atualizaMetricaCelulas("mediaInimigoTeleportePoder");
-      this.progressionManager.marcarCelulasDisponiveisParaInimigos(this.rooms[i]);
+      this.enemyPositioningManager.marcarCelulasDisponiveisParaInimigos(this.rooms[i]);
       this.rooms[i].metricas.mapaInfluencia.influenciaPoder = this.rooms[i].getValorMaxMapaInfluencia('influenciaPoder');
     }
     this.roomIniciado = true;
@@ -869,7 +867,7 @@ export default class Level {
 
   posicionarInimigoDebug() {
     let roomAtual = this.getPlayerRoom();
-    this.progressionManager.posicionarUmInimigo(this, roomAtual);
+    this.enemyPositioningManager.posicionarUmInimigo(this, roomAtual);
     roomAtual.atualizaMetricaCelulas("mediaInimigoTeleportePoder");
     roomAtual.metricas.mapaInfluencia.influenciaPoder = roomAtual.getValorMaxMapaInfluencia('influenciaPoder');
   }
