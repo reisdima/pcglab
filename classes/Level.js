@@ -9,6 +9,8 @@ import ProgressionManager from "./ProgressionManager.js";
 import Slime from "./Entities/Slime.js";
 import Debugger, { DEBUG_MODE, PATHS } from "./utils/Debugger.js";
 import { getPlayer } from "./Entities/Player.js";
+import TreasurePositioningManager from "./TreasurePositioningManager.js";
+import EnemyPositioningManager from "./EnemyPositioningManager.js";
 
 
 //TODO Fix parametro
@@ -16,7 +18,9 @@ export default class Level {
 
   constructor(w, h, s, { hud, seedGen, assetsMng }) {
     this.mapa = new Map(w, h, s, assetsMng);
-    this.progressionManager = new ProgressionManager(seedGen, this.mapa);
+    this.progressionManager = new ProgressionManager();
+    this.treasurePositioningManager = new TreasurePositioningManager(seedGen, this.mapa);
+    this.enemyPositioningManager = new EnemyPositioningManager(seedGen, this.mapa);
     this.rooms = [];
     this.tempoFase = 0;
     this.tempoTotal = 0;
@@ -182,11 +186,11 @@ export default class Level {
       let maxDist = roomAtual.getMaxDist(0);
       let celulas = roomAtual.getCellsByDist(maxDist, 0);
       sortPosition = this.getRandomInt(0, (celulas.length - 1));
-        roomAtual.resetDistancia(0);
+      roomAtual.resetDistancia(0);
 
-        // Posicionamento teleporte de inicio de sala
-        roomAtual.teleporterInitial.setPosition(celulas[sortPosition]);
-        roomAtual.teleporterInitial.roomNumber = celulas[sortPosition].room;
+      // Posicionamento teleporte de inicio de sala
+      roomAtual.teleporterInitial.setPosition(celulas[sortPosition]);
+      roomAtual.teleporterInitial.roomNumber = celulas[sortPosition].room;
       roomAtual.teleporterInitial.gy = celulas[sortPosition].linha;
       roomAtual.teleporterInitial.gx = celulas[sortPosition].coluna;
       roomAtual.teleporterInitial.map = this.mapa;
@@ -194,7 +198,6 @@ export default class Level {
       // roomAtual.resetDistancia(0);
       // roomAtual.teleporterInitial = this.criaTeleporte(roomAtual, 100).setType(TeleporterType.InicioSala);
       roomAtual.teleporterFinal = this.criaTeleporte(roomAtual, params.porcentagem).setType(TeleporterType.FimSala);
-      this.mapa.atualizaDist(roomAtual.teleporterFinal.gy, roomAtual.teleporterFinal.gx, 0, 4);
       roomsAvailable.push(roomAtual.number);
     }
 
@@ -535,10 +538,6 @@ export default class Level {
     }
   }
 
-  posicionarInimigosTeste() {
-    this.progressionManager.posicionarInimigos(this, this.rooms);
-  }
-
   posicionarInimigos(params) {
     for (let indiceSala = 0; indiceSala < this.rooms.length; indiceSala++) {
       let auxRoom = this.rooms[indiceSala];
@@ -604,7 +603,7 @@ export default class Level {
       this.rooms[this.player.room - 1].attackEnemiesPlayer(this.player);      // Ataque somente na sala do player
     }
     for (let i = 0; i < this.rooms.length; i++) {
-      this.rooms[i].move(dt, this.player);
+      this.rooms[i].move(dt);
     }
     // this.removerInimigos();
     this.criarFilaDesenho();
@@ -621,14 +620,30 @@ export default class Level {
     this.posicionarFireZones(25);          // Posiciona acima de 25 na distancia de firezones
     
     this.rooms.forEach(room => {
+      // Precisa para calcular distancia saida
+      // que é necessário para distribuir poder entre inimigos
       room.definirBlocosVizinhos();
-      room.achaEntrada();
       room.achaSaida();
-      room.inundaRecursivo(room.saida, 0);
+      room.inundar(room.saida, 0, 'distInundacaoSaida');
+      
+      //Precisa para criar caminho entrada-saida
+      room.achaEntrada();
+      room.apontarDirecoesParaSaida();
+      
+      room.getPathRoom();
+      
+      // Precisa para posicionar inimigos
+      room.atualizaMetricas(['maxTeleportes']);
+      room.atualizaDistanciaCaminhoEntradaSaida(this.mapa);
+
+      //Precisa para posicionar tesouros
+      room.atualizaMetricas(['maxCaminhoEntradaSaida', 'maxFirezones']);
     });
     
-    // this.posicionarInimigosTeste();
+    this.enemyPositioningManager.posicionar(this);
 
+    this.treasurePositioningManager.posicionar(this);
+    
     // this.posicionarInimigos({
     //   porcentagemDistancia: 80,
     //   porcentagemDistanciaComp: 30,
@@ -642,8 +657,8 @@ export default class Level {
     // });
 
     this.rooms.forEach(room => {
-      room.achaTesouros();
-      room.maxCamadaDistancias();
+      // room.achaTesouros();
+      // room.maxCamadaDistancias();
     });
     
 
@@ -840,14 +855,17 @@ export default class Level {
     }
     for (let i = 0; i < this.rooms.length; i++) {
       this.rooms[i].init();
+      this.rooms[i].adicionarPontosDeInteresse();
       this.rooms[i].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
       this.rooms[i].constroiRota();
-      this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
       this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
-      this.rooms[i].atualizaMetricaCelula("mediaInimigoTeleportePoder");
-      this.progressionManager.marcarCelulasDisponiveisParaInimigos(this.rooms[i]);
-      this.rooms[i].metricas.mapaInfluencia.influenciaPoder = this.rooms[i].getValorMaxMapaInfluencia('influenciaPoder');
+      this.rooms[i].atualizaMetricas();
+      this.rooms[i].atualizaMetricaCelulas("mediaInimigoTeleportePoder");
+      this.rooms[i].atualizaMetricaCelulas("mediaTesouroFirezoneTeleporteEntradaSaida");
+      this.rooms[i].atualizaMetricaCelulas("mediaInimigoTesouroTeleportePoder");
+      this.enemyPositioningManager.marcarCelulasDisponiveisParaInimigos(this.rooms[i]);
+      this.treasurePositioningManager.marcarCelulasDisponiveisParaTesouros(this.rooms[i]);
     }
     this.roomIniciado = true;
     //this.rooms[10].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
@@ -867,10 +885,17 @@ export default class Level {
   }
 
   posicionarInimigoDebug() {
-    let roomAtual = this.rooms[getPlayer().room - 1];
-    this.progressionManager.posicionarUmInimigo(this, roomAtual);
-    roomAtual.atualizaMetricaCelula("mediaInimigoTeleportePoder");
+    let roomAtual = this.getPlayerRoom();
+    this.enemyPositioningManager.posicionarUmInimigo(this, roomAtual);
+    roomAtual.atualizaMetricaCelulas("mediaInimigoTeleportePoder");
     roomAtual.metricas.mapaInfluencia.influenciaPoder = roomAtual.getValorMaxMapaInfluencia('influenciaPoder');
+  }
+
+  posicionarTesouroDebug() {
+    let roomAtual = this.getPlayerRoom();
+    this.treasurePositioningManager.posicionarUmTesouro(this);
+    roomAtual.atualizaMetricaCelulas("mediaTesouroFirezoneTeleporteEntradaSaida");
+    roomAtual.atualizaMetricaCelulas("mediaInimigoTesouroTeleportePoder");
   }
 
 }

@@ -45,9 +45,10 @@ export default class Room {
 			},
             distancias: {
                 maxTeleportes: 999,
-                maxFirezones: 0,
-                maxTesouros: 0,
+                maxFirezones: 999,
+                maxTesouros: 999,
                 maxInimigos: 999,
+                maxCaminhoEntradaSaida: 999,
                 compostas: {
                     inimigosTeleportes: {
                         max: 999,
@@ -315,7 +316,7 @@ export default class Room {
                     }
                     break;
             }
-        });
+		});
         return valor;
 	}
 
@@ -356,9 +357,66 @@ export default class Room {
 		this.metricas.distancias.compostas.inimigo_Tesouro_Teleporte.max = this.getMaxDist(5);
 		this.metricas.mapaInfluencia.compostas.inimigosTeleportesPoder.max =
 			this.getValorMaxMapaInfluencia("influenciaInimigosTeleportesPoder");
+		this.metricas.distancias.maxCaminhoEntradaSaida = this.getValorMaxMapaInfluencia("distCaminhoEntradaSaida");
 	};
 
-	move(dt, player) {
+	atualizaMetricas(metricas = []) {
+		if (metricas.length === 0) {
+			this.metricas.distancias.maxTeleportes = this.getMaxDist(0);
+			this.metricas.distancias.maxFirezones = this.getMaxDist(1);
+			this.metricas.distancias.maxInimigos = this.getMaxDist(2);
+			this.metricas.distancias.maxTesouros = this.getMaxDist(3);
+	
+			// Métricas compostas
+			this.metricas.distancias.compostas.inimigosTeleportes.max = this.getMaxDist(4);
+			this.metricas.distancias.compostas.inimigo_Tesouro_Teleporte.max = this.getMaxDist(5);
+			this.metricas.mapaInfluencia.compostas.inimigosTeleportesPoder.max =
+				this.getValorMaxMapaInfluencia("influenciaInimigosTeleportesPoder");
+			this.metricas.distancias.maxCaminhoEntradaSaida = this.getValorMaxMapaInfluencia("distCaminhoEntradaSaida");
+		} else {
+			metricas.forEach(metrica => {
+				switch (metrica) {
+					case 'maxTeleportes':
+						this.metricas.distancias.maxTeleportes = this.getMaxDist(0);
+						break;
+					case 'maxFirezones':
+						this.metricas.distancias.maxFirezones = this.getMaxDist(1);
+						break;
+					case 'maxInimigos':
+						this.metricas.distancias.maxInimigos = this.getMaxDist(2);
+						break;
+					case 'maxTesouros':
+						this.metricas.distancias.maxTesouros = this.getMaxDist(3);
+						break;
+					case 'inimigosTeleportes':
+						this.metricas.distancias.compostas.inimigosTeleportes.max = this.getMaxDist(4);
+						break;
+					case 'influenciaPoder':
+						this.metricas.mapaInfluencia.influenciaPoder = this.getValorMaxMapaInfluencia("influenciaPoder");
+						break;
+					case 'inimigo_Tesouro_Teleporte':
+						this.metricas.distancias.compostas.inimigo_Tesouro_Teleporte.max = this.getMaxDist(5);
+						break;
+					case 'inimigosTeleportesPoder':
+						this.metricas.mapaInfluencia.compostas.inimigosTeleportesPoder.max =
+							this.getValorMaxMapaInfluencia("influenciaInimigosTeleportesPoder");
+						break;
+					case 'maxCaminhoEntradaSaida':
+						this.metricas.distancias.maxCaminhoEntradaSaida = this.getValorMaxMapaInfluencia("distCaminhoEntradaSaida");
+						break;
+				
+					default:
+						break;
+				}
+			});
+		}
+		// if (this.number === 12) {
+		// 	console.log('max camada distancias');
+		// 	console.log(this.metricas.distancias.maxCaminhoEntradaSaida);
+		// }
+	};
+
+	move(dt) {
 		if (Debugger.isDebugModeOn()) {
 			for (let i = 0; i < this.fireZones.length; i++) {
 				this.fireZones[i].mover(dt);
@@ -380,11 +438,9 @@ export default class Room {
 				this.treasures[i].mover(dt);
 			}
 
-			for (const indiceInimigo in this.enemies) {
-				const enemy = this.enemies[indiceInimigo]
-				enemy.persegue(player);
-				enemy.movimento(dt);
-			}
+			this.enemies.forEach(enemy => {
+				enemy.passo(dt);
+			});
 		}
 	};
 
@@ -460,6 +516,27 @@ export default class Room {
 				case DEBUG_MODE.MAPA_INIMIGOS_TELEPORTES_PODER: {
 					valor = this.blocks[i].metricas.mediaInimigoTeleportePoder.toFixed(3);
 					valorMapaCalor = this.blocks[i].metricas.mediaInimigoTeleportePoder;
+					break;
+				}
+				case DEBUG_MODE.MAPA_INIMIGOS_TESOURO_TELEPORTES_PODER: {
+					valor = this.blocks[i].metricas.mediaInimigoTesouroTeleportePoder.toFixed(3);
+					valorMapaCalor = this.blocks[i].metricas.mediaInimigoTesouroTeleportePoder;
+					break;
+				}
+				case DEBUG_MODE.PONTOS_DE_INTERESSE: {
+					let indexRotaPercurso = this.rotaPercurso.indexOf(i);
+					valor = indexRotaPercurso === -1 ? 0 : indexRotaPercurso; 
+					valorMapaCalor = indexRotaPercurso === -1 ? 0 : 1; 
+					break;
+				}
+				case DEBUG_MODE.DISTANCIA_CAMINHO_ENTRADA_SAIDA: {
+					valor = this.blocks[i].distCaminhoEntradaSaida;
+					valorMapaCalor = valor / this.metricas.distancias.maxCaminhoEntradaSaida;
+					break;
+				}
+				case DEBUG_MODE.MAPA_TESOURO_FIREZONE_TELEPORTE_ENTRADA_SAIDA: {
+					valor = this.blocks[i].metricas.mediaTesouroFirezoneTeleporteEntradaSaida.toFixed(3);
+					valorMapaCalor = this.blocks[i].metricas.mediaTesouroFirezoneTeleporteEntradaSaida;
 					break;
 				}
 				default:
@@ -578,6 +655,7 @@ export default class Room {
 			aux.clone(room.blocks[i]);
 			this.blocks.push(aux);
 		}
+		this.pathRoom = room.pathRoom;
 
 		this.metricas = {
 			mapaInfluencia: {
@@ -593,6 +671,7 @@ export default class Room {
 				maxFirezones: room.metricas.distancias.maxFirezones,
 				maxTesouros: room.metricas.distancias.maxTesouros,
 				maxInimigos: room.metricas.distancias.maxInimigos,
+				maxCaminhoEntradaSaida: room.metricas.maxCaminhoEntradaSaida,
 				compostas: {
 					inimigosTeleportes: {
 						max: room.metricas.distancias.compostas.inimigosTeleportes.max,
@@ -615,6 +694,7 @@ export default class Room {
 			cellAux.room = room.number;
 			this.blocks.push(cellAux);
 		}
+		this.pathRoom = room.pathRoom;
 		this.metricas = {
 			mapaInfluencia: {
 				influenciaPoder: 0,
@@ -629,6 +709,7 @@ export default class Room {
 				maxFirezones: room.metricas.distancias.maxFirezones,
 				maxTesouros: room.metricas.distancias.maxTesouros,
 				maxInimigos: room.metricas.distancias.maxInimigos,
+				maxCaminhoEntradaSaida: room.metricas.maxCaminhoEntradaSaida,
 				compostas: {
 					inimigosTeleportes: {
 						max: room.metricas.distancias.compostas.inimigosTeleportes.max,
@@ -655,6 +736,7 @@ export default class Room {
 			cellAux.room = room.number;
 			this.blocks.push(cellAux);
 		}
+		this.pathRoom = room.pathRoom;
 		this.metricas = {
 			mapaInfluencia: {
 				influenciaPoder: room.metricas.mapaInfluencia.influenciaPoder,
@@ -669,6 +751,7 @@ export default class Room {
 				maxFirezones: room.metricas.distancias.maxFirezones,
 				maxTesouros: room.metricas.distancias.maxTesouros,
 				maxInimigos: room.metricas.distancias.maxInimigos,
+				maxCaminhoEntradaSaida: room.metricas.maxCaminhoEntradaSaida,
 				compostas: {
 					inimigosTeleportes: {
 						max: room.metricas.distancias.compostas.inimigosTeleportes.max,
@@ -719,7 +802,8 @@ export default class Room {
 		}
 	};
 	
-	apontarDirecoes() {
+	// Direção pra saida
+	apontarDirecoesParaSaida() {
 		for (let i = 0; i < this.blocks.length; i++) {
 			if (this.blocks[i].distInundacaoSaida === 0) {
 				this.blocks[i].direcaoSaida = "X";
@@ -763,24 +847,6 @@ export default class Room {
 		}
 	};
 
-	inundaRecursivo(origem, val) {
-		if (this.blocks[origem].distInundacaoSaida === -1) {
-			this.blocks[origem].distInundacaoSaida = val;
-			val++;
-			for (let i = 0; i < this.blocks[origem].vizinhos.length; i++) {
-				this.inundaRecursivo(this.blocks[origem].vizinhos[i], val);
-			}
-		} else {
-			if (val < this.blocks[origem].distInundacaoSaida) {
-				this.blocks[origem].distInundacaoSaida = val;
-				val++;
-				for (let i = 0; i < this.blocks[origem].vizinhos.length; i++) {
-					this.inundaRecursivo(this.blocks[origem].vizinhos[i], val);
-				}
-			}
-		}
-	};
-
 	definirBlocosVizinhos() {
 		for (let i = 0; i < this.blocks.length; i++) {
             const bloco = this.blocks[i];
@@ -809,7 +875,13 @@ export default class Room {
 	}
 
 	init() {
-		this.apontarDirecoes();
+		this.apontarDirecoesParaSaida();
+	};
+	
+	adicionarPontosDeInteresse() {
+		this.pontosInteresse.push(this.entrada);
+		this.achaTesouros();
+		this.pontosInteresse.push(this.saida);
 	};
 
 	achaSaida() {
@@ -822,7 +894,6 @@ export default class Room {
 				break;
 			}
 		}
-		this.pontosInteresse.push(this.saida);
 	};
 
 	achaEntrada() {
@@ -835,7 +906,6 @@ export default class Room {
 				break;
 			}
 		}
-		this.pontosInteresse.push(this.entrada);
 	};
 
 	achaTesouros() {
@@ -930,18 +1000,10 @@ export default class Room {
 		}
 	};
 
-	getPathRoom(gx, gy) {
+	getPathRoom() {
 		this.pathRoom.steps = [];
 		let indexAtual = this.entrada;
 
-		let indexPlayer = -1; // Index -1 indica que o player não está nessa room
-		for (let i = 0; i < this.blocks.length; i++) {
-			if (this.blocks[i].linha === gy && this.blocks[i].coluna === gx) {
-				indexPlayer = i;
-			}
-		}
-
-		//if(indexPlayer !== -1){
 		this.pathRoom.addStep(this.blocks[indexAtual]);
 		for (let i = 0; i < this.blocks[this.entrada].distInundacaoSaida; i++) {
 			if (this.blocks[indexAtual].direcaoSaida === "^") {
@@ -1010,30 +1072,27 @@ export default class Room {
 				}
 			}
 		}
-		//}
 	};
-
-	inundar(origem, val) {
-		if (this.blocks[origem].distInundacaoTemp === -1) {
-			this.blocks[origem].distInundacaoTemp = val;
-			val++;
-			for (let i = 0; i < this.blocks[origem].vizinhos.length; i++) {
-				this.inundar(this.blocks[origem].vizinhos[i], val);
-			}
-		} else {
-			if (val < this.blocks[origem].distInundacaoTemp) {
-				this.blocks[origem].distInundacaoTemp = val;
-				val++;
-				for (let i = 0; i < this.blocks[origem].vizinhos.length; i++) {
-					this.inundar(this.blocks[origem].vizinhos[i], val);
+	
+	inundar(origem, val, propriedade) {
+		const avaliar = [{ celula: this.blocks[origem], valor: val}];
+		let aux;
+		while (aux = avaliar.shift()) {
+			if (aux.valor < aux.celula[propriedade]) {
+				aux.celula[propriedade] = aux.valor;
+				for (let i = 0; i < aux.celula.vizinhos.length; i++) {
+					avaliar.push({
+						celula: this.blocks[aux.celula.vizinhos[i]],
+						valor: aux.valor + 1
+					});
 				}
 			}
 		}
 	};
-
+	
 	resetaDistanciaInundacaoTemp() {
 		for (let i = 0; i < this.blocks.length; i++) {
-			this.blocks[i].distInundacaoTemp = -1;
+			this.blocks[i].distInundacaoTemp = Infinity;
 		}
 	};
 
@@ -1081,11 +1140,15 @@ export default class Room {
 		}
 	};
 
+	/**
+	 * Calcula a distancia entre os pontos de interesse, colocando
+	 * a informação em uma matriz
+	 */
 	calculaDistPontosInteresse() {
 		console.log("Room " + this.number + ": " + this.pontosInteresse.length);
 		for (let i = 0; i < this.pontosInteresse.length; i++) {
 			this.resetaDistanciaInundacaoTemp();
-			this.inundar(this.pontosInteresse[i], 0);
+			this.inundar(this.pontosInteresse[i], 0, 'distInundacaoTemp');
 			this.matrizDistancias[i] = [];
 			for (let j = 0; j < this.pontosInteresse.length; j++) {
 				if (i === j) {
@@ -1101,6 +1164,13 @@ export default class Room {
 		//console.log(this.pontosInteresse)
 	};
 
+	/**
+	 * Adiciona ao array rotaPercurso os índices dos blocos que contêm os pontos de interesse.
+	 * A ordem em que são inseridos é o de menor distância para o ponto atual.
+	 * Ou seja, começando do teleporte de entrada, é adicionado sempre o pronto de interesse
+	 * de menor distância daquele ponto.
+	 * 
+	 */
 	constroiRota() {
 		let index = 0;
 		let indexAux = 0;
@@ -1115,7 +1185,7 @@ export default class Room {
 			let menor = Infinity;
 			for (let i = 0; i < this.pontosInteresse.length; i++) {
 				if (
-					index !== i &&
+					// index !== i &&
 					this.matrizDistancias[index][i] < menor &&
 					jaFoi.indexOf(this.pontosInteresse[i]) === -1
 				) {
@@ -1133,7 +1203,6 @@ export default class Room {
 			faltam--;
 		}
 
-		//console.log(this.rotaPercurso);
 	};
 
 	getPathTesouros(gx, gy) {
@@ -1151,7 +1220,7 @@ export default class Room {
 
 		for (let i = atual; i < this.rotaPercurso.length - 1; i++) {
 			this.resetaDistanciaInundacaoTemp();
-			this.inundar(this.rotaPercurso[proximo], 0);
+			this.inundar(this.rotaPercurso[proximo], 0, 'distInundacaoTemp');
 			this.apontarDirecoesTemp();
 			this.constroiPathDoisPontos(this.rotaPercurso[atual]);
 			atual++;
@@ -1257,25 +1326,53 @@ export default class Room {
 		}
 	};
 
-	atualizaMetricaCelula(metrica) {
-		let distMaxTeleporte = this.getMaxDist(0);
-        let maxDistInimigos = this.getMaxDist(2);
-        let maxPoder = this.getValorMaxMapaInfluencia("influenciaPoder");
+	atualizaMetricaCelulas(metrica) {
+		let distMaxTeleporte = this.metricas.distancias.maxTeleportes;
+		let distMaxFirezones = this.metricas.distancias.maxFirezones;
+        let distMaxInimigos = this.metricas.distancias.maxInimigos;
+		let distMaxTesouros = this.metricas.distancias.maxTesouros;
+        let maxPoder = this.metricas.mapaInfluencia.influenciaPoder;
+		let distMaxCaminhoEntradaSaida = this.metricas.distancias.maxCaminhoEntradaSaida;
 		this.blocks.forEach((block) => {
             switch (metrica) {
                 case "mediaInimigoTeleportePoder":
                     block.metricas.mediaInimigoTeleportePoder =
                         block.mediaInimigo_Teleporte_Poder(
-                            maxDistInimigos,
+                            distMaxInimigos,
                             distMaxTeleporte,
                             maxPoder
                         );
                     break;
+                case "mediaInimigoTesouroTeleportePoder":
+                    block.metricas.mediaInimigoTesouroTeleportePoder =
+                        block.mediaInimigo_Tesouro_Teleporte_Poder(
+                            distMaxInimigos,
+                            distMaxTeleporte,
+                            distMaxTesouros,
+                            maxPoder
+                        );
+                    break;
+				case "mediaTesouroFirezoneTeleporteEntradaSaida":
+                    block.metricas.mediaTesouroFirezoneTeleporteEntradaSaida =
+                        block.mediaTesouro_Firezone_Teleporte_EntradaSaida(
+                            distMaxTeleporte,
+                            distMaxFirezones,
+                            distMaxTesouros,
+                            distMaxCaminhoEntradaSaida
+                        );
+					break;
                 default:
                     break;
             }
         });
+	}
 
+	atualizaDistanciaCaminhoEntradaSaida(mapa) {
+		if (this.pathRoom.steps.length > 0) {
+			this.pathRoom.steps.forEach(celula => {
+				mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distCaminhoEntradaSaida');
+			});
+		}
 	}
 
 }

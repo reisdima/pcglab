@@ -3,6 +3,7 @@ import seedGen from "../SeedGen.js";
 import assetsMng from "../AssetsMng.js";
 import { escreveTexto } from "../Utils.js";
 import Debugger, { DEBUG_MODE } from "../utils/Debugger.js";
+import { getPlayer } from "./Player.js";
 
 export default class Character extends Sprite {
     constructor(params, nivel) {
@@ -29,6 +30,11 @@ export default class Character extends Sprite {
         //     cooldownImune: 0
         // }
         this.criarAnimacoes();
+    }
+
+    passo(dt) {
+        this.persegue(getPlayer());
+        this.movimento(dt);
     }
 
 
@@ -265,8 +271,6 @@ export default class Character extends Sprite {
 
     }
 
-
-
     persegue(alvo) {
         if (alvo == null) {
             return;
@@ -278,8 +282,10 @@ export default class Character extends Sprite {
                 (distanciaX * distanciaX) +
                 (distanciaY * distanciaY)
             );
-            if (Math.abs(distanciaAlvo) < this.atributos.raioAtaque * (this.map.s / 2)) {       //(k * 16) ==> 16 tamanho do celula
+            // if (Math.abs(distanciaAlvo) < this.atributos.raioAtaque * (this.map.s / 2)) {       //(k * 16) ==> 16 tamanho do celula
+            if (Math.abs(distanciaAlvo) < 5 * (this.map.s / 2)) {       //(k * 16) ==> 16 tamanho do celula
                 this.alvo = alvo;
+                this.propagarAlvo(alvo, 2);
                 return;
             }
 
@@ -287,6 +293,22 @@ export default class Character extends Sprite {
             this.direcaoX = Math.sign(distanciaX);
             this.direcaoY = Math.sign(distanciaY);
         }
+    }
+
+    propagarAlvo(alvo, distancia) {
+        const roomAtual = this.room;
+        const celulasNoRange = this.map.getCellsByDist(
+            this.gx,
+            this.gy,
+            distancia
+        );
+        celulasNoRange.forEach(celula => {
+            roomAtual.enemies.forEach(enemy => {
+                if (enemy.gx == celula.coluna && enemy.gy == celula.linha) {
+                    enemy.alvo = alvo;
+                }
+            });
+        })
     }
 
     attackPlayer(player) {
@@ -309,8 +331,6 @@ export default class Character extends Sprite {
     }
 
     sofrerAtaque(dano) {
-        console.log("Sofrer ataque Character");
-        console.log(this);
         this.hpAtual -= dano;
         if (this.hpAtual <= 0) {
             return this.morrer();

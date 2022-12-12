@@ -103,6 +103,29 @@ export default class Map {
     return null;                // Não encontrou nenhuma celula com a caracteristica
   }
 
+  getCellsByDist(x, y, dist) {
+    const celulas = [];
+    console.log(x, y, dist);
+    
+    for (let i = y - dist; i <= y + dist; i++) {
+      if (i < 0 && i >= this.h) {
+        continue;
+      }
+      for (let j = x - dist; j <= x + dist; j++) {
+        if (j < 0 && j >= this.w) {
+          continue;
+        }
+        if (i == y && j == x) {
+          continue;
+        }
+        if (this.cell[i][j].tipo === 0) {
+          celulas.push(this.cell[i][j]);
+        }
+      }
+    }
+    return celulas;
+  }
+
   getCell(row, column) {
     return this.cell[row][column];
   }
@@ -295,9 +318,21 @@ export default class Map {
         case DEBUG_MODE.ROOM_DA_CELULA:                   // Rooms
           this.escreveTexto(ctx, this.cell[l][c].room + "", c, l);
           break;
-          case DEBUG_MODE.POSICIONAMENTO_INIMIGO:
-          if (this.cell[l][c].podePosicionarInimigo) {
-            const texto = this.cell[l][c].metricas.mediaInimigoTeleportePoder.toFixed(3);
+        case DEBUG_MODE.POSICIONAMENTO_INIMIGO:
+            if (this.cell[l][c].podePosicionarInimigo) {
+              const texto = this.cell[l][c].metricas.mediaInimigoTeleportePoder.toFixed(3);
+              ctx.save();
+              ctx.fillStyle = `hsl(${120}, 100%, 50%)`;
+              ctx.linewidth = 1;
+              ctx.globalAlpha = 0.4;
+              ctx.fillRect(c * this.s, l * this.s, this.s, this.s);
+              ctx.restore();
+              this.escreveTexto(ctx, texto + "", c, l);
+            }
+            break;
+        case DEBUG_MODE.POSICIONAMENTO_TESOURO:
+          if (this.cell[l][c].podePosicionarTesouro) {
+            const texto = this.cell[l][c].metricas.mediaTesouroFirezoneTeleporteEntradaSaida.toFixed(3);
             ctx.save();
             ctx.fillStyle = `hsl(${120}, 100%, 50%)`;
             ctx.linewidth = 1;
@@ -352,7 +387,7 @@ export default class Map {
 
     }
 
-    if (Debugger.getDebugMode() < 16) {
+    if (Debugger.isDebugModeOn()) {
       ctx.strokeStyle = "white";
       ctx.lineWidth = 1;
       ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);

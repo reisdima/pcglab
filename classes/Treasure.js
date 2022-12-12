@@ -8,6 +8,7 @@ export default class Treasure extends Sprite {
     constructor() {
         super({ s: 18, w: 17, h: 10, nomeImagem: "coin_gold" });
         this.roomNumber = -1;
+        this.room = null;
         this.animation = [];
         this.qtdAnimacoes = 8;
         this.speedAnimation = 14;//1.5;  // 1.2

@@ -3,7 +3,7 @@ import Character from "./Character.js";
 
 
 export default class Enemy extends Character {
-
+    
     constructor(params, nivel) {
         super(params, nivel);
         this.alvo = null;
