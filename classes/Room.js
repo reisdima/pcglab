@@ -45,9 +45,10 @@ export default class Room {
 			},
             distancias: {
                 maxTeleportes: 999,
-                maxFirezones: 0,
-                maxTesouros: 0,
+                maxFirezones: 999,
+                maxTesouros: 999,
                 maxInimigos: 999,
+                maxCaminhoEntradaSaida: 999,
                 compostas: {
                     inimigosTeleportes: {
                         max: 999,
@@ -356,6 +357,7 @@ export default class Room {
 		this.metricas.distancias.compostas.inimigo_Tesouro_Teleporte.max = this.getMaxDist(5);
 		this.metricas.mapaInfluencia.compostas.inimigosTeleportesPoder.max =
 			this.getValorMaxMapaInfluencia("influenciaInimigosTeleportesPoder");
+		this.metricas.distancias.maxCaminhoEntradaSaida = this.getValorMaxMapaInfluencia("distCaminhoEntradaSaida");
 	};
 
 	atualizaMetricas(metricas = []) {
@@ -399,6 +401,10 @@ export default class Room {
 						this.metricas.mapaInfluencia.compostas.inimigosTeleportesPoder.max =
 							this.getValorMaxMapaInfluencia("influenciaInimigosTeleportesPoder");
 						break;
+					case 'maxCaminhoEntradaSaida':
+						this.metricas.distancias.maxCaminhoEntradaSaida = this.getValorMaxMapaInfluencia("distCaminhoEntradaSaida");
+						break;
+				
 					default:
 						break;
 				}
@@ -517,6 +523,22 @@ export default class Room {
 					valorMapaCalor = this.blocks[i].metricas.mediaInimigoTesouroTeleportePoder;
 					break;
 				}
+				case DEBUG_MODE.PONTOS_DE_INTERESSE: {
+					let indexRotaPercurso = this.rotaPercurso.indexOf(i);
+					valor = indexRotaPercurso === -1 ? 0 : indexRotaPercurso; 
+					valorMapaCalor = indexRotaPercurso === -1 ? 0 : 1; 
+					break;
+				}
+				case DEBUG_MODE.DISTANCIA_CAMINHO_ENTRADA_SAIDA: {
+					valor = this.blocks[i].distCaminhoEntradaSaida;
+					valorMapaCalor = valor / this.metricas.distancias.maxCaminhoEntradaSaida;
+					break;
+				}
+				case DEBUG_MODE.MAPA_TESOURO_FIREZONE_TELEPORTE_ENTRADA_SAIDA: {
+					valor = this.blocks[i].metricas.mediaTesouroFirezoneTeleporteEntradaSaida.toFixed(3);
+					valorMapaCalor = this.blocks[i].metricas.mediaTesouroFirezoneTeleporteEntradaSaida;
+					break;
+				}
 				default:
 					return;
 			}
@@ -633,6 +655,7 @@ export default class Room {
 			aux.clone(room.blocks[i]);
 			this.blocks.push(aux);
 		}
+		this.pathRoom = room.pathRoom;
 
 		this.metricas = {
 			mapaInfluencia: {
@@ -648,6 +671,7 @@ export default class Room {
 				maxFirezones: room.metricas.distancias.maxFirezones,
 				maxTesouros: room.metricas.distancias.maxTesouros,
 				maxInimigos: room.metricas.distancias.maxInimigos,
+				maxCaminhoEntradaSaida: room.metricas.maxCaminhoEntradaSaida,
 				compostas: {
 					inimigosTeleportes: {
 						max: room.metricas.distancias.compostas.inimigosTeleportes.max,
@@ -670,6 +694,7 @@ export default class Room {
 			cellAux.room = room.number;
 			this.blocks.push(cellAux);
 		}
+		this.pathRoom = room.pathRoom;
 		this.metricas = {
 			mapaInfluencia: {
 				influenciaPoder: 0,
@@ -684,6 +709,7 @@ export default class Room {
 				maxFirezones: room.metricas.distancias.maxFirezones,
 				maxTesouros: room.metricas.distancias.maxTesouros,
 				maxInimigos: room.metricas.distancias.maxInimigos,
+				maxCaminhoEntradaSaida: room.metricas.maxCaminhoEntradaSaida,
 				compostas: {
 					inimigosTeleportes: {
 						max: room.metricas.distancias.compostas.inimigosTeleportes.max,
@@ -710,6 +736,7 @@ export default class Room {
 			cellAux.room = room.number;
 			this.blocks.push(cellAux);
 		}
+		this.pathRoom = room.pathRoom;
 		this.metricas = {
 			mapaInfluencia: {
 				influenciaPoder: room.metricas.mapaInfluencia.influenciaPoder,
@@ -724,6 +751,7 @@ export default class Room {
 				maxFirezones: room.metricas.distancias.maxFirezones,
 				maxTesouros: room.metricas.distancias.maxTesouros,
 				maxInimigos: room.metricas.distancias.maxInimigos,
+				maxCaminhoEntradaSaida: room.metricas.maxCaminhoEntradaSaida,
 				compostas: {
 					inimigosTeleportes: {
 						max: room.metricas.distancias.compostas.inimigosTeleportes.max,
@@ -1304,6 +1332,7 @@ export default class Room {
         let distMaxInimigos = this.metricas.distancias.maxInimigos;
 		let distMaxTesouros = this.metricas.distancias.maxTesouros;
         let maxPoder = this.metricas.mapaInfluencia.influenciaPoder;
+		let distMaxCaminhoEntradaSaida = this.metricas.distancias.maxCaminhoEntradaSaida;
 		this.blocks.forEach((block) => {
             switch (metrica) {
                 case "mediaInimigoTeleportePoder":
@@ -1323,11 +1352,27 @@ export default class Room {
                             maxPoder
                         );
                     break;
+				case "mediaTesouroFirezoneTeleporteEntradaSaida":
+                    block.metricas.mediaTesouroFirezoneTeleporteEntradaSaida =
+                        block.mediaTesouro_Firezone_Teleporte_EntradaSaida(
+                            distMaxTeleporte,
+                            distMaxFirezones,
+                            distMaxTesouros,
+                            distMaxCaminhoEntradaSaida
+                        );
+					break;
                 default:
                     break;
             }
         });
+	}
 
+	atualizaDistanciaCaminhoEntradaSaida(mapa) {
+		if (this.pathRoom.steps.length > 0) {
+			this.pathRoom.steps.forEach(celula => {
+				mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distCaminhoEntradaSaida');
+			});
+		}
 	}
 
 }

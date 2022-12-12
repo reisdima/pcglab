@@ -379,6 +379,10 @@ export default class Hud {
     this.debugText.push("Mode 13 - Influência - inimigo-teleporte-poder");
     this.debugText.push("Mode 14 - Influência - inimigo-tesouro-teleporte-poder");
     this.debugText.push("Mode 15 - Blocos disponíveis para inimigos");
+    this.debugText.push("Mode 16 - Blocos disponíveis para tesouro");
+    this.debugText.push("Mode 17 -  PONTOS_DE_INTERESSE");
+    this.debugText.push("Mode 18 -  Distancia - Caminho entrada saida");
+    this.debugText.push("Mode 19 -  MAPA_TESOURO_FIREZONE_TELEPORTE_ENTRADA_SAIDA");
     this.updateElementos(canvas);
     this.bussola.init();
     

@@ -9,6 +9,7 @@ import ProgressionManager from "./ProgressionManager.js";
 import Slime from "./Entities/Slime.js";
 import Debugger, { DEBUG_MODE, PATHS } from "./utils/Debugger.js";
 import { getPlayer } from "./Entities/Player.js";
+import TreasurePositioningManager from "./TreasurePositioningManager.js";
 import EnemyPositioningManager from "./EnemyPositioningManager.js";
 
 
@@ -18,6 +19,7 @@ export default class Level {
   constructor(w, h, s, { hud, seedGen, assetsMng }) {
     this.mapa = new Map(w, h, s, assetsMng);
     this.progressionManager = new ProgressionManager();
+    this.treasurePositioningManager = new TreasurePositioningManager(seedGen, this.mapa);
     this.enemyPositioningManager = new EnemyPositioningManager(seedGen, this.mapa);
     this.rooms = [];
     this.tempoFase = 0;
@@ -618,15 +620,30 @@ export default class Level {
     this.posicionarFireZones(25);          // Posiciona acima de 25 na distancia de firezones
     
     this.rooms.forEach(room => {
+      // Precisa para calcular distancia saida
+      // que é necessário para distribuir poder entre inimigos
       room.definirBlocosVizinhos();
-      room.achaEntrada();
       room.achaSaida();
       room.inundar(room.saida, 0, 'distInundacaoSaida');
       
+      //Precisa para criar caminho entrada-saida
+      room.achaEntrada();
+      room.apontarDirecoesParaSaida();
+      
+      room.getPathRoom();
+      
+      // Precisa para posicionar inimigos
+      room.atualizaMetricas(['maxTeleportes']);
+      room.atualizaDistanciaCaminhoEntradaSaida(this.mapa);
+
+      //Precisa para posicionar tesouros
+      room.atualizaMetricas(['maxCaminhoEntradaSaida', 'maxFirezones']);
     });
     
     this.enemyPositioningManager.posicionar(this);
 
+    this.treasurePositioningManager.posicionar(this);
+    
     // this.posicionarInimigos({
     //   porcentagemDistancia: 80,
     //   porcentagemDistanciaComp: 30,
@@ -640,8 +657,8 @@ export default class Level {
     // });
 
     this.rooms.forEach(room => {
-      room.achaTesouros();
-      room.maxCamadaDistancias();
+      // room.achaTesouros();
+      // room.maxCamadaDistancias();
     });
     
 
@@ -841,13 +858,14 @@ export default class Level {
       this.rooms[i].adicionarPontosDeInteresse();
       this.rooms[i].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
       this.rooms[i].constroiRota();
-      this.rooms[i].getPathRoom(this.player.gx, this.player.gy);
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
       this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
+      this.rooms[i].atualizaMetricas();
       this.rooms[i].atualizaMetricaCelulas("mediaInimigoTeleportePoder");
+      this.rooms[i].atualizaMetricaCelulas("mediaTesouroFirezoneTeleporteEntradaSaida");
       this.rooms[i].atualizaMetricaCelulas("mediaInimigoTesouroTeleportePoder");
       this.enemyPositioningManager.marcarCelulasDisponiveisParaInimigos(this.rooms[i]);
-      this.rooms[i].metricas.mapaInfluencia.influenciaPoder = this.rooms[i].getValorMaxMapaInfluencia('influenciaPoder');
+      this.treasurePositioningManager.marcarCelulasDisponiveisParaTesouros(this.rooms[i]);
     }
     this.roomIniciado = true;
     //this.rooms[10].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
@@ -871,6 +889,13 @@ export default class Level {
     this.enemyPositioningManager.posicionarUmInimigo(this, roomAtual);
     roomAtual.atualizaMetricaCelulas("mediaInimigoTeleportePoder");
     roomAtual.metricas.mapaInfluencia.influenciaPoder = roomAtual.getValorMaxMapaInfluencia('influenciaPoder');
+  }
+
+  posicionarTesouroDebug() {
+    let roomAtual = this.getPlayerRoom();
+    this.treasurePositioningManager.posicionarUmTesouro(this);
+    roomAtual.atualizaMetricaCelulas("mediaTesouroFirezoneTeleporteEntradaSaida");
+    roomAtual.atualizaMetricaCelulas("mediaInimigoTesouroTeleportePoder");
   }
 
 }

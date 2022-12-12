@@ -195,9 +195,9 @@ export default class Grafico {
         let maiorDistFirezones = 0;
         let maiorDistTesouros = 0;
         for (let i = 0; i < this.caminho.steps.length; i++) {
-            // if (this.caminho.steps[i].distTesouros > maiorDistTesouros) {
-            // 	maiorDistTesouros = this.caminho.steps[i].distTesouros;
-            // }
+            if (this.caminho.steps[i].distTesouros > maiorDistTesouros) {
+            	maiorDistTesouros = this.caminho.steps[i].distTesouros;
+            }
             if (this.caminho.steps[i].distInimigos > maiorDistInimigos) {
                 maiorDistInimigos = this.caminho.steps[i].distInimigos;
             }
