@@ -25,7 +25,8 @@ export default class Cell {
         Object.assign(this, exemplo, params);   // Sobrescreve os atributos de params e exemplo na classe
 
         this.metricas = {
-            mediaInimigoTeleportePoder: -1
+            mediaInimigoTeleportePoder: -1,
+            mediaInimigoTesouroTeleportePoder: -1,
         }
     }
 
@@ -49,6 +50,28 @@ export default class Cell {
         }
         return ((this.distInimigos / maxInimigo) + (this.distTeleportes / maxTeleporte) +
             1 - poder) / 3;
+    }
+
+    // Média entre as distências normalizadas da célula até inimigo, tesouro e teleporte e o valor
+    // normalizado de poder
+    mediaInimigo_Tesouro_Teleporte_Poder(
+        maxInimigo = 1,
+        maxTeleporte = 1,
+        maxTesouro = 1,
+        maxPoder = 1
+    ) {
+        let poder = this.influenciaPoder / maxPoder;
+        if (this.influenciaPoder === 0 || maxPoder === 0) {
+            poder = 0;
+        }
+        return (
+            (this.distInimigos / maxInimigo +
+                this.distTeleportes / maxTeleporte +
+                this.distTesouros / maxTesouro +
+                1 -
+                poder) /
+            4
+        );
     }
 
     clone(celula) {

@@ -512,6 +512,11 @@ export default class Room {
 					valorMapaCalor = this.blocks[i].metricas.mediaInimigoTeleportePoder;
 					break;
 				}
+				case DEBUG_MODE.MAPA_INIMIGOS_TESOURO_TELEPORTES_PODER: {
+					valor = this.blocks[i].metricas.mediaInimigoTesouroTeleportePoder.toFixed(3);
+					valorMapaCalor = this.blocks[i].metricas.mediaInimigoTesouroTeleportePoder;
+					break;
+				}
 				default:
 					return;
 			}
@@ -1297,6 +1302,7 @@ export default class Room {
 		let distMaxTeleporte = this.metricas.distancias.maxTeleportes;
 		let distMaxFirezones = this.metricas.distancias.maxFirezones;
         let distMaxInimigos = this.metricas.distancias.maxInimigos;
+		let distMaxTesouros = this.metricas.distancias.maxTesouros;
         let maxPoder = this.metricas.mapaInfluencia.influenciaPoder;
 		this.blocks.forEach((block) => {
             switch (metrica) {
@@ -1305,6 +1311,15 @@ export default class Room {
                         block.mediaInimigo_Teleporte_Poder(
                             distMaxInimigos,
                             distMaxTeleporte,
+                            maxPoder
+                        );
+                    break;
+                case "mediaInimigoTesouroTeleportePoder":
+                    block.metricas.mediaInimigoTesouroTeleportePoder =
+                        block.mediaInimigo_Tesouro_Teleporte_Poder(
+                            distMaxInimigos,
+                            distMaxTeleporte,
+                            distMaxTesouros,
                             maxPoder
                         );
                     break;

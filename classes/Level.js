@@ -845,6 +845,7 @@ export default class Level {
       this.rooms[i].getPathTesouros(this.player.gx, this.player.gy, 0);
       this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
       this.rooms[i].atualizaMetricaCelulas("mediaInimigoTeleportePoder");
+      this.rooms[i].atualizaMetricaCelulas("mediaInimigoTesouroTeleportePoder");
       this.enemyPositioningManager.marcarCelulasDisponiveisParaInimigos(this.rooms[i]);
       this.rooms[i].metricas.mapaInfluencia.influenciaPoder = this.rooms[i].getValorMaxMapaInfluencia('influenciaPoder');
     }
