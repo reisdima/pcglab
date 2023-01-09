@@ -40,12 +40,16 @@ export default class Player extends Character {
         this.cooldownAtaque = 1;                  //Tempo do personagem travado até terminar o ataque            
         this.cooldownImune = 0;
         this.imune = false;
+
         this.atributos = {
-            hpMax: 20,
-            ataque: 5,
+            hpMax: 0,
+            ataque: 0,
+            // velocidade: 7,
             velocidade: 30,
-            // velocidade: 60,
         },
+        this.calcularAtributos();
+        this.hpAtual = this.hpMax;
+
         this.xpAtual = 0;
         this.xpDoLevel = 100;
         this.levelAtual = 1;
@@ -61,8 +65,7 @@ export default class Player extends Character {
         this.animation = [];
         this.nomeImagem = "player";
 
-        Object.assign(this, exemplo, params);   // Sobrescreve os atributos de params e exemplo na classe
-        this.hpAtual = this.atributos.hpMax;
+        this.taxasCrescimento = Slime.getTaxaCrescimentoAtributos();
         this.poderTotal = ProgressionManager.calcularPoderTotal(this.atributos, this.taxasCrescimento);
         this.criarAnimacoes();
     }
@@ -392,9 +395,10 @@ export default class Player extends Character {
             for (let i = 0; i < this.tiro.length; i++) {
                 if (this.tiro[i].colidiuComCentralWidthHeight(alvo)) {
                     if (!alvo.imune) {
-                        if (alvo.sofrerAtaque(this.atributos.ataque)) {
-                            this.xpAtual += alvo.xpFornecida;
-                            this.pontos += alvo.xpFornecida;
+                        if (alvo.sofrerAtaque(this.ataque)) {
+                            console.log('Sofreu ', this.ataque);
+                            this.xpAtual += alvo.poderAoMorrer;
+                            this.pontos += alvo.poderAoMorrer;
                             this.calculaXp();
                         }
                         alvo.ativarInvencibilidade();
@@ -425,6 +429,12 @@ export default class Player extends Character {
         }
     }
 
+    coletarTesouro(tesouro) {
+        this.tesourosColetados++;
+        this.pontos += tesouro.poderTotal;
+        console.log('Tesouro coletado: ', tesouro.poderTotal);
+    }
+
     calculaXp() {
         if (this.xpAtual >= this.xpDoLevel) {
             console.log('PASSOU DE NÍVEL');
@@ -439,19 +449,24 @@ export default class Player extends Character {
     }
 
     aumentarAtributo(atributo) {
-        switch (atributo) {
-            case 'vida':
-                this.atributos.hpMax += 10;
-                this.hpAtual += 10;
-                break;
-            case 'dano':
-                this.atributos.ataque += 10;
-                break;
-            case 'velocidade':
-                this.atributos.velocidade += 30;
-                break;
-            default:
-                break;
+        const saltoDeUpgrade = 1;
+        let valorAtual = this.atributos[atributo];
+        let custoUpgrade = 0
+        for (let i = 0; i < saltoDeUpgrade; i++) {
+            custoUpgrade += ProgressionManager.aplicarFuncaoDeProgressao(
+                valorAtual + i,
+                1,
+                "cookie",
+                this.taxasCrescimento[atributo]
+            );
+        }
+        console.log('Custo para aumentar ', atributo, ': ', custoUpgrade);
+        if (this.pontos >= custoUpgrade) {
+            this.pontos -= custoUpgrade;
+            this.atributos[atributo] += saltoDeUpgrade;
+            // if (atributo === 'hpMax') {
+            //     this.hpAtual += saltoDeUpgrade;
+            // }
         }
     }
 

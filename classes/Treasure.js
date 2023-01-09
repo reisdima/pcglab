@@ -18,6 +18,7 @@ export default class Treasure extends Sprite {
             widthImagem: 32,
             heightImagem: 32
         }
+        this.poderTotal = 100;
         this.criarAnimacoes();
     }
 
@@ -82,5 +83,6 @@ export default class Treasure extends Sprite {
             widthImagem: treasure.matrizImagem.widthImagem,
             heightImagem: treasure.matrizImagem.heightImagem
         }
+        this.poderTotal = treasure.poderTotal;
     }
 }

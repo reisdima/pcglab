@@ -1,6 +1,7 @@
 import Slime from "./Entities/Slime.js";
 import PositioningManager from "./PositioningManager.js";
 import ProgressionManager from "./ProgressionManager.js";
+import { TIPOS_DE_MEDIA } from "./TipoDeMediaEntreAtributos.js";
 
 export default class EnemyPositioningManager extends PositioningManager{
     constructor(seedGen, mapa) {
@@ -10,7 +11,8 @@ export default class EnemyPositioningManager extends PositioningManager{
         this.distanciaInimigos = 1;
         this.distanciaTeleporte = 5;
         this.distanciaFirezone = 1;
-        this.porcentagemDistanciaComp = 0.4;
+        this.distanciaTesrousos = 1;
+        this.porcentagemDistanciaComp = 0.5;
     }
 
     posicionar(level) {
@@ -24,11 +26,17 @@ export default class EnemyPositioningManager extends PositioningManager{
                 if (celula) {
                     const inimigo = this.criarInimigo(celula, roomAtual, level);
                     this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distInimigos');
-                    roomAtual.atualizaMetricas(['maxInimigos', 'influenciaPoder']);
-                }
+                    roomAtual.atualizaMetricas(['distInimigos', 'influenciaPoder']);
+                    ProgressionManager.calculaMapaDePoderSala(roomAtual);
+                } 
             } while (--numeroInimigos > 0);
 
-            let poderAtual = ProgressionManager.distribuirPoderEntreInimigos(roomAtual, this.mapa);
+            let poderAtual = ProgressionManager.distribuirPoderEntreInimigos(
+                roomAtual,
+                this.mapa,
+                this.poderBase,
+                this.seedGen
+            );
             ProgressionManager.calculaMapaDePoderSala(roomAtual);
 
             roomAtual = rooms[roomAtual.teleporterFinal.proximoTeleporte.roomNumber - 1];
@@ -45,24 +53,41 @@ export default class EnemyPositioningManager extends PositioningManager{
      * de distância de poder
      */
     getCelulasElegiveis(room) {
-        let distMaxTeleporte = room.metricas.distancias.maxTeleportes;
-        let distMaxInimgos = room.metricas.distancias.maxInimigos;
-        let maxPoder = room.metricas.mapaInfluencia.influenciaPoder;
+        if (room.number === 12) {
+            // console.log('Outro inimigo');
+        }
         let listaCelulas = [
             ...room.blocks.filter((b) => {
                 if (
-                    b.distTeleportes >= this.distanciaTeleporte &&
-                    b.distFirezones >= this.distanciaFirezone &&
-                    b.distInimigos >= this.distanciaInimigos
+                    b.metricas.distTeleportes >= this.distanciaTeleporte &&
+                    b.metricas.distFirezones >= this.distanciaFirezone &&
+                    b.metricas.distTesouros >= this.distanciaTesrousos &&
+                    b.metricas.distInimigos >= this.distanciaInimigos
                 ) {
                     let auxMediaNormalizada =
-                        b.mediaInimigo_Teleporte_Poder(
-                            distMaxInimgos,
-                            distMaxTeleporte,
-                            maxPoder
+                        // b.fazerMediaPonderadaTeste(
+                        b.fazerSomaTeste(
+							TIPOS_DE_MEDIA.posicionamentoInimigoPertoDeTesouro,
+							room
                         );
-                    b.metricas.mediaInimigoTeleportePoder = auxMediaNormalizada;
-                    return auxMediaNormalizada >= this.porcentagemDistanciaComp;
+                    if (room.number === 12) {
+                        // console.log('OUTR ACELULA');
+                        let tipoDeMedia = TIPOS_DE_MEDIA.posicionamentoInimigoPertoDeTesouro;
+                        for (let i = 0; i < Object.values(tipoDeMedia).length; i++) {
+                            let nomeAtributo = Object.keys(tipoDeMedia)[i];
+                            let peso = tipoDeMedia[nomeAtributo];
+                            let valorMaximoNaRoom = room.metricas[nomeAtributo];
+                            let valorDaCelula = b.metricas[nomeAtributo];
+                            // console.log('nomeAtributo', nomeAtributo);
+                            // console.log('peso', peso);
+                            // console.log('valorMaximoNaRoom', valorMaximoNaRoom);
+                            // console.log('valorDaCelula', valorDaCelula);
+                        }
+                        // console.log(auxMediaNormalizada);
+                    }
+                    b.metricas.compostas.mediaPosicionamentoInimigo = auxMediaNormalizada;
+                    return auxMediaNormalizada >= 0;
+                    // return auxMediaNormalizada >= this.porcentagemDistanciaComp;
                 }
                 return false;
             }),
@@ -76,11 +101,11 @@ export default class EnemyPositioningManager extends PositioningManager{
      * mediaInimigoTeleportePoder, maior a probabilidade de ser sorteado
      * https://stackoverflow.com/a/55671924
      */
-     getCelulaParaPosicionarInimigo(room) {
+    getCelulaParaPosicionarInimigo(room) {
         let celulasElegiveis = this.getCelulasElegiveis(room);
         let pesos = [
-            ...celulasElegiveis.map(
-                (c) => c.metricas.mediaInimigoTeleportePoder
+        ...celulasElegiveis.map(
+            (c) => c.metricas.compostas.mediaPosicionamentoInimigo
             ),
         ];
         let i;
@@ -126,13 +151,16 @@ export default class EnemyPositioningManager extends PositioningManager{
         if (numeroInimigosAtual < numeroInimigosMaximo) {
             let celula = this.getCelulaParaPosicionarInimigo(roomAtual);
             if (celula) {
-                console.log('Célula selecionada com peso ', celula.metricas.mediaInimigoTeleportePoder);
+                console.log('Célula selecionada com peso ', celula.linha, celula.coluna, celula.metricas.compostas.mediaPosicionamentoInimigo);
                 const inimigo = this.criarInimigo(celula, roomAtual, level);
                 this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distInimigos');     // Recalcula
-                roomAtual.atualizaMetricas(['maxInimigos', 'influenciaPoder']);
+                roomAtual.atualizaMetricas(['distInimigos', 'influenciaPoder']);
                 console.log('posicionou inimigo');
                 if (numeroInimigosAtual + 1 === numeroInimigosMaximo) {
-                    ProgressionManager.distribuirPoderEntreInimigos(roomAtual, this.mapa);
+                    ProgressionManager.distribuirPoderEntreInimigos(roomAtual,
+                        this.mapa,
+                        this.poderBase,
+                        this.seedGen);
                 }
                 ProgressionManager.calculaMapaDePoderSala(roomAtual);
             }

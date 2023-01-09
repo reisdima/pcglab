@@ -202,7 +202,7 @@ export default class Map {
 
   // Teste função retorna distancia de composição entre os dois atributos
   getDistInimigosTesouros(l, c) {
-    return (3 * this.cell[l][c].distInimigos + 2 * this.cell[l][c].distTesouros);
+    return (3 * this.cell[l][c].metricas.distInimigos + 2 * this.cell[l][c].metricas.distTesouros);
   }
 
   // Teste função retorna distancia de composição entre os dois atributos -- MAX
@@ -311,6 +311,8 @@ export default class Map {
       }
     }
     else {
+      let cor = '';
+      let texto = '';
       switch (Debugger.getDebugMode()) {
         case DEBUG_MODE.TIPO_DA_CELULA:                   // Tipos
           this.escreveTexto(ctx, this.cell[l][c].tipo + "", c, l);
@@ -319,28 +321,30 @@ export default class Map {
           this.escreveTexto(ctx, this.cell[l][c].room + "", c, l);
           break;
         case DEBUG_MODE.POSICIONAMENTO_INIMIGO:
-            if (this.cell[l][c].podePosicionarInimigo) {
-              const texto = this.cell[l][c].metricas.mediaInimigoTeleportePoder.toFixed(3);
-              ctx.save();
-              ctx.fillStyle = `hsl(${120}, 100%, 50%)`;
-              ctx.linewidth = 1;
-              ctx.globalAlpha = 0.4;
-              ctx.fillRect(c * this.s, l * this.s, this.s, this.s);
-              ctx.restore();
-              this.escreveTexto(ctx, texto + "", c, l);
-            }
-            break;
+          cor = this.cell[l][c].podePosicionarInimigo ? 120 : 0 * this.cell[l][c].metricas.compostas.mediaPosicionamentoInimigo
+          // if (this.cell[l][c].podePosicionarInimigo) {
+          texto = this.cell[l][c].metricas.compostas.mediaPosicionamentoInimigo.toFixed(3);
+          ctx.save();
+          ctx.fillStyle = `hsl(${cor}, 100%, 50%)`;
+          ctx.linewidth = 1;
+          ctx.globalAlpha = 0.4;
+          ctx.fillRect(c * this.s, l * this.s, this.s, this.s);
+          ctx.restore();
+          this.escreveTexto(ctx, texto + "", c, l);
+          // }
+          break;
         case DEBUG_MODE.POSICIONAMENTO_TESOURO:
-          if (this.cell[l][c].podePosicionarTesouro) {
-            const texto = this.cell[l][c].metricas.mediaTesouroFirezoneTeleporteEntradaSaida.toFixed(3);
-            ctx.save();
-            ctx.fillStyle = `hsl(${120}, 100%, 50%)`;
-            ctx.linewidth = 1;
-            ctx.globalAlpha = 0.4;
-            ctx.fillRect(c * this.s, l * this.s, this.s, this.s);
-            ctx.restore();
-            this.escreveTexto(ctx, texto + "", c, l);
-          }
+          cor = this.cell[l][c].podePosicionarTesouro ? 120 : 0 * this.cell[l][c].metricas.compostas.mediaTesouroFirezoneTeleporteEntradaSaida
+          // if (this.cell[l][c].podePosicionarTesouro) {
+          texto = this.cell[l][c].metricas.compostas.mediaTesouroFirezoneTeleporteEntradaSaida.toFixed(3);
+          ctx.save();
+          ctx.fillStyle = `hsl(${cor}, 100%, 50%)`;
+          ctx.linewidth = 1;
+          ctx.globalAlpha = 0.4;
+          ctx.fillRect(c * this.s, l * this.s, this.s, this.s);
+          ctx.restore();
+          this.escreveTexto(ctx, texto + "", c, l);
+          // }
           break;
         /*case 5:                   // Teleportes
           this.escreveTexto(ctx, this.cell[l][c].distTeleportes + "", c, l);
@@ -390,7 +394,7 @@ export default class Map {
     if (Debugger.isDebugModeOn()) {
       ctx.strokeStyle = "white";
       ctx.lineWidth = 1;
-      ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
+      // ctx.strokeRect(c * this.s, l * this.s, this.s, this.s);
     }
   };
 
@@ -416,10 +420,10 @@ export default class Map {
       if (this.cell[cell.l][cell.c].tipo != 0) {
         continue;
       }
-      if (this.cell[cell.l][cell.c][metodo] <= cell.v) {
+      if (this.cell[cell.l][cell.c].metricas[metodo] <= cell.v) {
         continue;
       }
-      this.cell[cell.l][cell.c][metodo] = cell.v;
+      this.cell[cell.l][cell.c].metricas[metodo] = cell.v;
       avaliar.push({ l: cell.l - 1, c: cell.c, v: cell.v + 1 });
       avaliar.push({ l: cell.l + 1, c: cell.c, v: cell.v + 1 });
       avaliar.push({ l: cell.l, c: cell.c - 1, v: cell.v + 1 });

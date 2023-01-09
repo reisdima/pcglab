@@ -19,6 +19,8 @@ export const DEBUG_MODE = Object.freeze({
     PONTOS_DE_INTERESSE: 17,
     DISTANCIA_CAMINHO_ENTRADA_SAIDA: 18,
     MAPA_TESOURO_FIREZONE_TELEPORTE_ENTRADA_SAIDA: 19,
+    MAPA_INFLUENCIA_POSICIONAMENTO_INIMIGO: 20,
+    INFLUENCIA_PODER_TESOURO: 21,
 });
 
 export const PATHS = Object.freeze({
@@ -32,6 +34,8 @@ export const PATHS = Object.freeze({
 
 
 export default class Debugger {
+    // static _debugMode = DEBUG_MODE.SIMPLE_DEBUG;
+    // static _pathSelecionado = PATHS.GPS_SAIDA_ROOM;
     static _debugMode = DEBUG_MODE.DEBUG_OFF;
     static _pathSelecionado = PATHS.CAMINHO_OFF;
 

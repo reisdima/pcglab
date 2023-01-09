@@ -173,10 +173,14 @@ export default class Level {
     let roomsAvailable = [];            //Rooms disponíveis para escolher o teleporte inicial
     let sortPosition;
     let menorSala = this.rooms[0];
+    let maiorSala = this.rooms[0];
     for (let i = 0; i < this.rooms.length; i++) {
       const roomAtual = this.rooms[i];
       if (roomAtual.blocks.length < menorSala.blocks.length) {
         menorSala = roomAtual;
+      }
+      if (roomAtual.blocks.length > maiorSala.blocks.length) {
+        maiorSala = roomAtual;
       }
       // Pre-processamento -- Pega o bloco do meio da sala, calcula a distancia, pega o bloco
       // da maior, zera a distancia, posiciona o bloco e calcula a distancia de novo
@@ -187,7 +191,7 @@ export default class Level {
       let celulas = roomAtual.getCellsByDist(maxDist, 0);
       sortPosition = this.getRandomInt(0, (celulas.length - 1));
       roomAtual.resetDistancia(0);
-
+      
       // Posicionamento teleporte de inicio de sala
       roomAtual.teleporterInitial.setPosition(celulas[sortPosition]);
       roomAtual.teleporterInitial.roomNumber = celulas[sortPosition].room;
@@ -203,19 +207,20 @@ export default class Level {
 
     // Posicionamento teleporte inicio de fase
     // let roomInicioLevel = params.opcaoTeleporteInicio ? this.getRandomInt(0, (this.rooms.length - 1)) : 0;
-    let roomInicioLevel = menorSala.number - 1;
-    this.teleporteInicioLevel = this.criaTeleporte(this.rooms[roomInicioLevel], params.porcentagem).setType(TeleporterType.InicioLevel);
+    let roomInicioLevel = menorSala.number;
+    this.teleporteInicioLevel = this.criaTeleporte(this.rooms[roomInicioLevel - 1], params.porcentagem).setType(TeleporterType.InicioLevel);
 
     // Posicionamento teleporte fim de fase
-    let roomFinalLevel = this.getRandomInt(0, this.rooms.length - 1);                 // Possibilita ter o teleporte de FINAL DE FASE na mesma sala de início
-    if (params.opcaoTeleporteFinal == 1) {
-      while (roomFinalLevel == roomInicioLevel) {                               // Certifica de não repetir a sala
-        roomFinalLevel = this.getRandomInt(0, this.rooms.length - 1);
-      }
-    }
-    this.teleporteFinalLevel = this.criaTeleporte(this.rooms[roomFinalLevel], params.porcentagem).setType(TeleporterType.FimLevel);
+    // let roomFinalLevel = this.getRandomInt(0, this.rooms.length - 1);                 // Possibilita ter o teleporte de FINAL DE FASE na mesma sala de início
+    let roomFinalLevel = maiorSala.number;
+    // if (params.opcaoTeleporteFinal == 1) {
+    //   while (roomFinalLevel == roomInicioLevel) {                               // Certifica de não repetir a sala
+    //     roomFinalLevel = this.getRandomInt(0, this.rooms.length - 1);
+    //   }
+    // }
+    this.teleporteFinalLevel = this.criaTeleporte(this.rooms[roomFinalLevel - 1], params.porcentagem).setType(TeleporterType.FimLevel);
 
-    this.interligarTeleportes();
+    this.interligarTeleportes(roomInicioLevel, roomFinalLevel);
 
     if (!params.opcaoMapaCircular) {
       this.rooms[this.teleporteInicioLevel.roomNumber - 1].teleporterInitial.setAtivo(false);
@@ -227,9 +232,14 @@ export default class Level {
   /**************************************************************
    * LIGANDO OS TELEPORTES ENTRE AS SALAS DE MANEIRA CIRCULAR   *
    **************************************************************/
-  interligarTeleportes() {
+  interligarTeleportes(roomInicioLevel, roomFinalLevel) {
     let roomsAvailable = this.rooms.map(room => room.number);
     let roomsClosed = [];               //Rooms que o teleporte inicial foi conectado
+
+    this.rooms[roomInicioLevel - 1].teleporterInitial.proximoTeleporte = this.rooms[roomFinalLevel - 1].teleporterFinal;
+    this.rooms[roomFinalLevel - 1].teleporterFinal.proximoTeleporte = this.rooms[roomInicioLevel - 1].teleporterInitial;
+    roomsAvailable.splice(roomInicioLevel - 1, 1);
+    roomsAvailable.splice(roomFinalLevel - 1, 1);
 
     let indCurrentRoom;
     let indNextRoom;
@@ -252,10 +262,17 @@ export default class Level {
       roomsClosed.push(currentRoom);
       roomsAvailable.splice(indCurrentRoom, 1);
     }
-    // Connecting last room => to create a cycle on the rooms connections
-    this.rooms[roomsAvailable[0] - 1].teleporterInitial.proximoTeleporte = this.rooms[roomsClosed[0] - 1].teleporterFinal;
-    this.rooms[roomsClosed[0] - 1].teleporterFinal.proximoTeleporte = this.rooms[roomsAvailable[0] - 1].teleporterInitial;
 
+    // Faz com que a primeira e últimas salas sejam as passadas por parâmetro
+    this.rooms[roomsAvailable[0] - 1].teleporterInitial.proximoTeleporte = this.rooms[roomInicioLevel - 1].teleporterFinal;
+    this.rooms[roomInicioLevel - 1].teleporterFinal.proximoTeleporte = this.rooms[roomsAvailable[0] - 1].teleporterInitial;
+
+    this.rooms[roomFinalLevel - 1].teleporterInitial.proximoTeleporte = this.rooms[roomsClosed[0] - 1].teleporterFinal;
+    this.rooms[roomsClosed[0] - 1].teleporterFinal.proximoTeleporte = this.rooms[roomFinalLevel - 1].teleporterInitial;
+
+    // Connecting last room => to create a cycle on the rooms connections
+    // this.rooms[roomsAvailable[0] - 1].teleporterInitial.proximoTeleporte = this.rooms[roomsClosed[0] - 1].teleporterFinal;
+    // this.rooms[roomsClosed[0] - 1].teleporterFinal.proximoTeleporte = this.rooms[roomsAvailable[0] - 1].teleporterInitial;
   }
 
   criaTeleporte(room, porcentagem) {
@@ -289,6 +306,10 @@ export default class Level {
     p.y = this.teleporteInicioLevel.y;
     p.gx = this.teleporteInicioLevel.gx;            // Coluna
     p.gy = this.teleporteInicioLevel.gy;            // Linha
+    // p.x = this.rooms[6].teleporterInitial.x;
+    // p.y = this.rooms[6].teleporterInitial.y;
+    // p.gx = this.rooms[6].teleporterInitial.gx;            // Coluna
+    // p.gy = this.rooms[6].teleporterInitial.gy;            // Linha
     p.setRoom();
 
     // Referencia ao player para facilitar
@@ -495,13 +516,17 @@ export default class Level {
 
     for (let indiceSala = 0; indiceSala < this.rooms.length; indiceSala++) {
       let auxRoom = this.rooms[indiceSala];
-      let listaCelulas = [...auxRoom.blocks.filter((b) => ((b.distTeleportes >= 5)
-        && (b.distFirezones > 0) && (b.distInimigos > 0)))];        // Todos os blocks da sala com distTeleportes maior que 5
+      let listaCelulas = [...auxRoom.blocks.filter((b) => ((b.metricas.distTeleportes >= 5)
+        && (b.metricas.distFirezones > 0) && (b.metricas.distInimigos > 0)))];        // Todos os blocks da sala com distTeleportes maior que 5
       let listaCelulasFinal = [];
-      let numTesouros = Math.round(auxRoom.blocks.length / this.tamanhoSalasMinimo);    // /25
+      // let numTesouros = Math.round(auxRoom.blocks.length / this.tamanhoSalasMinimo);    // /25
+      let numTesouros = Math.round(auxRoom.blocks.length / 50);    // /25
       let distMaxTeleporte = auxRoom.getMaxDist(0);
+      distMaxTeleporte = distMaxTeleporte === Infinity ? 999 : distMaxTeleporte;
       let distMaxTesouros = auxRoom.getMaxDist(1);
+      distMaxTesouros = distMaxTesouros === Infinity ? 999 : distMaxTesouros;
       let distMaxInimigos = auxRoom.getMaxDist(2);
+      distMaxInimigos = distMaxInimigos === Infinity ? 999 : distMaxInimigos;
 
       do {
         let maxDistComposto = auxRoom.getMaxDist(5);            // Valor referencial maximo nao vai mudar
@@ -516,7 +541,7 @@ export default class Level {
             distMaxTeleporte, distMaxTesouros);
           if ((minimalValueComposto <= auxDistanciaNormalizada) //&& 
             //(auxDistanciaNormalizada <= minimalValueComposto * 1.5)
-            && (listaCelulas[i].distTesouros >= 5)           // Evita inimigos muito próximos
+            && (listaCelulas[i].metricas.distTesouros >= 5)           // Evita inimigos muito próximos
           ) {
             listaCelulasFinal.push(listaCelulas[i]);
           }
@@ -534,21 +559,34 @@ export default class Level {
           this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distTesouros');     // Recalcula
         }
       }
-      while (numTesouros-- > 0 && listaCelulasFinal.length > 0);
+      // while (numTesouros-- > 0 && listaCelulasFinal.length > 0);
+      while (--numTesouros > 0 && listaCelulasFinal.length > 0);
     }
   }
 
   posicionarInimigos(params) {
+    const poderBase = Slime.getPoderBase();
     for (let indiceSala = 0; indiceSala < this.rooms.length; indiceSala++) {
       let auxRoom = this.rooms[indiceSala];
-      let listaCelulas = [...auxRoom.blocks.filter((b) => ((b.distTeleportes >= 5) && (b.distFirezones > 0)))];        // Todos os blocks da sala com distTeleportes maior que 5
+      let listaCelulas = [...auxRoom.blocks.filter((b) => ((b.metricas.distTeleportes >= 5) && (b.metricas.distFirezones > 0)))];        // Todos os blocks da sala com distTeleportes maior que 5
+      
       let listaCelulasFinal = [];
       let numInimigos = Math.round(auxRoom.blocks.length / this.tamanhoSalasMinimo);    // /25
       let distMaxTeleporte = auxRoom.getMaxDist(0);
 
+      console.log('========= Room ' + auxRoom.number + ' =========');
+      console.log('Tamanho da Sala: ', auxRoom.blocks.length);
+      console.log('Numero de inimigos: ', numInimigos);
+      console.log('Distancia teleporte: ', distMaxTeleporte);
+      // console.log('Lista de celulas: ', listaCelulas);
+
+      
       do {
         let maxDistInimigos = auxRoom.getMaxDist(2);
+        maxDistInimigos = maxDistInimigos === Infinity ? 999 : maxDistInimigos;
         let maxDistComposto = auxRoom.getMaxDist(4);            // Valor referencial maximo nao vai mudar
+        maxDistComposto = maxDistComposto === Infinity ? 999 : maxDistComposto;
+        console.log('maxDistInimigos', maxDistInimigos);
         let minimalValue = Math.round((params.porcentagemDistancia * maxDistInimigos) / 100);                 // Menor elemento no intervalo para o DistInimigos
         let minimalValueComposto = (params.porcentagemDistanciaComp) / 100;                 // Menor elemento no intervalo para o DistInimigos
         //listaCelulas = [...auxRoom.blocks.filter((b) => (b.distTeleportes >= 5))];        // Todos os blocks da sala com distTeleportes maior que 5
@@ -557,15 +595,13 @@ export default class Level {
 
         // Verifica a distancia composta
         for (let i = 0; i < listaCelulas.length; i++) {       // preenche a lista de celulas disponiveis --- Dist Inimigos
-          /*let auxDistanciaNormalizada = auxRoom.blocks[i].distInimigoTeleporte(auxRoom.distancias.maxInimigos, 
+          /*let auxDistanciaNormalizada = auxRoom.blocks[i].distInimigoTeleporte(auxRoom.distancias.maxInimigos,
             auxRoom.distancias.maxTeleportes);*/
-          if (listaCelulas[i].distInimigos <= 5) { // Evita inimigos muito próximos
-            continue;
-          }
           let auxDistanciaNormalizada = listaCelulas[i].distInimigoTeleporte(maxDistInimigos,
             distMaxTeleporte);
-          if ((minimalValueComposto <= auxDistanciaNormalizada) //&& 
+          if ((minimalValueComposto <= auxDistanciaNormalizada) //&&
             //(auxDistanciaNormalizada <= minimalValueComposto * 1.5)
+            && (listaCelulas[i].metricas.distInimigos > 5)           // Evita inimigos muito próximos
           ) {
             listaCelulasFinal.push(listaCelulas[i]);
           }
@@ -577,12 +613,14 @@ export default class Level {
           this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distInimigos');     // Recalcula
         }
       }
-      while (numInimigos-- > 0 && listaCelulasFinal.length > 0);
+      // while (numInimigos-- > 0 && listaCelulasFinal.length > 0);
+      while (--numInimigos > 0 && listaCelulasFinal.length > 0);
     }
+    ProgressionManager.distribuirPoderEntreInimigosSalaInicial(this, this.mapa, poderBase, this.seedGen)
   }
   
   criarInimigo(celula, room, dificuldade = 1) {
-    const inimigo = new Slime(1);
+    const inimigo = new Slime(dificuldade);
     inimigo.room = room;
     inimigo.gx = celula.coluna;
     inimigo.gy = celula.linha;
@@ -633,21 +671,23 @@ export default class Level {
       room.getPathRoom();
       
       // Precisa para posicionar inimigos
-      room.atualizaMetricas(['maxTeleportes']);
+      room.atualizaMetricas(['distTeleportes']);
       room.atualizaDistanciaCaminhoEntradaSaida(this.mapa);
 
       //Precisa para posicionar tesouros
-      room.atualizaMetricas(['maxCaminhoEntradaSaida', 'maxFirezones']);
+      room.atualizaMetricas(['distCaminhoEntradaSaida', 'distFirezones']);
     });
     
+    this.treasurePositioningManager.posicionar(this);
+
     this.enemyPositioningManager.posicionar(this);
 
-    this.treasurePositioningManager.posicionar(this);
     
     // this.posicionarInimigos({
     //   porcentagemDistancia: 80,
     //   porcentagemDistanciaComp: 30,
     // });
+      
     
     // this.posicionarTesouros({
     //   //porcentagemDistancia: 90, qtdTesouros: 0, porcentagemTesourosPorSala: 5
@@ -661,8 +701,41 @@ export default class Level {
       // room.maxCamadaDistancias();
     });
     
-
+    
     this.mapa.camadaDistCompostas();
+
+
+    // console.log('Room do player'); 
+    // let roomInicial = this.getPlayerRoom();
+    // let roomAtual = roomInicial;
+    // console.log(roomAtual);
+    // do {
+    //   console.log(roomAtual.number, ' => ', roomAtual.teleporterFinal.proximoTeleporte.roomNumber);
+    //   roomAtual = this.rooms[roomAtual.teleporterFinal.proximoTeleporte.roomNumber - 1];
+    // } while (roomAtual.number != roomInicial.number);
+
+    
+    console.log('===============================');
+    console.log('NUMERO DE SALAS: ', this.rooms.length);
+    // console.log('Número de blocos por sala');
+    // this.rooms.forEach(room => {
+    //   console.log('Sala ' + room.number + ': ', room.blocks.length);
+    // });
+    console.log('Número de inimigos por sala');
+    let totalInimigos = 0;
+    this.rooms.forEach(room => {
+      totalInimigos += room.enemies.length;
+      console.log('Sala ' + room.number + ': ', room.enemies.length);
+    });
+    console.log('Total de inimigos: ', totalInimigos);
+
+    console.log('Número de tesouros por sala');
+    let totalTesouros = 0;
+    this.rooms.forEach(room => {
+      totalTesouros += room.treasures.length;
+      console.log('Sala ' + room.number + ': ', room.treasures.length);
+    });
+    console.log('Total de tesouros: ', totalTesouros);
   }
 
   getPlayerRoom() {
@@ -838,15 +911,30 @@ export default class Level {
   }
 
   colisaoTesouros(player) {
-    let auxRoom = this.rooms[player.room - 1];          // Checar somente a sala onde o player se encontra
-    if (auxRoom.collisionTreasures(player)) {
-      console.log("Colidiu com tesouros");
-      /*let salaInicial = this.rooms[this.teleporteInicioLevel.getCell().room - 1];
-      let indiceSala = salaInicial.room - 1;
-      auxRoom = this.rooms[indiceSala];
-      let celula = this.mapa.getCell(this.player.gy, this.player.gx);
-      this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 3);*/
+    const room = this.getPlayerRoom();
+    const tesouros = room.treasures;
+    for (let i = 0; i < tesouros.length; i++) {
+      if (player.colidiuComCentralWidthHeight(tesouros[i])) {
+        player.coletarTesouro(tesouros[i]);
+				room.treasures.splice(i, 1);
+      }
     }
+
+
+
+    // let auxRoom = this.rooms[player.room - 1];          // Checar somente a sala onde o player se encontra
+    // if (auxRoom.collisionTreasures(player)) {
+    //   console.log("Colidiu com tesouros");
+    //   // TODO
+    //   // pegar o custo de upgrade de todos atributos
+    //   // Adicionar ao player ponto suficiente para evoluir o atributo mais caro
+    //   player.pontos += player.pontos * 0.1;
+    //   /*let salaInicial = this.rooms[this.teleporteInicioLevel.getCell().room - 1];
+    //   let indiceSala = salaInicial.room - 1;
+    //   auxRoom = this.rooms[indiceSala];
+    //   let celula = this.mapa.getCell(this.player.gy, this.player.gx);
+    //   this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 3);*/
+    // }
   }
 
   iniciaRooms() {
@@ -854,7 +942,6 @@ export default class Level {
       return;
     }
     for (let i = 0; i < this.rooms.length; i++) {
-      this.rooms[i].init();
       this.rooms[i].adicionarPontosDeInteresse();
       this.rooms[i].calculaDistPontosInteresse(); //Vai mostrar os pontos de interesse na i+1
       this.rooms[i].constroiRota();
@@ -862,6 +949,7 @@ export default class Level {
       this.rooms[i].getPathPlayer(this.player.gx, this.player.gy, 1);
       this.rooms[i].atualizaMetricas();
       this.rooms[i].atualizaMetricaCelulas("mediaInimigoTeleportePoder");
+      this.rooms[i].atualizaMetricaCelulas("mediaPosicionamentoInimigo");
       this.rooms[i].atualizaMetricaCelulas("mediaTesouroFirezoneTeleporteEntradaSaida");
       this.rooms[i].atualizaMetricaCelulas("mediaInimigoTesouroTeleportePoder");
       this.enemyPositioningManager.marcarCelulasDisponiveisParaInimigos(this.rooms[i]);
@@ -887,8 +975,9 @@ export default class Level {
   posicionarInimigoDebug() {
     let roomAtual = this.getPlayerRoom();
     this.enemyPositioningManager.posicionarUmInimigo(this, roomAtual);
-    roomAtual.atualizaMetricaCelulas("mediaInimigoTeleportePoder");
-    roomAtual.metricas.mapaInfluencia.influenciaPoder = roomAtual.getValorMaxMapaInfluencia('influenciaPoder');
+    // roomAtual.atualizaMetricaCelulas("mediaInimigoTeleportePoder");
+    roomAtual.atualizaMetricaCelulas("mediaPosicionamentoInimigo");
+    roomAtual.metricas.influenciaPoder = roomAtual.getValorMaxMapaInfluencia('influenciaPoder');
   }
 
   posicionarTesouroDebug() {
@@ -896,6 +985,11 @@ export default class Level {
     this.treasurePositioningManager.posicionarUmTesouro(this);
     roomAtual.atualizaMetricaCelulas("mediaTesouroFirezoneTeleporteEntradaSaida");
     roomAtual.atualizaMetricaCelulas("mediaInimigoTesouroTeleportePoder");
+    roomAtual.metricas.influenciaPoderTesouro = roomAtual.getValorMaxMapaInfluencia('influenciaPoderTesouro');
+  }
+
+  posicionarTesouroEmPosicaoEspecifica(celula) {
+    this.treasurePositioningManager.posicionarTesouroEmPosicaoEspecifica(celula, this);
   }
 
 }

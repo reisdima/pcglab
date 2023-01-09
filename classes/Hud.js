@@ -383,6 +383,8 @@ export default class Hud {
     this.debugText.push("Mode 17 -  PONTOS_DE_INTERESSE");
     this.debugText.push("Mode 18 -  Distancia - Caminho entrada saida");
     this.debugText.push("Mode 19 -  MAPA_TESOURO_FIREZONE_TELEPORTE_ENTRADA_SAIDA");
+    this.debugText.push("Mode 20 -  MAPA_INFLUENCIA_POSICIONAMENTO_INIMIGO");
+    this.debugText.push("Mode 21 - Influência - poder tesouro");
     this.updateElementos(canvas);
     this.bussola.init();
     

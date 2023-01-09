@@ -4,6 +4,7 @@ import assetsMng from "../AssetsMng.js";
 import { escreveTexto } from "../Utils.js";
 import Debugger, { DEBUG_MODE } from "../utils/Debugger.js";
 import { getPlayer } from "./Player.js";
+import { PARAMETROS_SLIME } from "./EnemiesBaseAttributes.js";
 
 export default class Character extends Sprite {
     constructor(params, nivel) {
@@ -12,23 +13,16 @@ export default class Character extends Sprite {
         this.alvo = null;
         this.roomNumber = -1;
         this.room = null;
-        this.hpMax = 200;
-        this.hpAtual = 200;
+        this.hpMax = 20;
+        this.hpAtual = 20;
+        this.ataque = 5;
+        this.velocidade = 1;
         this.animation = [];
         this.speedAnimation = 11.49; //1.2;
         this.type = 0;
         this.pose = 0;
         this.raioAtaque = 5;
         this.imune = false;
-        // this.atributos = {
-        //     hpMax: 200,
-        //     hpAtual: 200,
-        //     ataque: 40,
-        //     velocidade: 0,
-        //     raioAtaque: 5,
-        //     cooldownAtaque: 0,
-        //     cooldownImune: 0
-        // }
         this.criarAnimacoes();
     }
 
@@ -51,7 +45,7 @@ export default class Character extends Sprite {
         if (this.direcaoX == 0 && this.direcaoY == 0) {
             return;
         }
-        const velocidade = this.calcularVelocidade();
+        const velocidade = this.velocidade;
         this.gx = Math.floor(this.x / this.map.s);
         this.gy = Math.floor(this.y / this.map.s);
 
@@ -225,7 +219,7 @@ export default class Character extends Sprite {
         });
         ctx.restore();
         this.desenharHP(ctx);
-        this.desenharAtributos(ctx);
+        // this.desenharAtributos(ctx);
         if (Debugger.isDebugMode(DEBUG_MODE.LIGACAO_TELEPORTES)) {
             this.desenharCentro(ctx);
         }
@@ -240,8 +234,8 @@ export default class Character extends Sprite {
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
         ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w, 4);         // Fundo
-        ctx.fillStyle = `hsl(${120 * this.hpAtual / this.atributos.hpMax}, 100%, 50%)`;
-        ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w * (Math.max(0, this.hpAtual) / this.atributos.hpMax), 4);         // Quantidade de HP
+        ctx.fillStyle = `hsl(${120 * this.hpAtual / this.hpMax}, 100%, 50%)`;
+        ctx.fillRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w * (Math.max(0, this.hpAtual) / this.hpMax), 4);         // Quantidade de HP
         ctx.strokeRect(this.x - this.w / 2, this.y - this.h * 2.5, this.w, 4);       // Borda
     }
 
@@ -254,8 +248,10 @@ export default class Character extends Sprite {
         ctx.strokeStyle = "black";
         ctx.font = "10px Arial Black";
         if (this.nivel) {
-            ctx.strokeText(this.nivel, this.x, this.y - this.h * 2.7);
-            ctx.fillText(this.nivel, this.x, this.y - this.h * 2.7);
+            // ctx.strokeText(this.nivel, this.x, this.y - this.h * 2.7);
+            // ctx.fillText(this.nivel, this.x, this.y - this.h * 2.7);
+            // ctx.strokeText(this.room.enemies.indexOf(this), this.x, this.y - this.h * 2.7);
+            // ctx.fillText(this.room.enemies.indexOf(this), this.x, this.y - this.h * 2.7);
         }
         
         if (this.atributos) {
@@ -265,7 +261,8 @@ export default class Character extends Sprite {
             escreveTexto(ctx, "A: " + this.atributos.ataque, this.x + (0.7 * this.w), this.y - (this.h * 2))
             escreveTexto(ctx, "H: " + this.atributos.hpMax, this.x + (0.7 * this.w), this.y - this.h)
             escreveTexto(ctx, "V: " + this.atributos.velocidade, this.x + (0.7 * this.w), this.y)
-            escreveTexto(ctx, "Pa: " + this.poderTotal, this.x + (0.7 * this.w), this.y + this.h)
+            // escreveTexto(ctx, "Lvl: " + this.nivel, this.x + (0.7 * this.w), this.y + this.h)
+            escreveTexto(ctx, "Pa: " + this.poderTotal, this.x + (0.7 * this.w), this.y + (this.h * 2))
         }
         ctx.restore();
 
@@ -285,7 +282,7 @@ export default class Character extends Sprite {
             // if (Math.abs(distanciaAlvo) < this.atributos.raioAtaque * (this.map.s / 2)) {       //(k * 16) ==> 16 tamanho do celula
             if (Math.abs(distanciaAlvo) < 5 * (this.map.s / 2)) {       //(k * 16) ==> 16 tamanho do celula
                 this.alvo = alvo;
-                this.propagarAlvo(alvo, 2);
+                // this.propagarAlvo(alvo, 3);
                 return;
             }
 
@@ -320,7 +317,8 @@ export default class Character extends Sprite {
             this.type = 0;
             if (this.colidiuComCentralWidthHeight(player)) {
                 if (player.hp > 0) {
-                    player.hp = player.hp - this.atributos.ataque;
+                    // player.hp = player.hp - this.atributos.ataque;
+                    player.hp = player.hp - this.ataque;
                     player.ativarInvencibilidade();
                 }
                 else {
@@ -331,6 +329,9 @@ export default class Character extends Sprite {
     }
 
     sofrerAtaque(dano) {
+        console.log('Tomou ', dano);
+        console.log('Vida maxima ', this.hpMax);
+        console.log('Vida atual ', this.hpAtual);
         this.hpAtual -= dano;
         if (this.hpAtual <= 0) {
             return this.morrer();
@@ -343,11 +344,25 @@ export default class Character extends Sprite {
     }
 
     getPorcentagemVida() {
-        return Math.max(0, this.hpAtual) / this.atributos.hpMax;
+        return Math.max(0, this.hpAtual) / this.hpMax;
     }
 
-    calcularVelocidade() {
-        return 30 + (Math.pow(this.atributos.velocidade, 1.25) - 1);
+    calcularAtributos() {
+        this.hpMax = this.calcularVidaMaxima(PARAMETROS_SLIME.slime_valores_atributos_aumento_por_ponto['hpMax']);
+        this.ataque = this.calcularAtaque(PARAMETROS_SLIME.slime_valores_atributos_aumento_por_ponto['ataque']);
+        this.velocidade = this.calcularVelocidade(PARAMETROS_SLIME.slime_valores_atributos_aumento_por_ponto['velocidade']);
+    }
+
+    calcularVidaMaxima(quantidadePorPonto) {
+        return 20 + (this.atributos.hpMax * quantidadePorPonto);
+    }
+    
+    calcularAtaque(quantidadePorPonto) {
+        return 5 + (this.atributos.ataque * quantidadePorPonto);
+    }
+
+    calcularVelocidade(quantidadePorPonto) {
+        return 30 + (this.atributos.velocidade * quantidadePorPonto);
     }
 
 }

@@ -195,30 +195,30 @@ export default class Grafico {
         let maiorDistFirezones = 0;
         let maiorDistTesouros = 0;
         for (let i = 0; i < this.caminho.steps.length; i++) {
-            if (this.caminho.steps[i].distTesouros > maiorDistTesouros) {
-            	maiorDistTesouros = this.caminho.steps[i].distTesouros;
+            if (this.caminho.steps[i].metricas.distTesouros > maiorDistTesouros) {
+            	maiorDistTesouros = this.caminho.steps[i].metricas.distTesouros;
             }
-            if (this.caminho.steps[i].distInimigos > maiorDistInimigos) {
-                maiorDistInimigos = this.caminho.steps[i].distInimigos;
+            if (this.caminho.steps[i].metricas.distInimigos > maiorDistInimigos) {
+                maiorDistInimigos = this.caminho.steps[i].metricas.distInimigos;
             }
-            if (this.caminho.steps[i].distFirezones > maiorDistFirezones) {
-                maiorDistFirezones = this.caminho.steps[i].distFirezones;
+            if (this.caminho.steps[i].metricas.distFirezones > maiorDistFirezones) {
+                maiorDistFirezones = this.caminho.steps[i].metricas.distFirezones;
             }
-            if (this.caminho.steps[i].influenciaPoder > maiorPoder) {
-                maiorPoder = this.caminho.steps[i].influenciaPoder;
+            if (this.caminho.steps[i].metricas.influenciaPoder > maiorPoder) {
+                maiorPoder = this.caminho.steps[i].metricas.influenciaPoder;
             }
         }
         const influenciaPoderEmEscala = this.caminho.steps.map(step => {
-            return (step.influenciaPoder) / maiorPoder;
+            return (step.metricas.influenciaPoder) / maiorPoder;
         });
         const distInimigosEmEscala = this.caminho.steps.map(step => {
-            return (step.distInimigos) / maiorDistInimigos;
+            return (step.metricas.distInimigos) / maiorDistInimigos;
         });
         const distFirezonesEmEscala = this.caminho.steps.map(step => {
-            return (step.distFirezones) / maiorDistFirezones;
+            return (step.metricas.distFirezones) / maiorDistFirezones;
         });
         const distTesourosEmEscala = this.caminho.steps.map(step => {
-            return (step.distTesouros) / maiorDistTesouros;
+            return (step.metricas.distTesouros) / maiorDistTesouros;
         });
 
         this.escalaX = this.caminho.steps.length - 1;

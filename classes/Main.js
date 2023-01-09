@@ -38,10 +38,10 @@ input.configurarTeclado({
     o: "o",
     t: "t",
     g: "ALTERNA_GRAFICO",
-    Add: "+",
-    Subtract: "-"
-
-
+    "+": "+",
+    "-": "-",
+    r: "POSICIONAR_PLAYER",
+    y: "OUTROS_TESTES"
 });
 // Ocupa a janela toda
 tela.width = window.innerWidth;

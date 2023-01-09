@@ -81,7 +81,7 @@ export default class Enemy extends Character {
         if (this.cooldownAtaque < 0 && this.type === 1) {
             this.type = 0;
             if (colidiuComPlayer) {
-                player.sofrerAtaque(this.atributos.ataque)
+                player.sofrerAtaque(this.ataque)
             }
         }
     }

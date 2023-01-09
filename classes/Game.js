@@ -19,7 +19,7 @@ export default class Game {
 
         this.adicionarCena('jogo', new CenaJogo());
         this.adicionarCena('menuInicial', new CenaMenu());
-        this.selecionarCena('menuInicial');
+        this.selecionarCena('jogo');
         this.moedas = 0;
     }
 

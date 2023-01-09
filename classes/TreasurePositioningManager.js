@@ -1,4 +1,6 @@
 import PositioningManager from "./PositioningManager.js";
+import ProgressionManager from "./ProgressionManager.js";
+import TipoDeMediaEntreAtributos, { TIPOS_DE_MEDIA } from "./TipoDeMediaEntreAtributos.js";
 import Treasure from "./Treasure.js";
 
 let a = false;
@@ -26,16 +28,27 @@ export default class TreasurePositioningManager extends PositioningManager{
                 if (celula) {
                     const tesouro = this.criarTesouro(celula, roomAtual, level);
                     this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distTesouros');
-                    roomAtual.atualizaMetricas(['maxTesouros'])
+                    roomAtual.atualizaMetricas(['distTesouros', 'influenciaPoderTesouro'])
                 }
+                ProgressionManager.calculaMapaDePoderTesouroSala(roomAtual);
             } while (--numeroTesouros > 0);
+
+            let poderAtual = ProgressionManager.distribuirPoderEntreTesouros(
+                roomAtual,
+                this.mapa,
+                100,
+                // this.poderBase,
+                this.seedGen
+            );
+            ProgressionManager.calculaMapaDePoderTesouroSala(roomAtual);
 
             roomAtual = rooms[roomAtual.teleporterFinal.proximoTeleporte.roomNumber - 1];
         } while (roomAtual.number != roomInicial.number);
     }
 
     getNumeroTesourosNaSala(room, level) {
-        let numeroTesouros = Math.round(room.blocks.length / level.tamanhoSalasMinimo);
+        // let numeroTesouros = Math.round(room.blocks.length / level.tamanhoSalasMinimo);
+        let numeroTesouros = Math.round(room.blocks.length / 50);
         return numeroTesouros;
     }
 
@@ -44,26 +57,21 @@ export default class TreasurePositioningManager extends PositioningManager{
      * de distância de poder
      */
     getCelulasElegiveis(room) {
-        let distMaxTeleporte = room.metricas.distancias.maxTeleportes;
-        let distMaxFirezones = room.metricas.distancias.maxFirezones;
-        let distMaxTesouros = room.metricas.distancias.maxTesouros;
-        let distMaxCaminhoEntradaSaida = room.metricas.distancias.maxCaminhoEntradaSaida;
         let listaCelulas = [
             ...room.blocks.filter((b) => {
                 if (
-                    b.distInimigos >= this.distanciaInimigos &&
-                    b.distTeleportes >= this.distanciaTeleporte &&
-                    b.distFirezones >= this.distanciaFirezone &&
-                    b.distCaminhoEntradaSaida >= this.distCaminhoEntradaSaida &&
-                    b.distTesouros >= this.distanciaTesouros
+                    b.metricas.distInimigos >= this.distanciaInimigos &&
+                    b.metricas.distTeleportes >= this.distanciaTeleporte &&
+                    b.metricas.distFirezones >= this.distanciaFirezone &&
+                    b.metricas.distCaminhoEntradaSaida >= this.distCaminhoEntradaSaida &&
+                    b.metricas.distTesouros >= this.distanciaTesouros
                 ) {
-                    let auxMediaNormalizada = b.mediaTesouro_Firezone_Teleporte_EntradaSaida(
-                        distMaxTeleporte,
-                        distMaxFirezones,
-                        distMaxTesouros,
-                        distMaxCaminhoEntradaSaida,
+                    // let auxMediaNormalizada = b.fazerMediaPonderadaTeste(
+                    let auxMediaNormalizada = b.fazerSomaTeste(
+                        TIPOS_DE_MEDIA.posicionamentoTesouroLongeCaminhoEntradaSaida,
+                        room
                     );
-                    b.metricas.mediaTesouroFirezoneTeleporteEntradaSaida = auxMediaNormalizada;
+                    b.metricas.compostas.mediaTesouroFirezoneTeleporteEntradaSaida = auxMediaNormalizada;
                     return auxMediaNormalizada >= this.porcentagemDistanciaComp;
                 }
                 return false;
@@ -78,11 +86,11 @@ export default class TreasurePositioningManager extends PositioningManager{
      * mediaInimigoTesouroTeleportePoder, maior a probabilidade de ser sorteado
      * https://stackoverflow.com/a/55671924
      */
-     getCelulaParaPosicionarTesouro(room) {
+    getCelulaParaPosicionarTesouro(room) {
         let celulasElegiveis = this.getCelulasElegiveis(room);
         let pesos = [
             ...celulasElegiveis.map(
-                (c) => c.metricas.mediaTesouroFirezoneTeleporteEntradaSaida
+                (c) => c.metricas.compostas.mediaTesouroFirezoneTeleporteEntradaSaida
             ),
         ];
         let i;
@@ -128,49 +136,26 @@ export default class TreasurePositioningManager extends PositioningManager{
             let celula = this.getCelulaParaPosicionarTesouro(roomAtual);
             if (celula) {
                 console.log('Célula selecionada ', celula);
-                console.log('Peso dela: ', celula.metricas.mediaTesouroFirezoneTeleporteEntradaSaida);
+                console.log('Peso dela: ', celula.metricas.compostas.mediaTesouroFirezoneTeleporteEntradaSaida);
                 const tesouro = this.criarTesouro(celula, roomAtual, level);
                 this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distTesouros');     // Recalcula
                 roomAtual.maxCamadaDistancias();
                 console.log('posicionou tesouro');
-                // if (numeroTesourosAtual + 1 === numeroTesourosMaximo) {
-                //     this.distribuirPoderEntreInimigos(roomAtual);
-                // }
-                // this.calculaMapaDePoderSala(roomAtual);
+                ProgressionManager.calculaMapaDePoderTesouroSala(roomAtual);
             }
         }
         this.marcarCelulasDisponiveisParaTesouros(roomAtual);
     }
 
-    calculaMapaDePoderSala(room) {
-        if (room == null) {
-            return;
-        }
-        const inimigos = room.enemies;
-        inimigos.forEach((inimigo, index) => {
-            const celula = room.blocks.find(block => {
-                return (block.linha == inimigo.gy && block.coluna == inimigo.gx);
-            });
-            if (celula) {
-                let poderInimigo = inimigo.poderTotal;
-                const avaliar = [{ celula: celula, poder: poderInimigo}];
-                let aux;
-                while (aux = avaliar.shift()) {
-                    if (aux.poder <= 0 || aux.celula.idObjetoInundacao == index) {
-                        continue;
-                    }
-                    aux.celula.influenciaPoder += aux.poder;
-                    aux.celula.idObjetoInundacao = index;
-                    for (let i = 0; i < aux.celula.vizinhos.length; i++) {
-                        avaliar.push({
-                            celula: room.blocks[aux.celula.vizinhos[i]],
-                            poder: Math.floor(aux.poder - (poderInimigo * 0.2))
-                        });
-                    }
-                }
-            }
-        });
-        room.maxCamadaDistancias();
+    posicionarTesouroEmPosicaoEspecifica(celula, level) {
+        const roomAtual = level.getPlayerRoom();
+        const tesouro = this.criarTesouro(celula, roomAtual, level);
+        this.mapa.atualizaDist(celula.linha, celula.coluna, 0, 'distTesouros');     // Recalcula
+        roomAtual.maxCamadaDistancias();
+        console.log('posicionou tesouro');
+        ProgressionManager.calculaMapaDePoderTesouroSala(roomAtual);
+        this.marcarCelulasDisponiveisParaTesouros(roomAtual);
     }
+
 
 }
